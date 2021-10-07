@@ -31,7 +31,8 @@ dependencies:
     sdk: flutter
   qr_code_scanner: ^0.5.2
   share_plus: ^2.2.0
-  path_provider: ^2.0.5
+  path_provider: ^2.0.1
+  multi_search_flutter: ^0.0.1
 
 
   # The following adds the Cupertino Icons font to your application.

@@ -1,9 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-void main() {
-  runApp(MyApp());
-}
+
+// void main() {
+//   runApp(MyApp());
+// }
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -15,12 +16,14 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
 class ScanQRPage extends StatefulWidget {
   const ScanQRPage({Key? key}) : super(key: key);
   @override
   _ScanQRPageState createState() => _ScanQRPageState();
 }
-class _ScanQRPageState extends State< ScanQRPage > {
+
+class _ScanQRPageState extends State<ScanQRPage> {
   final GlobalKey qrKey = GlobalKey();
   late QRViewController controller;
   Barcode? result;
@@ -34,6 +37,7 @@ class _ScanQRPageState extends State< ScanQRPage > {
       controller.resumeCamera();
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,9 +123,9 @@ class _ScanQRPageState extends State< ScanQRPage > {
       ),
     );
   }
-  void onQRViewCreated(QRViewController p1) 
-{
-//called when View gets created. 
+
+  void onQRViewCreated(QRViewController p1) {
+//called when View gets created.
     this.controller = p1;
     controller.scannedDataStream.listen((scanevent) {
       setState(() {
@@ -130,6 +134,7 @@ class _ScanQRPageState extends State< ScanQRPage > {
       });
     });
   }
+
   @override
   void dispose() {
     controller.dispose();
