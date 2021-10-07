@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 void main() => runApp(MyApp());
+
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
@@ -16,30 +17,36 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
 class MyHomePage extends StatefulWidget {
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
+
 class _MyHomePageState extends State<MyHomePage> {
   XFile? _image;
   final imagePicker = ImagePicker();
   Future getImagefromcamera() async {
-    final XFile? image = await imagePicker.pickImage(source: ImageSource.camera);
+    final XFile? image =
+        await imagePicker.pickImage(source: ImageSource.camera);
     setState(() {
       _image = image;
     });
   }
+
   Future getImagefromGallery() async {
-    final XFile? image = await imagePicker.pickImage(source: ImageSource.gallery);
+    final XFile? image =
+        await imagePicker.pickImage(source: ImageSource.gallery);
     setState(() {
       _image = image;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Take a picture of your package"),
+        title: Text("Take a picture of your Items"),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -47,18 +54,16 @@ class _MyHomePageState extends State<MyHomePage> {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Container(
-              width: MediaQuery
-                  .of(context)
-                  .size
-                  .width,
+              width: MediaQuery.of(context).size.width,
               height: 200.0,
               child: Center(
                 child: _image == null
                     ? const Text("No Image is picked")
                     : Image.file(
-                  File(_image!.path),
-                  width: 250,
-                  fit: BoxFit.cover,),
+                        File(_image!.path),
+                        width: 250,
+                        fit: BoxFit.cover,
+                      ),
               ),
             ),
           ),
@@ -81,9 +86,9 @@ class _MyHomePageState extends State<MyHomePage> {
             height: 50,
           ),
           OutlinedButton(
-            onPressed: (){}, 
-            child:const Text('Confirm'),
-            ),
+            onPressed: () {},
+            child: const Text('Confirm'),
+          ),
         ],
       ),
     );
