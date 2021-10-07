@@ -37,9 +37,8 @@ class LandHome extends StatelessWidget {
                       RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(18.0),
               )))
-              ),
+              )
             ]
-            
           ),
         ] 
       ),

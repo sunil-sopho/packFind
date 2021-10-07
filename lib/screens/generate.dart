@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:image_picker/image_picker.dart';
 import 'dart:ui';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -7,6 +8,8 @@ import 'package:flutter/services.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
+
+import 'camera.dart';
 
 void main() {
   runApp(MyApp());
@@ -20,7 +23,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: QRGeneratorSharePage(),
+      home: const QRGeneratorSharePage(),
     );
   }
 }
@@ -34,8 +37,10 @@ class QRGeneratorSharePage extends StatefulWidget {
 
 class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
   final key = GlobalKey();
-  String textdata = 'androidride.com';
+  String textdata = 'enter data';
   final textcontroller = TextEditingController();
+  final textcontroller2 = TextEditingController();
+  final textcontroller3 = TextEditingController();
   File? file;
 
   @override
@@ -52,18 +57,64 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
             child: Container(
               color: Colors.white,
               child: QrImage(
-                size: 300, //size of the QrImage widget.
+                size: 200, //size of the QrImage widget.
                 data: textdata, //textdata used to create QR code
               ),
             ),
           ),
-          SizedBox(
-            height: 50,
+          const SizedBox(
+            height: 20,
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
+            padding: const EdgeInsets.all(4.0),
+            child: TextFormField(
+              decoration: const InputDecoration(
+                labelText: 'Package id'
+              ),
               controller: textcontroller,
+            ),
+          ),
+
+
+          Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: TextFormField(
+              decoration: InputDecoration(
+                labelText: 'List of items',
+              ),
+              controller: textcontroller2,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: TextFormField(
+              decoration: InputDecoration(
+                labelText: 'Location of packaging',
+              ),
+              controller: textcontroller3,
+            ),
+          ),
+          SizedBox(
+            width: 150,
+            child: OutlinedButton(
+              onPressed: (){
+                Navigator.pushNamed(context, '/Camera');
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Icon(
+                    Icons.camera_alt,
+                    size: 20.0,
+                  ),
+                  Text('Add image'),
+                ],
+              ),
+                style: ButtonStyle(
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                        )))
             ),
           ),
           OutlinedButton(
@@ -71,7 +122,7 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
               onPressed: () async {
                 setState(() {
 //rebuilds UI with new QR code
-                  textdata = textcontroller.text;
+                  textdata = textcontroller.text +'\n'+textcontroller2.text +'\n'+ textcontroller3.text;
                 });
               },
               style: ButtonStyle(
@@ -120,3 +171,5 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
     );
   }
 }
+
+
