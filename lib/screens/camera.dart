@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 void main() => runApp(MyApp());
+
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
@@ -16,15 +17,18 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
 class MyHomePage extends StatefulWidget {
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
+
 class _MyHomePageState extends State<MyHomePage> {
   final imagePicker = ImagePicker();
   final List<XFile>? _imageList = [];
   Future getImagefromcamera() async {
-    final XFile? image = await imagePicker.pickImage(source: ImageSource.camera);
+    final XFile? image =
+        await imagePicker.pickImage(source: ImageSource.camera);
     setState(() {
       _imageList!.add(image!);
     });
@@ -38,6 +42,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
 
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,10 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
           /*Padding(
             padding: const EdgeInsets.all(16.0),
             child: Container(
-              width: MediaQuery
-                  .of(context)
-                  .size
-                  .width,
+              width: MediaQuery.of(context).size.width,
               height: 200.0,
               child: Center(
                 child: _image == null
@@ -103,7 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
             height: 30,
           ),
           OutlinedButton(
-            onPressed: (){}, 
+            onPressed: () {}, 
             child:const Text('Confirm'),
             ),
           const SizedBox(
