@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pack/screens/camera.dart';
 import 'package:pack/screens/generate.dart';
 import 'package:pack/screens/home.dart';
 import 'package:pack/screens/landing.dart';
@@ -12,5 +13,6 @@ void main() => runApp(MaterialApp(
         '/ScanQr': (context) => ScanQRPage(),
         '/GenQr': (context) => QRGeneratorSharePage(),
         '/Search': (context) => SearchPage(title: 'Find'),
+        '/Camera': (context) => MyHomePage(),
       },
     ));

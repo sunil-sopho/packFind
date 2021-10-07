@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: ScanQRPage(),
+      home: const ScanQRPage(),
     );
   }
 }
@@ -69,14 +69,14 @@ class _ScanQRPageState extends State<ScanQRPage> {
                   child: Container(
                     width: 50,
                     height: 50,
-                    decoration: BoxDecoration(
+                    decoration:const BoxDecoration(
                       color: Colors.black26,
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         IconButton(
-                            icon: Icon(
+                            icon: const Icon(
                               Icons.flip_camera_ios,
                               color: Colors.white,
                             ),
@@ -84,7 +84,7 @@ class _ScanQRPageState extends State<ScanQRPage> {
                               await controller.flipCamera();
                             }),
                         IconButton(
-                            icon: Icon(
+                            icon: const Icon(
                               Icons.flash_on,
                               color: Colors.white,
                             ),
@@ -101,7 +101,7 @@ class _ScanQRPageState extends State<ScanQRPage> {
           Expanded(
             flex: 1,
             child: Container(
-              margin: EdgeInsets.all(8.0),
+              margin:const EdgeInsets.all(8.0),
               width: double.infinity,
               color: Colors.white,
               child: Center(
@@ -109,7 +109,7 @@ class _ScanQRPageState extends State<ScanQRPage> {
                     ? Column(
                         children: [
                           Text('Code: ${result!.code}'),
-                          SizedBox(
+                          const SizedBox(
                             height: 8.0,
                           ),
                           Text('Format: ${result!.format}'),
