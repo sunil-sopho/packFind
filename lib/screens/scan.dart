@@ -108,14 +108,13 @@ class _ScanQRPageState extends State<ScanQRPage> {
                 child: result != null
                     ? Column(
                         children: [
-                          Text('Code: ${result!.code}'),
+                          Text('Result is:\n${result!.code}'),
                           const SizedBox(
                             height: 8.0,
                           ),
-                          Text('Format: ${result!.format}'),
                         ],
                       )
-                    : Text('Scan Code'),
+                    : Text('Scanning.....'),
               ),
             ),
           ),

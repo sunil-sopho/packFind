@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-import 'package:image_picker/image_picker.dart';
 import 'dart:ui';
 import 'dart:io';
 import 'package:flutter/material.dart';

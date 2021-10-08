@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -24,34 +23,35 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  XFile? _image;
   final imagePicker = ImagePicker();
+  final List<XFile>? _imageList = [];
   Future getImagefromcamera() async {
     final XFile? image =
         await imagePicker.pickImage(source: ImageSource.camera);
     setState(() {
-      _image = image;
+      _imageList!.add(image!);
     });
   }
-
-  Future getImagefromGallery() async {
-    final XFile? image =
-        await imagePicker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      _image = image;
+  void getImagefromGallery() async {
+    final List<XFile>? selectedImages = await imagePicker.pickMultiImage();
+    setState((){
+      if(selectedImages!.isNotEmpty){
+        _imageList!.addAll(selectedImages);
+      }
     });
+
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Take a picture of your Items"),
+        title: const Text("Take a picture of your package"),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Padding(
+          /*Padding(
             padding: const EdgeInsets.all(16.0),
             child: Container(
               width: MediaQuery.of(context).size.width,
@@ -60,11 +60,27 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: _image == null
                     ? const Text("No Image is picked")
                     : Image.file(
-                        File(_image!.path),
-                        width: 250,
-                        fit: BoxFit.cover,
-                      ),
+                  File(_imageList![index].path),
+                  width: 200,
+                  fit: BoxFit.cover,),
               ),
+            ),
+          ),*/
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: GridView.builder(
+                itemCount: _imageList!.length,
+                gridDelegate:
+                  const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+                itemBuilder: (BuildContext context, int index){
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Image.file(File(_imageList![index].path),
+                    fit: BoxFit.cover,
+                    ),
+                  );
+              }),
             ),
           ),
           Row(
@@ -76,18 +92,23 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: const Icon(Icons.add_a_photo),
               ),
               FloatingActionButton(
-                onPressed: getImagefromGallery,
+                onPressed: (){
+                  getImagefromGallery();
+                },
                 tooltip: "Pick Image",
                 child: const Icon(Icons.image),
               )
             ],
           ),
-          SizedBox(
-            height: 50,
+          const SizedBox(
+            height: 30,
           ),
           OutlinedButton(
-            onPressed: () {},
-            child: const Text('Confirm'),
+            onPressed: () {}, 
+            child:const Text('Confirm'),
+            ),
+          const SizedBox(
+            height: 30,
           ),
         ],
       ),
