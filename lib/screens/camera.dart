@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pack/controllers/services/package_handler.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -32,14 +34,14 @@ class _MyHomePageState extends State<MyHomePage> {
       _imageList!.add(image!);
     });
   }
+
   void getImagefromGallery() async {
     final List<XFile>? selectedImages = await imagePicker.pickMultiImage();
-    setState((){
-      if(selectedImages!.isNotEmpty){
+    setState(() {
+      if (selectedImages!.isNotEmpty) {
         _imageList!.addAll(selectedImages);
       }
     });
-
   }
 
   @override
@@ -70,17 +72,18 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: GridView.builder(
-                itemCount: _imageList!.length,
-                gridDelegate:
-                  const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
-                itemBuilder: (BuildContext context, int index){
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Image.file(File(_imageList![index].path),
-                    fit: BoxFit.cover,
-                    ),
-                  );
-              }),
+                  itemCount: _imageList!.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3),
+                  itemBuilder: (BuildContext context, int index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Image.file(
+                        File(_imageList![index].path),
+                        fit: BoxFit.cover,
+                      ),
+                    );
+                  }),
             ),
           ),
           Row(
@@ -92,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: const Icon(Icons.add_a_photo),
               ),
               FloatingActionButton(
-                onPressed: (){
+                onPressed: () {
                   getImagefromGallery();
                 },
                 tooltip: "Pick Image",
@@ -104,9 +107,12 @@ class _MyHomePageState extends State<MyHomePage> {
             height: 30,
           ),
           OutlinedButton(
-            onPressed: () {}, 
-            child:const Text('Confirm'),
-            ),
+            onPressed: () {
+              addImages(_imageList);
+              Navigator.pop(context);
+            },
+            child: const Text('Confirm'),
+          ),
           const SizedBox(
             height: 30,
           ),

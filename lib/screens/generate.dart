@@ -12,6 +12,7 @@ import 'package:hive/hive.dart';
 import 'camera.dart';
 import 'package:pack/models/package.dart';
 import 'package:pack/controllers/services/package_handler.dart';
+import 'package:image_picker/image_picker.dart';
 
 void main() {
   runApp(MyApp());
@@ -46,6 +47,8 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
   final _itemList = TextEditingController();
   final _location = TextEditingController();
   File? file;
+  final List<Image> _imageList = [];
+  final List<String> _imageStringList = [];
 
   var userID = '1';
   void updatePackageId() {
@@ -53,8 +56,26 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
     _packageId.text = "pack_id:" + getCounter().toString();
   }
 
+  void updateImageList() {
+    List _list = getImages();
+    for (int i = 0; i < _list.length; i++) {
+      _imageList.add(_list[i]);
+    }
+    print("Length : " + _list.length.toString());
+  }
+
+  void updateImageStringList() {
+    List _list = getImageStrings();
+    for (int i = 0; i < _list.length; i++) {
+      _imageStringList.add(_list[i]);
+    }
+    // print("Length : " + _list.length.toString());
+  }
+
   @override
   Widget build(BuildContext context) {
+    updateImageList();
+    updateImageStringList();
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -101,87 +122,111 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
               controller: _location,
             ),
           ),
-          SizedBox(
-            width: 150,
-            child: OutlinedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/Camera');
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: GridView.builder(
+                  itemCount: _imageList.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3),
+                  itemBuilder: (BuildContext context, int index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: _imageList[index],
+                    );
+                  }),
+            ),
+          ),
+          Row(children: [
+            SizedBox(
+              width: 150,
+              child: OutlinedButton(
+                  onPressed: () {
+                    clearImages();
+                    Navigator.pushNamed(context, '/Camera');
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(
+                        Icons.camera_alt,
+                        size: 20.0,
+                      ),
+                      Text('Add image'),
+                    ],
+                  ),
+                  style: ButtonStyle(
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0),
+                  )))),
+            ),
+            OutlinedButton(
+                child: Text('Save Package'),
+                onPressed: () async {
+                  setState(() {
+//rebuilds UI with new QR code
+
+                    textdata = _packageId.text;
+                  });
+                  dynamic imgpath = null;
+                  if (_imageStringList.length > 0) {
+                    imgpath = _imageStringList[0];
+                  }
+                  Package newpackage = Package(
+                    packageId: _packageId.text,
+                    uid: userID,
+                    itemList: _itemList.text,
+                    location: _location.text,
+                    image: imgpath,
+                  );
+                  print(" : : " + _packageId.text);
+                  print(newpackage.packageId);
+                  handlePackage(newpackage);
+                  updatePackageId();
                 },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(
-                      Icons.camera_alt,
-                      size: 20.0,
-                    ),
-                    Text('Add image'),
-                  ],
-                ),
                 style: ButtonStyle(
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(18.0),
                 )))),
-          ),
-          OutlinedButton(
-              child: Text('Save Package'),
-              onPressed: () async {
-                setState(() {
-//rebuilds UI with new QR code
-
-                  textdata = _packageId.text;
-                });
-                Package newpackage = Package(
-                    packageId: _packageId.text,
-                    uid: userID,
-                    itemList: _itemList.text,
-                    location: _location.text);
-                print(" : : " + _packageId.text);
-                print(newpackage.packageId);
-                handlePackage(newpackage);
-                updatePackageId();
-              },
-              style: ButtonStyle(
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(18.0),
-              )))),
-          OutlinedButton(
-              child: Text('Share'),
-              onPressed: () async {
-                try {
-                  RenderRepaintBoundary boundary = key.currentContext!
-                      .findRenderObject() as RenderRepaintBoundary;
+            OutlinedButton(
+                child: Text('Share'),
+                onPressed: () async {
+                  try {
+                    RenderRepaintBoundary boundary = key.currentContext!
+                        .findRenderObject() as RenderRepaintBoundary;
 //captures qr image
-                  var image = await boundary.toImage();
+                    var image = await boundary.toImage();
 
-                  ByteData? byteData =
-                      await image.toByteData(format: ImageByteFormat.png);
+                    ByteData? byteData =
+                        await image.toByteData(format: ImageByteFormat.png);
 
-                  Uint8List pngBytes = byteData!.buffer.asUint8List();
+                    Uint8List pngBytes = byteData!.buffer.asUint8List();
 //app directory for storing images.
-                  final appDir = await getApplicationDocumentsDirectory();
+                    final appDir = await getApplicationDocumentsDirectory();
 //current time
-                  var datetime = DateTime.now();
+                    var datetime = DateTime.now();
 //qr image file creation
-                  file = await File('${appDir.path}/$datetime.png').create();
+                    file = await File('${appDir.path}/$datetime.png').create();
 //appending data
-                  await file?.writeAsBytes(pngBytes);
+                    await file?.writeAsBytes(pngBytes);
 //Shares QR image
-                  await Share.shareFiles(
-                    [file!.path],
-                    mimeTypes: ["image/png"],
-                    text: "Share the QR Code",
-                  );
-                } catch (e) {
-                  print(e.toString());
-                }
-              },
-              style: ButtonStyle(
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(18.0),
-              ))))
+                    await Share.shareFiles(
+                      [file!.path],
+                      mimeTypes: ["image/png"],
+                      text: "Share the QR Code",
+                    );
+                  } catch (e) {
+                    print(e.toString());
+                  }
+                },
+                style: ButtonStyle(
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18.0),
+                ))))
+          ])
         ],
       ),
     );

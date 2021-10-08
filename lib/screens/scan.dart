@@ -1,15 +1,19 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:pack/models/package.dart';
+import 'package:pack/controllers/services/package_handler.dart';
+import 'package:image_picker/image_picker.dart';
 
 // void main() {
 //   runApp(MyApp());
 // }
 List getInfo = [
-  [1,'pen1,pencil,brush','assets/img-home1.jpeg'],
-  [2,'pen2,pencil,brush','assets/img-home1.jpeg'],
-  [3,'pen3,pencil,brush','assets/img-home1.jpeg'],
+  [1, 'pen1,pencil,brush', 'assets/img-home1.jpeg'],
+  [2, 'pen2,pencil,brush', 'assets/img-home1.jpeg'],
+  [3, 'pen3,pencil,brush', 'assets/img-home1.jpeg'],
 ];
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -75,7 +79,7 @@ class _ScanQRPageState extends State<ScanQRPage> {
                   child: Container(
                     width: 50,
                     height: 50,
-                    decoration:const BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Colors.black26,
                     ),
                     child: Row(
@@ -107,7 +111,7 @@ class _ScanQRPageState extends State<ScanQRPage> {
           Expanded(
             flex: 1,
             child: Container(
-              margin:const EdgeInsets.all(8.0),
+              margin: const EdgeInsets.all(8.0),
               width: double.infinity,
               color: Colors.white,
               child: Center(
@@ -116,11 +120,13 @@ class _ScanQRPageState extends State<ScanQRPage> {
                         children: [
                           Text('Result is:\n${result!.code}'),
                           ElevatedButton(
-                            onPressed: (){
+                            onPressed: () {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder:(context)=>Information(result:int.parse(result!.code),),
+                                    builder: (context) => Information(
+                                      result: result!.code,
+                                    ),
                                   ));
                             },
                             child: Text('get result'),
@@ -156,12 +162,26 @@ class _ScanQRPageState extends State<ScanQRPage> {
     super.dispose();
   }
 }
+
 class Information extends StatelessWidget {
-  final int result;
+  final String result;
   const Information({Key? key, required this.result}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    String item, packId, imgString;
+    Image img;
+    Package? p = getPackageFromId(result);
+    if (p == null) {
+      item = "";
+      packId = "";
+      img = Image.asset('assets/img-home1.jpeg');
+    } else {
+      item = p.itemList;
+      packId = p.packageId;
+      img = Utility.imageFromBase64String(p.image);
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Found your Package'),
@@ -172,9 +192,9 @@ class Information extends StatelessWidget {
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('Package_id: ${getInfo[result][0]}'),
-              Text('Items : ${getInfo[result][1]}'),
-              Image.asset('${getInfo[result][2]}'),
+              Text('Package_id: $packId'),
+              Text('Items : $item'),
+              img,
             ],
           ),
         ],
@@ -183,8 +203,4 @@ class Information extends StatelessWidget {
   }
 }
 
-
-
-void onFinalResult(result){
-
-}
+void onFinalResult(result) {}

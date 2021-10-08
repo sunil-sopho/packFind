@@ -1,11 +1,17 @@
 import 'package:hive/hive.dart';
 import 'package:pack/models/package.dart';
+import 'package:pack/models/image.dart';
 import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:fluttertoast/fluttertoast.dart';
 
+import 'package:image_picker/image_picker.dart';
+import 'dart:typed_data';
+import 'dart:convert';
+
 final Box<Package> packages = Hive.box('packageBox');
 final counter = Hive.box('countBox');
+final Box<Img> images = Hive.box('imageBox');
 
 void handlePackage(Package package) async {
   final bool isPresent = packages.containsKey(package.packageId);
@@ -35,6 +41,33 @@ void handlePackage(Package package) async {
   }
 }
 
+Package? getPackageFromId(String id) {
+  if (packages.containsKey(id)) {
+    return packages.get(id);
+  }
+  return null;
+}
+
+class Utility {
+  static Image imageFromBase64String(String? base64String) {
+    if (base64String == null) {
+      return Image.memory(base64Decode("aaaa"));
+    }
+    return Image.memory(
+      base64Decode(base64String),
+      fit: BoxFit.fill,
+    );
+  }
+
+  static Uint8List dataFromBase64String(String base64String) {
+    return base64Decode(base64String);
+  }
+
+  static String base64String(Uint8List data) {
+    return base64Encode(data);
+  }
+}
+
 int getCounter() {
   if (counter.containsKey('idCounter')) {
     return counter.get('idCounter');
@@ -47,6 +80,37 @@ void incrementCounter() {
     int val = counter.get('idCounter');
     counter.put('idCounter', val + 1);
   }
+}
+
+void addImages(List<XFile>? allImages) {
+  allImages?.forEach((image) {
+    image.readAsBytes().then((value) {
+      String imgString = Utility.base64String(value);
+      images.add(Img(img: imgString));
+    });
+  });
+}
+
+void clearImages() {
+  for (var i = 0; i < images.length; i++) {
+    images.deleteAt(i);
+  }
+}
+
+List<Image> getImages() {
+  var _list = <Image>[];
+  for (var i = 0; i < images.length; i++) {
+    _list.add(Utility.imageFromBase64String(images.getAt(i)?.img));
+  }
+  return _list;
+}
+
+List<String> getImageStrings() {
+  var _list = <String>[];
+  for (var i = 0; i < images.length; i++) {
+    _list.add(images.getAt(i)?.img);
+  }
+  return _list;
 }
 
 class Data {
@@ -81,6 +145,14 @@ class Data {
 
   String getLocation(int index) {
     return _data[index].location;
+  }
+
+  Image getImage(int index) {
+    if (_data[index].image != null && _data[index].image != "") {
+      print(_data[index].image);
+      return Utility.imageFromBase64String(_data[index].image);
+    }
+    return Image.asset('assets/img-txt.jpeg');
   }
 
   int getLength() {

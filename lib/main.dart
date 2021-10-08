@@ -10,6 +10,7 @@ import 'package:pack/screens/scan.dart';
 import 'package:pack/screens/search.dart';
 import 'package:pack/screens/inventory.dart';
 import 'package:pack/models/package.dart';
+import 'package:pack/models/image.dart';
 
 // void main() => runApp(MaterialApp(
 //       home: const Home(),
@@ -30,8 +31,10 @@ void main() async {
 
   Hive.init(docPath.path);
   Hive.registerAdapter(PackageAdapter());
+  Hive.registerAdapter(ImgAdapter());
   await Hive.openBox<Package>('packageBox');
   await Hive.openBox('countBox');
+  await Hive.openBox<Img>('imageBox');
 
   final _init = await Hive.box('countBox').get('isInitialized');
   if (_init == null) {

@@ -56,6 +56,7 @@ class _InventoryPageState extends State<InventoryPage> {
     //       builder: (context) =>
     //           SecondRoute(id: _data.getId(index), name: _data.getName(index))),
     // );
+    Image img = _data.getImage(index);
 
     return Card(
       clipBehavior: Clip.antiAlias,
@@ -93,7 +94,7 @@ class _InventoryPageState extends State<InventoryPage> {
               ),
             ],
           ),
-          Image.asset('assets/img-home.png'),
+          img,
         ],
       ),
     );
