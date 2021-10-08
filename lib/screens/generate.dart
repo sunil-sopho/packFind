@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-import 'package:image_picker/image_picker.dart';
 import 'dart:ui';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -8,8 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
-
-import 'camera.dart';
 
 void main() {
   runApp(MyApp());
@@ -117,11 +114,11 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
               onPressed: () async {
                 setState(() {
 //rebuilds UI with new QR code
-                  textdata = textcontroller.text +
+                  textdata = 'Package_id: '+textcontroller.text +
                       '\n' +
-                      textcontroller2.text +
+                      'Items: '+textcontroller2.text +
                       '\n' +
-                      textcontroller3.text;
+                      'Location: '+textcontroller3.text;
                 });
               },
               style: ButtonStyle(
