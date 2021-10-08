@@ -5,6 +5,11 @@ import 'package:qr_code_scanner/qr_code_scanner.dart';
 // void main() {
 //   runApp(MyApp());
 // }
+List getInfo = [
+  [1,'pen1,pencil,brush','assets/img-home1.jpeg'],
+  [2,'pen2,pencil,brush','assets/img-home1.jpeg'],
+  [3,'pen3,pencil,brush','assets/img-home1.jpeg'],
+];
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -27,6 +32,7 @@ class _ScanQRPageState extends State<ScanQRPage> {
   final GlobalKey qrKey = GlobalKey();
   late QRViewController controller;
   Barcode? result;
+
 //in order to get hot reload to work.
   @override
   void reassemble() {
@@ -109,12 +115,22 @@ class _ScanQRPageState extends State<ScanQRPage> {
                     ? Column(
                         children: [
                           Text('Result is:\n${result!.code}'),
+                          ElevatedButton(
+                            onPressed: (){
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:(context)=>Information(result:int.parse(result!.code),),
+                                  ));
+                            },
+                            child: Text('get result'),
+                          ),
                           const SizedBox(
                             height: 8.0,
                           ),
                         ],
                       )
-                    : Text('Scanning.....'),
+                    : const Text('Scanning.....'),
               ),
             ),
           ),
@@ -139,4 +155,36 @@ class _ScanQRPageState extends State<ScanQRPage> {
     controller.dispose();
     super.dispose();
   }
+}
+class Information extends StatelessWidget {
+  final int result;
+  const Information({Key? key, required this.result}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Found your Package'),
+      ),
+      body: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Package_id: ${getInfo[result][0]}'),
+              Text('Items : ${getInfo[result][1]}'),
+              Image.asset('${getInfo[result][2]}'),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+
+void onFinalResult(result){
+
 }

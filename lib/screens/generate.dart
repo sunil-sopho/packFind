@@ -114,11 +114,7 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
               onPressed: () async {
                 setState(() {
 //rebuilds UI with new QR code
-                  textdata = 'Package_id: '+textcontroller.text +
-                      '\n' +
-                      'Items: '+textcontroller2.text +
-                      '\n' +
-                      'Location: '+textcontroller3.text;
+                  textdata = textcontroller.text;
                 });
               },
               style: ButtonStyle(
