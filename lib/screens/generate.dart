@@ -8,6 +8,9 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
+import 'package:hive/hive.dart';
+import 'camera.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -39,6 +42,9 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
   final textcontroller2 = TextEditingController();
   final textcontroller3 = TextEditingController();
   File? file;
+  var box = Hive.box('packages');
+  var userID = '1';
+  var counter = Hive.box('count');
 
   @override
   Widget build(BuildContext context) {
