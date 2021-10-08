@@ -41,6 +41,16 @@ class LandHome extends StatelessWidget {
                         RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(18.0),
                 )))),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/All');
+                },
+                child: const Text('all inventory'),
+                style: ButtonStyle(
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18.0),
+                )))),
           ]),
         ]),
         bottomNavigationBar: BottomNavigationBar(
@@ -50,18 +60,18 @@ class LandHome extends StatelessWidget {
           unselectedItemColor: Colors.blue.withOpacity(.60),
           selectedFontSize: 14,
           unselectedFontSize: 14,
+          currentIndex: 1,
           onTap: (value) {
             // Respond to item press.
           },
           items: [
             BottomNavigationBarItem(
               label: '',
-              icon: Icon(Icons.favorite),
+              icon: Icon(Icons.folder_shared),
             ),
             BottomNavigationBarItem(
               label: "",
-              icon: Image.asset("assets/img-txt.jpeg",
-                  height: 52, width: 220), //con(Icons.music_note),
+              icon: Image.asset("assets/img-txt.jpeg", height: 52, width: 220),
             ),
             BottomNavigationBarItem(
               label: '',

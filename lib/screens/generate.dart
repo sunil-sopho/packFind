@@ -7,9 +7,11 @@ import 'package:flutter/services.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
-
 import 'package:hive/hive.dart';
+
 import 'camera.dart';
+import 'package:pack/models/package.dart';
+import 'package:pack/controllers/services/package_handler.dart';
 
 void main() {
   runApp(MyApp());
@@ -38,13 +40,18 @@ class QRGeneratorSharePage extends StatefulWidget {
 class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
   final key = GlobalKey();
   String textdata = 'enter data';
-  final textcontroller = TextEditingController();
-  final textcontroller2 = TextEditingController();
-  final textcontroller3 = TextEditingController();
+  dynamic _packageId =
+      TextEditingController(text: "pack_id:" + getCounter().toString());
+  // _packageId.text = getCounter();
+  final _itemList = TextEditingController();
+  final _location = TextEditingController();
   File? file;
-  var box = Hive.box('packages');
+
   var userID = '1';
-  var counter = Hive.box('count');
+  void updatePackageId() {
+    incrementCounter();
+    _packageId.text = "pack_id:" + getCounter().toString();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,8 +78,9 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
           Padding(
             padding: const EdgeInsets.all(4.0),
             child: TextFormField(
+              enabled: false,
               decoration: const InputDecoration(labelText: 'Package id'),
-              controller: textcontroller,
+              controller: _packageId,
             ),
           ),
           Padding(
@@ -81,7 +89,7 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
               decoration: InputDecoration(
                 labelText: 'List of items',
               ),
-              controller: textcontroller2,
+              controller: _itemList,
             ),
           ),
           Padding(
@@ -90,7 +98,7 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
               decoration: InputDecoration(
                 labelText: 'Location of packaging',
               ),
-              controller: textcontroller3,
+              controller: _location,
             ),
           ),
           SizedBox(
@@ -116,12 +124,22 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
                 )))),
           ),
           OutlinedButton(
-              child: Text('Create QR Code'),
+              child: Text('Save Package'),
               onPressed: () async {
                 setState(() {
 //rebuilds UI with new QR code
-                  textdata = textcontroller.text;
+
+                  textdata = _packageId.text;
                 });
+                Package newpackage = Package(
+                    packageId: _packageId.text,
+                    uid: userID,
+                    itemList: _itemList.text,
+                    location: _location.text);
+                print(" : : " + _packageId.text);
+                print(newpackage.packageId);
+                handlePackage(newpackage);
+                updatePackageId();
               },
               style: ButtonStyle(
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
