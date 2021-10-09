@@ -169,6 +169,9 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
 
                     textdata = _packageId.text;
                   });
+                  updateImageList();
+                  updateImageStringList();
+                  clearImages();
                   dynamic imgpath = null;
                   if (_imageStringList.length > 0) {
                     imgpath = _imageStringList[0];
