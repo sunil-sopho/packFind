@@ -1,18 +1,42 @@
-import "package:flutter/material.dart";
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+import 'package:flutter/material.dart';
 
-  @override
-  _HomeScreenState createState() => _HomeScreenState();
-}
+class Home extends StatelessWidget {
+  const Home({Key? key}) : super(key: key);
 
-class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child:Text('Home Screen') ,
-      ),
+    return Scaffold(
+      /*appBar: AppBar(
+      title: Text('packFind'),
+      centerTitle: true,
+      backgroundColor: Colors.pinkAccent,
+    ),*/
+
+      body: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+        Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Image.asset(
+            'assets/img-home1.jpeg',
+            width: 300,
+            height: 300,
+          ),
+          Image.asset(
+            'assets/img-txt.jpeg',
+            width: 200,
+            height: 200,
+          ),
+          ElevatedButton.icon(
+              onPressed: () {
+                Navigator.pushNamed(context, '/landHome');
+              },
+              label: const Text('Login to Find'),
+              icon: const Icon(Icons.verified_user_rounded),
+              style: ButtonStyle(
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18.0),
+              )))),
+        ]),
+      ]),
     );
   }
 }

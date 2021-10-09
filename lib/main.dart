@@ -1,96 +1,70 @@
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:hive/hive.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+import 'package:pack/screens/camera.dart';
+import 'package:pack/screens/generate.dart';
+import 'package:pack/screens/home.dart';
+import 'package:pack/screens/landing.dart';
+import 'package:pack/screens/scan.dart';
+import 'package:pack/screens/search.dart';
+import 'package:pack/screens/inventory.dart';
+import 'package:pack/models/package.dart';
+import 'package:pack/models/image.dart';
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+// void main() => runApp(MaterialApp(
+//       home: const Home(),
+//       routes: {
+//         '/landHome': (context) => LandHome(),
+//         '/ScanQr': (context) => ScanQRPage(),
+//         '/GenQr': (context) => QRGeneratorSharePage(),
+//         '/Search': (context) => SearchPage(title: 'Find'),
+//         '/Camera': (context) => MyHomePage(),
+//       },
+//     ));
 
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
 
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
+  final docPath = await getApplicationDocumentsDirectory();
+
+  Hive.init(docPath.path);
+  Hive.registerAdapter(PackageAdapter());
+  Hive.registerAdapter(ImgAdapter());
+  await Hive.openBox<Package>('packageBox');
+  await Hive.openBox('countBox');
+  await Hive.openBox<Img>('imageBox');
+
+  final _init = await Hive.box('countBox').get('isInitialized');
+  if (_init == null) {
+    await Hive.box('countBox').put('isInitialized', true);
+    await Hive.box('countBox').put('idCounter', 1);
   }
-}
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+  await Hive.openBox('settingsBox');
+  await Hive.openBox('userBox');
 
+  final _isDarkModeOn = await Hive.box('settingsBox').get('isDarkModeOn');
+  // SettingsProvider().darkTheme(_isDarkModeOn ?? false);
 
+  final _isLoggedIn = await Hive.box('userBox').get('isLoggedIn');
 
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      
-      _counter++;
-    });
+  if (_isLoggedIn == null) {
+    await Hive.box('userBox').put('isLoggedIn', false);
   }
 
-  @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
-  }
+  final _lang = await Hive.box('settingsBox').get('activeLang');
+
+  runApp(MaterialApp(
+    home: const Home(),
+    routes: {
+      '/landHome': (context) => LandHome(),
+      '/ScanQr': (context) => ScanQRPage(),
+      '/GenQr': (context) => QRGeneratorSharePage(),
+      '/Search': (context) => SearchPage(title: 'Find'),
+      '/Camera': (context) => MyHomePage(),
+      '/All': (context) => InventoryPage(),
+    },
+  ));
 }
