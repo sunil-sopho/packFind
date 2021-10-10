@@ -8,6 +8,7 @@ import 'package:pack/screens/home.dart';
 import 'package:pack/screens/landing.dart';
 import 'package:pack/screens/scan.dart';
 import 'package:pack/screens/search.dart';
+import 'package:pack/screens/SearchPage2.dart';
 import 'package:pack/screens/inventory.dart';
 import 'package:pack/models/package.dart';
 import 'package:pack/models/image.dart';
@@ -62,7 +63,7 @@ void main() async {
       '/landHome': (context) => LandHome(),
       '/ScanQr': (context) => ScanQRPage(),
       '/GenQr': (context) => QRGeneratorSharePage(),
-      '/Search': (context) => SearchPage(title: 'Find'),
+      '/Search': (context) => PackageFinder(),
       '/Camera': (context) => MyHomePage(),
       '/All': (context) => InventoryPage(),
     },
