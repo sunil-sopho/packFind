@@ -78,9 +78,31 @@ class _MyHomePageState extends State<MyHomePage> {
                   itemBuilder: (BuildContext context, int index) {
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Image.file(
-                        File(_imageList![index].path),
-                        fit: BoxFit.cover,
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          Image.file(
+                            File(_imageList![index].path),
+                            fit: BoxFit.cover,
+                        ),
+                        Positioned(
+                          top: 0,
+                          right: 0,
+                          child: Container(
+                            padding: const EdgeInsetsDirectional.all(0),
+                            color: const Color.fromRGBO(255, 255, 254, 0.4),
+                            child: IconButton(
+                              onPressed: () {
+                                setState((){
+                                  _imageList!.removeAt(index);
+                                });
+                            } ,
+                            icon: const Icon(Icons.cancel),
+                            color: Colors.red[700],
+                            ),
+                        ),
+                        ),
+                        ],
                       ),
                     );
                   }),
