@@ -7,12 +7,9 @@ import 'package:flutter/services.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:hive/hive.dart';
 
-import 'camera.dart';
 import 'package:pack/models/package.dart';
 import 'package:pack/controllers/services/package_handler.dart';
-import 'package:image_picker/image_picker.dart';
 
 void main() {
   runApp(MyApp());
@@ -41,8 +38,8 @@ class QRGeneratorSharePage extends StatefulWidget {
 class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
   final key = GlobalKey();
   String textdata = 'enter data';
-  dynamic _packageId =
-      TextEditingController(text: "pack_id:" + getCounter().toString());
+  final dynamic _packageId =
+  TextEditingController(text:getCounter().toString());
   // _packageId.text = getCounter();
   final _itemList = TextEditingController();
   final _location = TextEditingController();
@@ -107,7 +104,7 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
           Padding(
             padding: const EdgeInsets.all(4.0),
             child: TextFormField(
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'List of items',
               ),
               controller: _itemList,
@@ -116,7 +113,7 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
           Padding(
             padding: const EdgeInsets.all(4.0),
             child: TextFormField(
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Location of packaging',
               ),
               controller: _location,
@@ -162,7 +159,7 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
                   )))),
             ),
             OutlinedButton(
-                child: Text('Save Package'),
+                child: const Text('Save Package'),
                 onPressed: () async {
                   setState(() {
 //rebuilds UI with new QR code

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pack/models/package.dart';
 import 'package:pack/controllers/services/package_handler.dart';
 
 // void main() => runApp(MyApp());

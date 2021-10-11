@@ -1,9 +1,13 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:async';
 
 // import 'package:example/image_view.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_search_flutter/multi_search_flutter.dart';
 import 'package:multi_search_flutter/search_indicator_style_enum.dart';
+import 'package:pack/controllers/services/package_handler.dart';
+import 'package:pack/models/package.dart';
 
 // import 'list_generator.dart';
 
@@ -144,3 +148,4 @@ class _MyHomePageState extends State<SearchPage> {
     super.dispose();
   }
 }
+

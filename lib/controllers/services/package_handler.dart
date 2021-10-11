@@ -15,7 +15,6 @@ final Box<Img> images = Hive.box('imageBox');
 
 void handlePackage(Package package) async {
   final bool isPresent = packages.containsKey(package.packageId);
-  print(package.packageId);
   if (!isPresent) {
     packages.put(package.packageId, package);
     // print(packages.length);

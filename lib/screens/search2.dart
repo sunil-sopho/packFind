@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pack/models/package.dart';
-import 'package:search_widget/search_widget.dart';
 import 'package:pack/controllers/services/package_handler.dart';
+import 'package:pack/models/package.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -10,17 +9,19 @@ void main() {
 }
 
 class PackageFinder extends StatelessWidget {
+  const PackageFinder({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-            title: Text('Search package with items'),
+            title: const Text('Search package with items'),
             backgroundColor: Colors.blue,
             actions: [
               IconButton(
-                  icon: Icon(Icons.search),
+                  icon: const Icon(Icons.search),
                   onPressed: () {
                     showSearch(
                       context: context,
@@ -28,7 +29,7 @@ class PackageFinder extends StatelessWidget {
                     );
                   }),
             ]),
-        body: Center(
+        body: const Center(
           child: Text(''),
         ),
       ),
@@ -41,7 +42,7 @@ class ItemFinder extends SearchDelegate<String> {
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
-        icon: Icon(Icons.clear),
+        icon: const Icon(Icons.clear),
         onPressed: () {
           query = '';
         },
@@ -52,7 +53,7 @@ class ItemFinder extends SearchDelegate<String> {
   @override
   Widget buildLeading(BuildContext context) {
     return IconButton(
-      icon: Icon(Icons.arrow_back),
+      icon: const Icon(Icons.arrow_back),
       onPressed: () {
         close(context, ""); // for closing the search page and going back
       },
@@ -93,7 +94,7 @@ class SearchFinder extends StatelessWidget {
                     style: Theme.of(context).textTheme.headline6),
               )
             : ListView.builder(
-                physics: BouncingScrollPhysics(),
+                physics: const BouncingScrollPhysics(),
                 itemCount: results.length,
                 itemBuilder: (context, index) {
                   // passing as a custom list
@@ -105,7 +106,7 @@ class SearchFinder extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => PackageDetailScreen()));
+                              builder: (context) => PackageDetailScreen(packageList: packageListItem)));
                     },
                     title: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -113,7 +114,7 @@ class SearchFinder extends StatelessWidget {
                         Text(
                           packageListItem.itemList,
                         ),
-                        SizedBox(height: 4.0),
+                        const SizedBox(height: 4.0),
                         Text(
                           packageListItem.location,
                           textScaleFactor: 1.0,
@@ -130,15 +131,31 @@ class SearchFinder extends StatelessWidget {
 }
 
 class PackageDetailScreen extends StatelessWidget {
-  const PackageDetailScreen({Key? key}) : super(key: key);
+  final Package packageList;
+  PackageDetailScreen({Key? key, required this.packageList}) : super(key: key);
+  final _data = Data();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Search Results"),
+        title: const Text("Search Results"),
       ),
-      body: Text("afl.snkmasmd.,fn"),
+      body:Center(
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 20,
+            ),
+            Text("List of items:  " + packageList.itemList),
+            Text("Location is  :  " + packageList.location),
+            const SizedBox(
+              height: 20,
+            ),
+            _data.getImage(int.parse(packageList.packageId)-1)
+          ],
+        ),
+      ), 
     );
   }
 }
