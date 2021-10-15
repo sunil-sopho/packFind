@@ -1,9 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:pack/models/package.dart';
-import 'package:pack/controllers/services/package_handler.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:pack/views/screens/scan/scan_result.dart';
 
 // void main() {
 //   runApp(MyApp());
@@ -52,7 +50,7 @@ class _ScanQRPageState extends State<ScanQRPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Scan QR Code'),
+        title: const Text('Scan QR Code'),
       ),
       body: Column(
         children: [
@@ -129,7 +127,7 @@ class _ScanQRPageState extends State<ScanQRPage> {
                                     ),
                                   ));
                             },
-                            child: Text('get result'),
+                            child: const Text('get result'),
                           ),
                           const SizedBox(
                             height: 8.0,
@@ -160,46 +158,6 @@ class _ScanQRPageState extends State<ScanQRPage> {
   void dispose() {
     controller.dispose();
     super.dispose();
-  }
-}
-
-class Information extends StatelessWidget {
-  final String result;
-  const Information({Key? key, required this.result}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    String item, packId, imgString;
-    Image img;
-    Package? p = getPackageFromId(result);
-    if (p == null) {
-      item = "";
-      packId = "";
-      img = Image.asset('assets/img-home1.jpeg');
-    } else {
-      item = p.itemList;
-      packId = p.packageId;
-      img = Utility.imageFromBase64String(p.image);
-    }
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Found your Package'),
-      ),
-      body: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('Package_id: $packId'),
-              Text('Items : $item'),
-              img,
-            ],
-          ),
-        ],
-      ),
-    );
   }
 }
 

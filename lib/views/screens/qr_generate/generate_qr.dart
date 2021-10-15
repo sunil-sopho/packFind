@@ -18,12 +18,8 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter QR Code Generator With Share',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const QRGeneratorSharePage(),
+    return const MaterialApp(
+      home: QRGeneratorSharePage(),
     );
   }
 }
@@ -50,7 +46,7 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
   var userID = '1';
   void updatePackageId() {
     incrementCounter();
-    _packageId.text = "pack_id:" + getCounter().toString();
+    _packageId.text = getCounter().toString();
   }
 
   void updateImageList() {
@@ -76,7 +72,7 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text('QR Code Generator'),
+        title: const Text('QR Code Generator'),
       ),
       body: Column(
         children: [
@@ -168,7 +164,7 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
                   });
                   updateImageList();
                   updateImageStringList();
-                  clearImages();
+                  // clearImages();
                   dynamic imgpath = null;
                   if (_imageStringList.length > 0) {
                     imgpath = _imageStringList[0];
@@ -180,8 +176,8 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
                     location: _location.text,
                     image: imgpath,
                   );
-                  print(" : : " + _packageId.text);
-                  print(newpackage.packageId);
+                  // print(" : : " + _packageId.text);
+                  // print(newpackage.packageId);
                   handlePackage(newpackage);
                   updatePackageId();
                 },
@@ -191,7 +187,7 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
                   borderRadius: BorderRadius.circular(18.0),
                 )))),
             OutlinedButton(
-                child: Text('Share'),
+                child: const Text('Share'),
                 onPressed: () async {
                   try {
                     RenderRepaintBoundary boundary = key.currentContext!

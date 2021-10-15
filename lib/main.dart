@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:pack/views/screens/search_screen/search.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:hive/hive.dart';
 
-import 'package:pack/screens/camera.dart';
-import 'package:pack/screens/generate.dart';
-import 'package:pack/screens/home.dart';
-import 'package:pack/screens/landing.dart';
-import 'package:pack/screens/scan.dart';
-import 'package:pack/screens/search2.dart';
-import 'package:pack/screens/inventory.dart';
+import 'package:pack/views/screens/qr_generate/upload_image.dart';
+import 'package:pack/views/screens/qr_generate/generate_qr.dart';
+import 'package:pack/views/screens/home.dart';
+import 'package:pack/views/screens/landing.dart';
+import 'package:pack/views/screens/scan/scan_qr.dart';
+import 'package:pack/views/screens/inventory.dart';
 import 'package:pack/models/package.dart';
 import 'package:pack/models/image.dart';
 
@@ -62,7 +62,7 @@ void main() async {
       '/landHome': (context) => LandHome(),
       '/ScanQr': (context) => ScanQRPage(),
       '/GenQr': (context) => QRGeneratorSharePage(),
-      '/Search': (context) => PackageFinder(),
+      '/Search': (context) => const HomePage(),
       '/Camera': (context) => MyHomePage(),
       '/All': (context) => InventoryPage(),
     },
