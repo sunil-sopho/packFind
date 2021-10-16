@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:pack/views/routes/routes.gr.dart';
+import 'package:auto_route/auto_route.dart';
 
 class Home extends StatelessWidget {
-  const Home({Key? key}) : super(key: key);
+  Home({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      /*appBar: AppBar(
-      title: Text('packFind'),
-      centerTitle: true,
-      backgroundColor: Colors.pinkAccent,
-    ),*/
-
       body: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
         Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           Image.asset(
@@ -26,7 +22,7 @@ class Home extends StatelessWidget {
           ),
           ElevatedButton.icon(
               onPressed: () {
-                Navigator.pushNamed(context, '/landHome');
+                context.router.push(const LandHome());
               },
               label: const Text('Login to Find'),
               icon: const Icon(Icons.verified_user_rounded),

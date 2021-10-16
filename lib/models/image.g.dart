@@ -17,7 +17,7 @@ class ImgAdapter extends TypeAdapter<Img> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Img(
-      img: fields[0] as String,
+      img: fields[0] as dynamic,
     );
   }
 

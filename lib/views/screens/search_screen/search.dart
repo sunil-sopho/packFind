@@ -1,21 +1,21 @@
+import 'package:auto_route/src/router/auto_router_x.dart';
 import 'package:flutter/material.dart';
 import 'package:pack/models/package.dart';
 import 'package:hive/hive.dart';
-import 'package:pack/views/screens/search_screen/item_detailed_result.dart';
+import 'package:pack/views/routes/routes.gr.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const PackageFinder());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class PackageFinder extends StatelessWidget {
+  const PackageFinder({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
       // Remove the debug banner
       debugShowCheckedModeBanner: false,
-      title: 'Search Packages....',
       home: HomePage(),
     );
   }
@@ -97,11 +97,7 @@ class _HomePageState extends State<HomePage> {
                         margin: const EdgeInsets.symmetric(vertical: 10),
                         child: ListTile(
                           onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => PackageDetailScreen(
-                                        packageList: _foundUsers[index])));
+                            context.router.push(PackageDetailScreen(packageList: _foundUsers[index]));
                           },
                           leading: Text('Package Id: ' +
                               _foundUsers[index].packageId.toString() +

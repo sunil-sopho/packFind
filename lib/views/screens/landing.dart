@@ -1,5 +1,7 @@
+import 'package:auto_route/src/router/auto_router_x.dart';
 import 'package:flutter/material.dart';
 import 'package:pack/views/widgets/bottom_navigator.dart';
+import 'package:pack/views/routes/routes.gr.dart';
 
 class LandHome extends StatelessWidget {
   const LandHome({Key? key}) : super(key: key);
@@ -14,7 +16,7 @@ class LandHome extends StatelessWidget {
           Column(mainAxisAlignment: MainAxisAlignment.center, children: [
             ElevatedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/ScanQr');
+                  context.router.push(const ScanQRPage());
                 },
                 child: const Text('Scan it to Find it'),
                 style: ButtonStyle(
@@ -24,7 +26,7 @@ class LandHome extends StatelessWidget {
                 )))),
             ElevatedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/GenQr');
+                  context.router.push(const QRGeneratorSharePage());
                 },
                 child: const Text('Create inventory'),
                 style: ButtonStyle(
@@ -34,7 +36,7 @@ class LandHome extends StatelessWidget {
                 )))),
             ElevatedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/Search');
+                  context.router.push(const PackageFinder());
                 },
                 child: const Text('Find inventory'),
                 style: ButtonStyle(
@@ -44,7 +46,7 @@ class LandHome extends StatelessWidget {
                 )))),
             ElevatedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/All');
+                  context.router.push(InventoryPage());
                 },
                 child: const Text('all inventory'),
                 style: ButtonStyle(

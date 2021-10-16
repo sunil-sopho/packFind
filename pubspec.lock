@@ -44,7 +44,7 @@ packages:
     source: hosted
     version: "2.4.2"
   auto_route_generator:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       name: auto_route_generator
       url: "https://pub.dartlang.org"
@@ -230,13 +230,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_keyboard_visibility:
-    dependency: transitive
-    description:
-      name: flutter_keyboard_visibility
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.7.0"
   flutter_launcher_icons:
     dependency: "direct dev"
     description:
@@ -422,13 +415,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
-  multi_search_flutter:
-    dependency: "direct main"
-    description:
-      name: multi_search_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.1"
   package_config:
     dependency: transitive
     description:
@@ -555,13 +541,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.0"
-  search_widget:
-    dependency: "direct main"
-    description:
-      name: search_widget
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.2"
   share_plus:
     dependency: "direct main"
     description:

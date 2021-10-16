@@ -1,27 +1,11 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:pack/views/screens/search_screen/search.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:hive/hive.dart';
+import 'package:pack/views/routes/routes.gr.dart';
 
-import 'package:pack/views/screens/qr_generate/upload_image.dart';
-import 'package:pack/views/screens/qr_generate/generate_qr.dart';
-import 'package:pack/views/screens/home.dart';
-import 'package:pack/views/screens/landing.dart';
-import 'package:pack/views/screens/scan/scan_qr.dart';
-import 'package:pack/views/screens/inventory.dart';
 import 'package:pack/models/package.dart';
 import 'package:pack/models/image.dart';
-
-// void main() => runApp(MaterialApp(
-//       home: const Home(),
-//       routes: {
-//         '/landHome': (context) => LandHome(),
-//         '/ScanQr': (context) => ScanQRPage(),
-//         '/GenQr': (context) => QRGeneratorSharePage(),
-//         '/Search': (context) => SearchPage(title: 'Find'),
-//         '/Camera': (context) => MyHomePage(),
-//       },
-//     ));
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -56,15 +40,19 @@ void main() async {
 
   final _lang = await Hive.box('settingsBox').get('activeLang');
 
-  runApp(MaterialApp(
-    home: const Home(),
-    routes: {
-      '/landHome': (context) => LandHome(),
-      '/ScanQr': (context) => ScanQRPage(),
-      '/GenQr': (context) => QRGeneratorSharePage(),
-      '/Search': (context) => const HomePage(),
-      '/Camera': (context) => MyHomePage(),
-      '/All': (context) => InventoryPage(),
-    },
-  ));
+  runApp(App());
 }
+
+class App extends StatelessWidget {
+  App({Key? key}) : super(key: key);
+  final _appRouter = Routes();
+  @override
+  
+  Widget build(BuildContext context) {
+    return MaterialApp.router(
+        routeInformationParser: _appRouter.defaultRouteParser(),
+        routerDelegate: AutoRouterDelegate(_appRouter),
+    );
+  }
+}
+

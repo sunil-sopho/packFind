@@ -1,7 +1,8 @@
 import 'dart:io';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:pack/views/routes/routes.gr.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:pack/views/screens/scan/scan_result.dart';
 
 // void main() {
 //   runApp(MyApp());
@@ -119,13 +120,7 @@ class _ScanQRPageState extends State<ScanQRPage> {
                           Text('Result is:\n${result!.code}'),
                           ElevatedButton(
                             onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => Information(
-                                      result: result!.code,
-                                    ),
-                                  ));
+                              context.router.push(Information(result: result!.code));
                             },
                             child: const Text('get result'),
                           ),

@@ -1,9 +1,11 @@
 import 'dart:typed_data';
 import 'dart:ui';
 import 'dart:io';
+import 'package:auto_route/src/router/auto_router_x.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:pack/views/routes/routes.gr.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -136,7 +138,7 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
               child: OutlinedButton(
                   onPressed: () {
                     clearImages();
-                    Navigator.pushNamed(context, '/Camera');
+                    context.router.push(const MyHomePage());
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
