@@ -79,7 +79,7 @@ class _InventoryPageState extends State<InventoryPage> {
                     ),
                     borderRadius: const BorderRadius.all(Radius.circular(20))),
                 child: Padding(
-                  padding: const EdgeInsets.all(5.0),
+                  padding: const EdgeInsets.all(4.0),
                   child: Column(
                     children: <Widget>[
                       Text(
@@ -106,7 +106,7 @@ class _InventoryPageState extends State<InventoryPage> {
                     ),
                     borderRadius: const BorderRadius.all(Radius.circular(20))),
                 child: Padding(
-                  padding: const EdgeInsets.all(5.0),
+                  padding: const EdgeInsets.all(4.0),
                   child: Column(
                     children: <Widget>[
                       Text(

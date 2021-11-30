@@ -73,16 +73,35 @@ class _HomePageState extends State<HomePage> {
         title: const Text('Search Package...'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            const SizedBox(
-              height: 20,
-            ),
-            TextField(
-              onChanged: (value) => _runFilter(value),
-              decoration: const InputDecoration(
-                  labelText: 'Search', suffixIcon: Icon(Icons.search)),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  children: [
+                    SizedBox(
+                      width: 300,
+                      child: TextField(
+                        onChanged: (value) => _runFilter(value),
+                        decoration: const InputDecoration(
+                            labelText: 'Search', suffixIcon: Icon(Icons.search)),
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        context.router.push(const ScanQRPage());
+                      },
+                      icon: const Icon(
+                        Icons.qr_code_scanner_rounded,
+                        size: 40,
+                      ),
+                    ),
+                  ],
+                ),
+                
+              ],
             ),
             const SizedBox(
               height: 20,
