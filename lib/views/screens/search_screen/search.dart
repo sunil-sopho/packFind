@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pack/models/package.dart';
 import 'package:hive/hive.dart';
 import 'package:pack/views/routes/routes.gr.dart';
+import 'package:pack/views/widgets/bottom_navigator.dart';
 
 void main() {
   runApp(const PackageFinder());
@@ -97,7 +98,8 @@ class _HomePageState extends State<HomePage> {
                         margin: const EdgeInsets.symmetric(vertical: 10),
                         child: ListTile(
                           onTap: () {
-                            context.router.push(PackageDetailScreen(packageList: _foundUsers[index]));
+                            context.router.push(PackageDetailScreen(
+                                packageList: _foundUsers[index]));
                           },
                           leading: Text('Package Id: ' +
                               _foundUsers[index].packageId.toString() +
@@ -114,6 +116,9 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavigator(
+        selectedIndex: 2,
       ),
     );
   }

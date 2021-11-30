@@ -9,54 +9,56 @@ class LandHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("Scan Qr code"),
-        ),
-        body: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            ElevatedButton(
-                onPressed: () {
-                  context.router.push(const ScanQRPage());
-                },
-                child: const Text('Scan it to Find it'),
-                style: ButtonStyle(
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18.0),
-                )))),
-            ElevatedButton(
-                onPressed: () {
-                  context.router.push(const QRGeneratorSharePage());
-                },
-                child: const Text('Create inventory'),
-                style: ButtonStyle(
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18.0),
-                )))),
-            ElevatedButton(
-                onPressed: () {
-                  context.router.push(const PackageFinder());
-                },
-                child: const Text('Find inventory'),
-                style: ButtonStyle(
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18.0),
-                )))),
-            ElevatedButton(
-                onPressed: () {
-                  context.router.push(InventoryPage());
-                },
-                child: const Text('all inventory'),
-                style: ButtonStyle(
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18.0),
-                )))),
-          ]),
+      appBar: AppBar(
+        title: const Text("Scan Qr code"),
+      ),
+      body: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          ElevatedButton(
+              onPressed: () {
+                context.router.push(const ScanQRPage());
+              },
+              child: const Text('Scan it to Find it'),
+              style: ButtonStyle(
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18.0),
+              )))),
+          ElevatedButton(
+              onPressed: () {
+                context.router.push(const QRGeneratorSharePage());
+              },
+              child: const Text('Create inventory'),
+              style: ButtonStyle(
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18.0),
+              )))),
+          ElevatedButton(
+              onPressed: () {
+                context.router.push(const PackageFinder());
+              },
+              child: const Text('Find inventory'),
+              style: ButtonStyle(
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18.0),
+              )))),
+          ElevatedButton(
+              onPressed: () {
+                context.router.push(InventoryPage());
+              },
+              child: const Text('all inventory'),
+              style: ButtonStyle(
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18.0),
+              )))),
         ]),
-        bottomNavigationBar: const BottomNavigator(),
-        );
+      ]),
+      bottomNavigationBar: BottomNavigator(
+        selectedIndex: 0,
+      ),
+    );
   }
 }

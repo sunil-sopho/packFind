@@ -12,6 +12,7 @@ import 'package:share_plus/share_plus.dart';
 
 import 'package:pack/models/package.dart';
 import 'package:pack/controllers/services/package_handler.dart';
+import 'package:pack/views/widgets/bottom_navigator.dart';
 
 void main() {
   runApp(MyApp());
@@ -37,7 +38,7 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
   final key = GlobalKey();
   String textdata = 'enter data';
   final dynamic _packageId =
-  TextEditingController(text:getCounter().toString());
+      TextEditingController(text: getCounter().toString());
   // _packageId.text = getCounter();
   final _itemList = TextEditingController();
   final _location = TextEditingController();
@@ -226,6 +227,9 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
                 ))))
           ])
         ],
+      ),
+      bottomNavigationBar: BottomNavigator(
+        selectedIndex: 1,
       ),
     );
   }
