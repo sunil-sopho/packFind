@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:pack/views/screens/home.dart';
-import 'package:pack/views/screens/inventory.dart';
+import 'package:pack/views/screens/dashboard.dart';
 import 'package:pack/views/screens/landing.dart';
 import 'package:pack/views/screens/qr_generate/generate_qr.dart';
 import 'package:pack/views/screens/qr_generate/upload_image.dart';
@@ -27,7 +27,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
     if (index == 0 && _selectedIndex != 0) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const LandHome()),
+        MaterialPageRoute(builder: (context) => const InventoryPage()),
       );
       setState(() {
         _selectedIndex = 0;

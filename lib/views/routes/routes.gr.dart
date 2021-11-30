@@ -8,7 +8,7 @@ import 'package:auto_route/auto_route.dart' as _i10;
 import 'package:flutter/material.dart' as _i11;
 import 'package:pack/models/package.dart' as _i12;
 import 'package:pack/views/screens/home.dart' as _i1;
-import 'package:pack/views/screens/inventory.dart' as _i6;
+import 'package:pack/views/screens/dashboard.dart' as _i6;
 import 'package:pack/views/screens/landing.dart' as _i2;
 import 'package:pack/views/screens/qr_generate/generate_qr.dart' as _i3;
 import 'package:pack/views/screens/qr_generate/upload_image.dart' as _i5;

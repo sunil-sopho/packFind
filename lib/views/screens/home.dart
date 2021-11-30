@@ -22,7 +22,7 @@ class Home extends StatelessWidget {
           ),
           ElevatedButton.icon(
               onPressed: () {
-                context.router.push(const LandHome());
+                context.router.push(InventoryPage());
               },
               label: const Text('Login to Find'),
               icon: const Icon(Icons.verified_user_rounded),
