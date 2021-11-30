@@ -21,12 +21,50 @@ class PackageDetailScreen extends StatelessWidget {
             const SizedBox(
               height: 10,
             ),
-            Text("List of items:  " + packageList.itemList),
-            Text("Location is  :  " + packageList.location),
-            const SizedBox(
-              height: 10,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const Text(
+                  'List of items:  ',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22,
+                  ),
+                ),
+                Text(
+                  packageList.itemList,
+                  style: const TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+              ],
             ),
-            _data.getImage(int.parse(packageList.packageId) - 1),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const Text(
+                  'Location is  :  ',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22,
+                  ),
+                ),
+                Text(
+                  packageList.location,
+                  style: const TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+              ],
+            ),
+            Container(
+              margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+              constraints: const BoxConstraints(maxHeight: 300, maxWidth: 300),
+              decoration: const BoxDecoration(color: Colors.grey),
+              child: _data.getImage(int.parse(packageList.packageId) - 1),
+            )
           ],
         ),
       ),

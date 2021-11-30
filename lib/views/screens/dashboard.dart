@@ -34,7 +34,7 @@ class InventoryPage extends StatefulWidget {
 
 class _InventoryPageState extends State<InventoryPage> {
   final Data _data = Data();
-
+  final int selectedIndex = 0;
   int _itemCount() {
     int items = 0;
     for (int i = 0; i < packageBox!.length; i++) {
@@ -151,7 +151,7 @@ class _InventoryPageState extends State<InventoryPage> {
           ])
         ]),
         bottomNavigationBar: BottomNavigator(
-          selectedIndex: 0,
+          selectedIndex: selectedIndex,
         ),
       );
     });

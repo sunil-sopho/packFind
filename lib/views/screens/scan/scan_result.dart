@@ -25,18 +25,56 @@ class Information extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Found your Package'),
       ),
-      body: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('Package_id: $packId'),
-              Text('Items : $item'),
-              img,
-            ],
-          ),
-        ],
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const Text(
+                  'Package_id:',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22,
+                  ),
+                ),
+                Text(
+                  packId,
+                  style: const TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const Text(
+                  'Items : ',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22,
+                  ),
+                ),
+                Text(
+                  item,
+                  style: const TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+              ],
+            ),
+            Container(
+              margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+              constraints: const BoxConstraints(maxHeight: 300, maxWidth: 300),
+              decoration: const BoxDecoration(color: Colors.grey),
+              child: img,
+            )
+          ],
+        ),
       ),
     );
   }

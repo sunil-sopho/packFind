@@ -76,6 +76,14 @@ class _HomePageState extends State<HomePage> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
+            Image.asset(
+              'assets/img-txt.jpeg',
+              width: 250,
+              height: 80,
+            ),
+            const SizedBox(
+              height: 25,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

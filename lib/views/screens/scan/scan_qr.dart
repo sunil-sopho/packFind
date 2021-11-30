@@ -34,6 +34,7 @@ class ScanQRPage extends StatefulWidget {
 
 class _ScanQRPageState extends State<ScanQRPage> {
   final GlobalKey qrKey = GlobalKey();
+  final int selectedIndex = 2;
   late QRViewController controller;
   Barcode? result;
 
@@ -138,7 +139,7 @@ class _ScanQRPageState extends State<ScanQRPage> {
         ],
       ),
       bottomNavigationBar: BottomNavigator(
-        selectedIndex: 2,
+        selectedIndex: selectedIndex,
       ),
     );
   }
