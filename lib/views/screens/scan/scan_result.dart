@@ -14,7 +14,7 @@ class Information extends StatelessWidget {
     if (p == null) {
       item = "";
       packId = "";
-      img = Image.asset('assets/img-home1.jpeg');
+      img = Image.asset('assets/logo-1.png');
     } else {
       item = p.itemList;
       packId = p.packageId;

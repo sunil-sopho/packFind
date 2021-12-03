@@ -151,7 +151,7 @@ class Data {
       print(_data[index].image);
       return Utility.imageFromBase64String(_data[index].image);
     }
-    return Image.asset('assets/img-txt.jpeg');
+    return Image.asset('assets/logo-0.png');
   }
 
   int getLength() {

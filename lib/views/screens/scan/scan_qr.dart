@@ -9,9 +9,9 @@ import 'package:pack/views/widgets/bottom_navigator.dart';
 //   runApp(MyApp());
 // }
 List getInfo = [
-  [1, 'pen1,pencil,brush', 'assets/img-home1.jpeg'],
-  [2, 'pen2,pencil,brush', 'assets/img-home1.jpeg'],
-  [3, 'pen3,pencil,brush', 'assets/img-home1.jpeg'],
+  [1, 'pen1,pencil,brush', 'assets/logo-1.png'],
+  [2, 'pen2,pencil,brush', 'assets/logo-1.png'],
+  [3, 'pen3,pencil,brush', 'assets/logo-1.png'],
 ];
 
 class MyApp extends StatelessWidget {

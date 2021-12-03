@@ -58,10 +58,9 @@ class _InventoryPageState extends State<InventoryPage> {
     return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
       return Scaffold(
-        body:
-            Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+        body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           Image.asset(
-            'assets/img-txt.jpeg',
+            'assets/logo-0.png',
             width: 200,
             height: 200,
           ),
@@ -95,33 +94,33 @@ class _InventoryPageState extends State<InventoryPage> {
                   ),
                 ),
               ),
-              Container(
-                height: constraints.maxHeight / 12,
-                width: constraints.maxWidth / 3,
-                margin: const EdgeInsets.fromLTRB(0, 0, 0, 20.0),
-                decoration: BoxDecoration(
-                    color: Colors.grey,
-                    border: Border.all(
-                      color: Colors.black,
-                    ),
-                    borderRadius: const BorderRadius.all(Radius.circular(20))),
-                child: Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Column(
-                    children: <Widget>[
-                      Text(
-                        _itemCount().toString(),
-                        style:
-                            const TextStyle(color: Colors.black, fontSize: 25),
-                      ),
-                      const Text(
-                        '# items',
-                        style: TextStyle(color: Colors.black),
-                      )
-                    ],
-                  ),
-                ),
-              ),
+              // Container(
+              //   height: constraints.maxHeight / 12,
+              //   width: constraints.maxWidth / 3,
+              //   margin: const EdgeInsets.fromLTRB(0, 0, 0, 20.0),
+              //   decoration: BoxDecoration(
+              //       color: Colors.grey,
+              //       border: Border.all(
+              //         color: Colors.black,
+              //       ),
+              //       borderRadius: const BorderRadius.all(Radius.circular(20))),
+              //   child: Padding(
+              //     padding: const EdgeInsets.all(4.0),
+              //     child: Column(
+              //       children: <Widget>[
+              //         Text(
+              //           _itemCount().toString(),
+              //           style:
+              //               const TextStyle(color: Colors.black, fontSize: 25),
+              //         ),
+              //         const Text(
+              //           '# items',
+              //           style: TextStyle(color: Colors.black),
+              //         )
+              //       ],
+              //     ),
+              //   ),
+              // ),
             ],
           ),
           Column(children: [
@@ -236,10 +235,10 @@ class _InventoryPageState extends State<InventoryPage> {
           context.router
               .push(PackageDetailScreen(packageList: _foundPackages[index]));
         },
-        leading: Text('Package Id: ' +
+        leading: Text('Inventory Id: ' +
             _foundPackages[index].packageId.toString() +
             '\n' +
-            'Item List: ' +
+            'Instruction List: ' +
             _foundPackages[index].itemList),
       ),
     );

@@ -97,7 +97,7 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
             padding: const EdgeInsets.all(4.0),
             child: TextFormField(
               enabled: false,
-              decoration: const InputDecoration(labelText: 'Package id'),
+              decoration: const InputDecoration(labelText: 'Inventory id'),
               controller: _packageId,
             ),
           ),
@@ -105,7 +105,7 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
             padding: const EdgeInsets.all(4.0),
             child: TextFormField(
               decoration: const InputDecoration(
-                labelText: 'List of items',
+                labelText: 'List of instructions',
               ),
               controller: _itemList,
             ),

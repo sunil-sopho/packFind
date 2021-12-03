@@ -69,15 +69,15 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Search Package...'),
-      ),
+      // appBar: AppBar(
+      //   title: const Text('Search Package...'),
+      // ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.fromLTRB(0, 50.0, 0, 0),
         child: Column(
           children: [
             Image.asset(
-              'assets/img-txt.jpeg',
+              'assets/logo-0.png',
               width: 250,
               height: 80,
             ),
@@ -94,7 +94,8 @@ class _HomePageState extends State<HomePage> {
                       child: TextField(
                         onChanged: (value) => _runFilter(value),
                         decoration: const InputDecoration(
-                            labelText: 'Search', suffixIcon: Icon(Icons.search)),
+                            labelText: 'Search',
+                            suffixIcon: Icon(Icons.search)),
                       ),
                     ),
                     IconButton(
@@ -108,7 +109,6 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ],
                 ),
-                
               ],
             ),
             const SizedBox(
@@ -128,10 +128,10 @@ class _HomePageState extends State<HomePage> {
                             context.router.push(PackageDetailScreen(
                                 packageList: _foundUsers[index]));
                           },
-                          leading: Text('Package Id: ' +
+                          leading: Text('Inventory Id: ' +
                               _foundUsers[index].packageId.toString() +
                               '\n' +
-                              'Item List: ' +
+                              'Instruction List: ' +
                               _foundUsers[index].itemList),
                         ),
                       ),

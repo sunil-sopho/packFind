@@ -11,15 +11,15 @@ class Home extends StatelessWidget {
       body: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
         Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           Image.asset(
-            'assets/img-home1.jpeg',
+            'assets/logo-1.png',
             width: 300,
             height: 300,
           ),
-          Image.asset(
-            'assets/img-txt.jpeg',
-            width: 200,
-            height: 200,
-          ),
+          // Image.asset(
+          //   'assets/img-txt.jpeg',
+          //   width: 200,
+          //   height: 200,
+          // ),
           ElevatedButton.icon(
               onPressed: () {
                 context.router.push(InventoryPage());

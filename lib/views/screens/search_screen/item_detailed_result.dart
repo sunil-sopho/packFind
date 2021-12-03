@@ -25,7 +25,7 @@ class PackageDetailScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 const Text(
-                  'List of items:  ',
+                  'List of instructions:  ',
                   style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
