@@ -15,7 +15,6 @@ final Box<Img> images = Hive.box('imageBox');
 
 void handlePackage(Package package) async {
   final bool isPresent = packages.containsKey(package.packageId);
-  print(package.packageId);
   if (!isPresent) {
     packages.put(package.packageId, package);
     // print(packages.length);
@@ -152,7 +151,7 @@ class Data {
       print(_data[index].image);
       return Utility.imageFromBase64String(_data[index].image);
     }
-    return Image.asset('assets/img-txt.jpeg');
+    return Image.asset('assets/logo-0.png');
   }
 
   int getLength() {

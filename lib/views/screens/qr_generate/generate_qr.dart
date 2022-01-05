@@ -1,18 +1,18 @@
 import 'dart:typed_data';
 import 'dart:ui';
 import 'dart:io';
+import 'package:auto_route/src/router/auto_router_x.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:pack/views/routes/routes.gr.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:hive/hive.dart';
 
-import 'camera.dart';
 import 'package:pack/models/package.dart';
 import 'package:pack/controllers/services/package_handler.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:pack/views/widgets/bottom_navigator.dart';
 
 void main() {
   runApp(MyApp());
@@ -21,12 +21,8 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter QR Code Generator With Share',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const QRGeneratorSharePage(),
+    return const MaterialApp(
+      home: QRGeneratorSharePage(),
     );
   }
 }
@@ -41,8 +37,9 @@ class QRGeneratorSharePage extends StatefulWidget {
 class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
   final key = GlobalKey();
   String textdata = 'enter data';
-  dynamic _packageId =
-      TextEditingController(text: "pack_id:" + getCounter().toString());
+  final int selectedIndex = 1;
+  final dynamic _packageId =
+      TextEditingController(text: getCounter().toString());
   // _packageId.text = getCounter();
   final _itemList = TextEditingController();
   final _location = TextEditingController();
@@ -53,7 +50,7 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
   var userID = '1';
   void updatePackageId() {
     incrementCounter();
-    _packageId.text = "pack_id:" + getCounter().toString();
+    _packageId.text = getCounter().toString();
   }
 
   void updateImageList() {
@@ -79,7 +76,7 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text('QR Code Generator'),
+        title: const Text('QR Code Generator'),
       ),
       body: Column(
         children: [
@@ -100,15 +97,15 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
             padding: const EdgeInsets.all(4.0),
             child: TextFormField(
               enabled: false,
-              decoration: const InputDecoration(labelText: 'Package id'),
+              decoration: const InputDecoration(labelText: 'Inventory id'),
               controller: _packageId,
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(4.0),
             child: TextFormField(
-              decoration: InputDecoration(
-                labelText: 'List of items',
+              decoration: const InputDecoration(
+                labelText: 'List of instructions',
               ),
               controller: _itemList,
             ),
@@ -116,7 +113,7 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
           Padding(
             padding: const EdgeInsets.all(4.0),
             child: TextFormField(
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Location of packaging',
               ),
               controller: _location,
@@ -143,7 +140,7 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
               child: OutlinedButton(
                   onPressed: () {
                     clearImages();
-                    Navigator.pushNamed(context, '/Camera');
+                    context.router.push(const MyHomePage());
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -162,7 +159,7 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
                   )))),
             ),
             OutlinedButton(
-                child: Text('Save Package'),
+                child: const Text('Save Package'),
                 onPressed: () async {
                   setState(() {
 //rebuilds UI with new QR code
@@ -171,7 +168,7 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
                   });
                   updateImageList();
                   updateImageStringList();
-                  clearImages();
+                  // clearImages();
                   dynamic imgpath = null;
                   if (_imageStringList.length > 0) {
                     imgpath = _imageStringList[0];
@@ -183,8 +180,8 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
                     location: _location.text,
                     image: imgpath,
                   );
-                  print(" : : " + _packageId.text);
-                  print(newpackage.packageId);
+                  // print(" : : " + _packageId.text);
+                  // print(newpackage.packageId);
                   handlePackage(newpackage);
                   updatePackageId();
                 },
@@ -194,7 +191,7 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
                   borderRadius: BorderRadius.circular(18.0),
                 )))),
             OutlinedButton(
-                child: Text('Share'),
+                child: const Text('Share'),
                 onPressed: () async {
                   try {
                     RenderRepaintBoundary boundary = key.currentContext!
@@ -231,6 +228,9 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
                 ))))
           ])
         ],
+      ),
+      bottomNavigationBar: BottomNavigator(
+        selectedIndex: selectedIndex,
       ),
     );
   }

@@ -1,32 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:pack/views/routes/routes.gr.dart';
+import 'package:auto_route/auto_route.dart';
 
 class Home extends StatelessWidget {
-  const Home({Key? key}) : super(key: key);
+  Home({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      /*appBar: AppBar(
-      title: Text('packFind'),
-      centerTitle: true,
-      backgroundColor: Colors.pinkAccent,
-    ),*/
-
       body: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
         Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           Image.asset(
-            'assets/img-home1.jpeg',
+            'assets/logo-1.png',
             width: 300,
             height: 300,
           ),
-          Image.asset(
-            'assets/img-txt.jpeg',
-            width: 200,
-            height: 200,
-          ),
+          // Image.asset(
+          //   'assets/img-txt.jpeg',
+          //   width: 200,
+          //   height: 200,
+          // ),
           ElevatedButton.icon(
               onPressed: () {
-                Navigator.pushNamed(context, '/landHome');
+                context.router.push(InventoryPage());
               },
               label: const Text('Login to Find'),
               icon: const Icon(Icons.verified_user_rounded),

@@ -1,17 +1,17 @@
 import 'dart:io';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:pack/views/routes/routes.gr.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:pack/models/package.dart';
-import 'package:pack/controllers/services/package_handler.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:pack/views/widgets/bottom_navigator.dart';
 
 // void main() {
 //   runApp(MyApp());
 // }
 List getInfo = [
-  [1, 'pen1,pencil,brush', 'assets/img-home1.jpeg'],
-  [2, 'pen2,pencil,brush', 'assets/img-home1.jpeg'],
-  [3, 'pen3,pencil,brush', 'assets/img-home1.jpeg'],
+  [1, 'pen1,pencil,brush', 'assets/logo-1.png'],
+  [2, 'pen2,pencil,brush', 'assets/logo-1.png'],
+  [3, 'pen3,pencil,brush', 'assets/logo-1.png'],
 ];
 
 class MyApp extends StatelessWidget {
@@ -34,6 +34,7 @@ class ScanQRPage extends StatefulWidget {
 
 class _ScanQRPageState extends State<ScanQRPage> {
   final GlobalKey qrKey = GlobalKey();
+  final int selectedIndex = 2;
   late QRViewController controller;
   Barcode? result;
 
@@ -52,7 +53,7 @@ class _ScanQRPageState extends State<ScanQRPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Scan QR Code'),
+        title: const Text('Scan QR Code'),
       ),
       body: Column(
         children: [
@@ -121,15 +122,10 @@ class _ScanQRPageState extends State<ScanQRPage> {
                           Text('Result is:\n${result!.code}'),
                           ElevatedButton(
                             onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => Information(
-                                      result: result!.code,
-                                    ),
-                                  ));
+                              context.router
+                                  .push(Information(result: result!.code));
                             },
-                            child: Text('get result'),
+                            child: const Text('get result'),
                           ),
                           const SizedBox(
                             height: 8.0,
@@ -141,6 +137,9 @@ class _ScanQRPageState extends State<ScanQRPage> {
             ),
           ),
         ],
+      ),
+      bottomNavigationBar: BottomNavigator(
+        selectedIndex: selectedIndex,
       ),
     );
   }
@@ -160,46 +159,6 @@ class _ScanQRPageState extends State<ScanQRPage> {
   void dispose() {
     controller.dispose();
     super.dispose();
-  }
-}
-
-class Information extends StatelessWidget {
-  final String result;
-  const Information({Key? key, required this.result}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    String item, packId, imgString;
-    Image img;
-    Package? p = getPackageFromId(result);
-    if (p == null) {
-      item = "";
-      packId = "";
-      img = Image.asset('assets/img-home1.jpeg');
-    } else {
-      item = p.itemList;
-      packId = p.packageId;
-      img = Utility.imageFromBase64String(p.image);
-    }
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Found your Package'),
-      ),
-      body: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('Package_id: $packId'),
-              Text('Items : $item'),
-              img,
-            ],
-          ),
-        ],
-      ),
-    );
   }
 }
 

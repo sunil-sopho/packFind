@@ -21,13 +21,14 @@ class PackageAdapter extends TypeAdapter<Package> {
       uid: fields[1] as dynamic,
       itemList: fields[2] as dynamic,
       location: fields[3] as dynamic,
+      image: fields[4] as dynamic,
     );
   }
 
   @override
   void write(BinaryWriter writer, Package obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.packageId)
       ..writeByte(1)
@@ -35,7 +36,9 @@ class PackageAdapter extends TypeAdapter<Package> {
       ..writeByte(2)
       ..write(obj.itemList)
       ..writeByte(3)
-      ..write(obj.location);
+      ..write(obj.location)
+      ..writeByte(4)
+      ..write(obj.image);
   }
 
   @override
