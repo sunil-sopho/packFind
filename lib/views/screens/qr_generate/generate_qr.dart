@@ -97,7 +97,7 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
             padding: const EdgeInsets.all(4.0),
             child: TextFormField(
               enabled: false,
-              decoration: const InputDecoration(labelText: 'Inventory id'),
+              decoration: const InputDecoration(labelText: 'Package id'),
               controller: _packageId,
             ),
           ),
@@ -105,7 +105,7 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
             padding: const EdgeInsets.all(4.0),
             child: TextFormField(
               decoration: const InputDecoration(
-                labelText: 'List of instructions',
+                labelText: 'List of items',
               ),
               controller: _itemList,
             ),
@@ -162,8 +162,7 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
                 child: const Text('Save Package'),
                 onPressed: () async {
                   setState(() {
-//rebuilds UI with new QR code
-
+                    //rebuilds UI with new QR code
                     textdata = _packageId.text;
                   });
                   updateImageList();
