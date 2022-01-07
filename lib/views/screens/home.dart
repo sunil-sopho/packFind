@@ -11,7 +11,7 @@ class Home extends StatelessWidget {
       body: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
         Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           Image.asset(
-            'assets/logo-1.png',
+            'assets/packFND_4_logo.png',
             width: 300,
             height: 300,
           ),
@@ -31,6 +31,17 @@ class Home extends StatelessWidget {
                       RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(18.0),
               )))),
+
+          FractionalTranslation(
+            translation: Offset(1.5, 1.5),
+            child: ClipRRect(
+                borderRadius: BorderRadius.circular(100.0),
+                child: SizedBox(
+                  height: 100,
+                  width: 100,
+                  child: const ColoredBox(color: Colors.yellow),
+                )),
+          ),
         ]),
       ]),
     );

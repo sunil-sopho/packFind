@@ -12,7 +12,7 @@ class Package extends HiveObject {
   @HiveField(3)
   final dynamic location;
   @HiveField(4)
-  final dynamic image;
+  final List<String> image;
   // @HiveField(5)
   // String urlToImage;
   // @HiveField(6)
@@ -27,7 +27,7 @@ class Package extends HiveObject {
     this.uid,
     this.itemList,
     this.location,
-    this.image,
+    required this.image,
   });
 
   factory Package.fromJson(Map<String, dynamic> json) => Package(
@@ -35,6 +35,7 @@ class Package extends HiveObject {
         itemList: json['itemList'],
         uid: json['uid'],
         location: json['location'],
+        image: List<String>.from(json['image']).map((item) => item).toList(),
       );
 
   Map<String, dynamic> toJson() {

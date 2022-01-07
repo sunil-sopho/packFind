@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:hive/hive.dart';
 import 'package:pack/views/routes/routes.gr.dart';
-
+import 'package:get_it/get_it.dart';
 import 'package:pack/models/package.dart';
 import 'package:pack/models/image.dart';
+import 'package:pack/controllers/services/package_handler.dart';
 
+final getIt = GetIt.instance;
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
   WidgetsFlutterBinding.ensureInitialized();
 
   final docPath = await getApplicationDocumentsDirectory();
@@ -40,6 +41,12 @@ void main() async {
 
   final _lang = await Hive.box('settingsBox').get('activeLang');
 
+  // registering blocs
+  final dataBloc = DataBloc();
+  final imageBloc = ImageBloc();
+  getIt.registerSingleton<DataBloc>(dataBloc);
+  getIt.registerSingleton<ImageBloc>(imageBloc);
+
   runApp(App());
 }
 
@@ -47,12 +54,12 @@ class App extends StatelessWidget {
   App({Key? key}) : super(key: key);
   final _appRouter = Routes();
   @override
-  
   Widget build(BuildContext context) {
+    print("building app");
+
     return MaterialApp.router(
-        routeInformationParser: _appRouter.defaultRouteParser(),
-        routerDelegate: AutoRouterDelegate(_appRouter),
+      routeInformationParser: _appRouter.defaultRouteParser(),
+      routerDelegate: AutoRouterDelegate(_appRouter),
     );
   }
 }
-

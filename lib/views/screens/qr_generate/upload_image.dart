@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pack/controllers/services/package_handler.dart';
+import 'package:get_it/get_it.dart';
 
 void main() => runApp(MyApp());
 
@@ -17,6 +18,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
+  MyHomePage({Key? key}) : super(key: key);
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -24,10 +26,12 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final imagePicker = ImagePicker();
   final List<XFile>? _imageList = [];
+  final imageBloc = GetIt.instance<ImageBloc>();
   Future getImagefromcamera() async {
     final XFile? image =
         await imagePicker.pickImage(source: ImageSource.camera);
     setState(() {
+      print("camera image added");
       _imageList!.add(image!);
     });
   }
@@ -42,15 +46,27 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   @override
+  void initState() {
+    // imageBloc.eventSink.add(ImageEvent(ImageAction.init));
+    // _imageList!.addAll(imageBloc.updateImageList());
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Take a picture of your package"),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          /*Padding(
+    return WillPopScope(
+        onWillPop: () async {
+          Navigator.pop(context);
+          return false;
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text("Take a picture of your package"),
+          ),
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              /*Padding(
             padding: const EdgeInsets.all(16.0),
             child: Container(
               width: MediaQuery.of(context).size.width,
@@ -65,78 +81,86 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
           ),*/
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: GridView.builder(
-                  itemCount: _imageList!.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3),
-                  itemBuilder: (BuildContext context, int index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          Image.file(
-                            File(_imageList![index].path),
-                            fit: BoxFit.cover,
-                        ),
-                        Positioned(
-                          top: 0,
-                          right: 0,
-                          child: Container(
-                            padding: const EdgeInsetsDirectional.all(0),
-                            color: const Color.fromRGBO(255, 255, 254, 0.4),
-                            child: IconButton(
-                              onPressed: () {
-                                setState((){
-                                  _imageList!.removeAt(index);
-                                });
-                            } ,
-                            icon: const Icon(Icons.cancel),
-                            color: Colors.red[700],
-                            ),
-                        ),
-                        ),
-                        ],
-                      ),
-                    );
-                  }),
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              FloatingActionButton(
-                onPressed: getImagefromcamera,
-                tooltip: "pickImage",
-                child: const Icon(Icons.add_a_photo),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GridView.builder(
+                      itemCount: _imageList!.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3),
+                      itemBuilder: (BuildContext context, int index) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Stack(
+                            fit: StackFit.expand,
+                            children: [
+                              Image.file(
+                                File(_imageList![index].path),
+                                fit: BoxFit.cover,
+                              ),
+                              Positioned(
+                                top: 0,
+                                right: 0,
+                                child: Container(
+                                  padding: const EdgeInsetsDirectional.all(0),
+                                  color:
+                                      const Color.fromRGBO(255, 255, 254, 0.4),
+                                  child: IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        _imageList!.removeAt(index);
+                                      });
+                                    },
+                                    icon: const Icon(Icons.cancel),
+                                    color: Colors.red[700],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }),
+                ),
               ),
-              FloatingActionButton(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  FloatingActionButton(
+                    onPressed: getImagefromcamera,
+                    tooltip: "Pick Image from Camera",
+                    heroTag: 'openCameraBtn',
+                    child: const Icon(Icons.add_a_photo),
+                  ),
+                  FloatingActionButton(
+                    onPressed: () {
+                      getImagefromGallery();
+                    },
+                    heroTag: 'openGalleryBtn',
+                    tooltip: "Pick Image from Gallery",
+                    child: const Icon(Icons.image),
+                  )
+                ],
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              OutlinedButton(
                 onPressed: () {
-                  getImagefromGallery();
+                  print("confirm clicked");
+                  print(_imageList);
+                  imageBloc.eventSink
+                      .add(ImageEvent(ImageAction.addImages, _imageList));
+                  // _imageList!.clear();
+                  Navigator.pop(context);
                 },
-                tooltip: "Pick Image",
-                child: const Icon(Icons.image),
-              )
+                child: const Text('Confirm'),
+              ),
+              const SizedBox(
+                height: 30,
+              ),
             ],
           ),
-          const SizedBox(
-            height: 30,
-          ),
-          OutlinedButton(
-            onPressed: () {
-              addImages(_imageList);
-              Navigator.pop(context);
-            },
-            child: const Text('Confirm'),
-          ),
-          const SizedBox(
-            height: 30,
-          ),
-        ],
-      ),
-    );
+        ));
   }
 }

@@ -8,6 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:typed_data';
 import 'dart:convert';
+import 'dart:async';
 
 final Box<Package> packages = Hive.box('packageBox');
 final counter = Hive.box('countBox');
@@ -91,8 +92,9 @@ void addImages(List<XFile>? allImages) {
 }
 
 void clearImages() {
-  for (var i = 0; i < images.length; i++) {
-    images.deleteAt(i);
+  int numImages = images.length;
+  for (var i = 1; i <= numImages; i++) {
+    images.deleteAt(numImages - i);
   }
 }
 
@@ -147,18 +149,159 @@ class Data {
   }
 
   Image getImage(int index) {
-    if (_data[index].image != null && _data[index].image != "") {
-      print(_data[index].image);
-      return Utility.imageFromBase64String(_data[index].image);
+    if (_data[index].image != null && _data[index].image.length > 0) {
+      print(_data[index].image.length);
+      return Utility.imageFromBase64String(_data[index].image[0]);
     }
     return Image.asset('assets/logo-0.png');
+  }
+
+  List<Image> getImages(int index) {
+    List<Image> _list = [];
+    if (_data[index].image != null && _data[index].image.length > 0) {
+      for (int i = 0; i < _data[index].image.length; i++) {
+        _list.add(Utility.imageFromBase64String(_data[index].image[i]));
+      }
+      return _list;
+    }
+    _list.add(Image.asset('assets/logo-0.png'));
+    return _list;
   }
 
   int getLength() {
     return _data.length;
   }
+
+  int length() {
+    return _data.length;
+  }
+
+  List getData() {
+    update();
+    print("data returned");
+    print(_data);
+    return _data;
+  }
 }
 
+enum DataAction { addPackage, deletePackage, updatePackage, init }
+
+class DataEvent {
+  final DataAction action;
+  Package? data;
+
+  DataEvent(this.action, [this.data]);
+}
+
+class DataBloc {
+  late Data data;
+
+  final _stateStreamController = StreamController<List>.broadcast();
+  StreamSink<List> get dataSink => _stateStreamController.sink;
+  Stream<List> get dataStream => _stateStreamController.stream;
+
+  final _sizeStreamController = StreamController<int>.broadcast();
+  StreamSink<int> get sizeSink => _sizeStreamController.sink;
+  Stream<int> get sizeStream => _sizeStreamController.stream;
+
+  final _eventStreamController = StreamController<DataEvent>();
+  StreamSink<DataEvent> get eventSink => _eventStreamController.sink;
+  Stream<DataEvent> get eventStream => _eventStreamController.stream;
+
+  DataBloc() {
+    data = Data();
+    eventStream.listen((event) {
+      print(event);
+      if (event.action == DataAction.init) {
+        dataSink.add(data.getData());
+        sizeSink.add(data.getLength());
+      } else if (event.action == DataAction.addPackage ||
+          event.action == DataAction.deletePackage) {
+        if (event.action == DataAction.addPackage) {
+          addPackage(event.data);
+        }
+        dataSink.add(data.getData());
+        sizeSink.add(data.getLength());
+      } else {
+        dataSink.add(data.getData());
+      }
+    });
+  }
+  void addPackage(newPackage) {
+    print("adding package ");
+    print(newPackage);
+    handlePackage(newPackage);
+    incrementCounter();
+  }
+
+  Package? getPackage(String id) {
+    return getPackageFromId(id);
+  }
+
+  void dispose() {
+    _stateStreamController.close();
+    _eventStreamController.close();
+    _sizeStreamController.close();
+  }
+}
+
+enum ImageAction { addImage, deleteImage, addImages, init, clearImages }
+
+class ImageEvent {
+  final ImageAction action;
+  List<XFile>? data = [];
+
+  ImageEvent(this.action, [this.data]);
+}
+
+class ImageBloc {
+  final List<Image> _imageList = [];
+  final List<String> _imageStringList = [];
+
+  final _stateStreamController = StreamController<List>.broadcast();
+  StreamSink<List> get dataSink => _stateStreamController.sink;
+  Stream<List> get dataStream => _stateStreamController.stream;
+
+  final _eventStreamController = StreamController<ImageEvent>();
+  StreamSink<ImageEvent> get eventSink => _eventStreamController.sink;
+  Stream<ImageEvent> get eventStream => _eventStreamController.stream;
+
+  ImageBloc() {
+    eventStream.listen((event) {
+      print(event);
+      if (event.action == ImageAction.init) {
+        var imageList = updateImageList();
+        dataSink.add(imageList);
+      } else if (event.action == ImageAction.addImages) {
+        print(event.data);
+        addImages(event.data);
+        var imageList = updateImageList();
+        dataSink.add(imageList);
+      } else if (event.action == ImageAction.clearImages) {
+        clear();
+      }
+    });
+  }
+
+  List updateImageList() {
+    List _list = getImages();
+    return _list;
+  }
+
+  List<String> getImageStringList() {
+    return getImageStrings();
+    // print("Length : " + _list.length.toString());
+  }
+
+  void clear() {
+    clearImages();
+  }
+
+  void dispose() {
+    _stateStreamController.close();
+    _eventStreamController.close();
+  }
+}
 
 // void addArticlesToUnreads(List<Articles> articles) async {
 //   articles.forEach((element) {

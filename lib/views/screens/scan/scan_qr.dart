@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:pack/views/routes/routes.gr.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:pack/views/widgets/bottom_navigator.dart';
+import 'package:get_it/get_it.dart';
+import 'package:pack/controllers/services/package_handler.dart';
 
 // void main() {
 //   runApp(MyApp());
@@ -37,7 +39,7 @@ class _ScanQRPageState extends State<ScanQRPage> {
   final int selectedIndex = 2;
   late QRViewController controller;
   Barcode? result;
-
+  final dataBloc = GetIt.instance<DataBloc>();
 //in order to get hot reload to work.
   @override
   void reassemble() {
@@ -122,8 +124,10 @@ class _ScanQRPageState extends State<ScanQRPage> {
                           Text('Result is:\n${result!.code}'),
                           ElevatedButton(
                             onPressed: () {
-                              context.router
-                                  .push(Information(result: result!.code));
+                              // context.router.push(Information(result: result!.code));
+                              context.router.push(PackageDetailScreen(
+                                  packageList:
+                                      dataBloc.getPackage(result!.code)));
                             },
                             child: const Text('get result'),
                           ),

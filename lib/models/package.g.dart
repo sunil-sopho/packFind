@@ -21,7 +21,7 @@ class PackageAdapter extends TypeAdapter<Package> {
       uid: fields[1] as dynamic,
       itemList: fields[2] as dynamic,
       location: fields[3] as dynamic,
-      image: fields[4] as dynamic,
+      image: (fields[4] as List).cast<String>(),
     );
   }
 

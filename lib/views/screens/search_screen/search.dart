@@ -76,11 +76,7 @@ class _HomePageState extends State<HomePage> {
         padding: const EdgeInsets.fromLTRB(0, 50.0, 0, 0),
         child: Column(
           children: [
-            Image.asset(
-              'assets/logo-0.png',
-              width: 250,
-              height: 80,
-            ),
+            const LogoWidget(),
             const SizedBox(
               height: 25,
             ),
@@ -94,7 +90,7 @@ class _HomePageState extends State<HomePage> {
                       child: TextField(
                         onChanged: (value) => _runFilter(value),
                         decoration: const InputDecoration(
-                            labelText: 'Search',
+                            labelText: ' Search by keywords',
                             suffixIcon: Icon(Icons.search)),
                       ),
                     ),
@@ -147,6 +143,18 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: BottomNavigator(
         selectedIndex: 2,
       ),
+    );
+  }
+}
+
+class LogoWidget extends StatelessWidget {
+  const LogoWidget({Key? key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Image.asset(
+      'assets/packFND_3_logo.png',
+      width: 170,
+      height: 120,
     );
   }
 }

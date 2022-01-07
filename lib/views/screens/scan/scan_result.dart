@@ -18,7 +18,8 @@ class Information extends StatelessWidget {
     } else {
       item = p.itemList;
       packId = p.packageId;
-      img = Utility.imageFromBase64String(p.image);
+      // img = Utility.imageFromBase64String(p.image[0]);
+      img = Image.asset('assets/logo-1.png');
     }
 
     return Scaffold(

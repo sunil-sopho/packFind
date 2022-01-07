@@ -7,6 +7,7 @@ import 'package:pack/controllers/services/package_handler.dart';
 import 'package:pack/views/styles/colors.dart';
 import 'package:pack/views/widgets/bottom_navigator.dart';
 
+import 'package:get_it/get_it.dart';
 // void main() => runApp(MyApp());
 
 // class MyApp extends StatelessWidget {
@@ -26,17 +27,13 @@ Box<Package>? packageBox = Hive.box<Package>('packageBox');
 class InventoryPage extends StatefulWidget {
   const InventoryPage({Key? key}) : super(key: key);
 
-  final String title = "Inventory";
-
   @override
   _InventoryPageState createState() => _InventoryPageState();
 }
 
-class _InventoryPageState extends State<InventoryPage> {
-  final Data _data = Data();
-  final int selectedIndex = 0;
-  int _itemCount() {
-    int items = 0;
+class ItemCountNotifier extends ChangeNotifier {
+  int items = 0;
+  void updateItemCount() {
     for (int i = 0; i < packageBox!.length; i++) {
       if (packageBox!.values.toList()[i].itemList == "") {
         items += 0;
@@ -48,22 +45,39 @@ class _InventoryPageState extends State<InventoryPage> {
         items += 1;
       }
     }
-    return items;
+    notifyListeners();
+  }
+}
+
+class _InventoryPageState extends State<InventoryPage> {
+  // final Data _data = Data();
+  final dataBloc = GetIt.instance<DataBloc>();
+  final int selectedIndex = 0;
+  final _itemCountNotifier = ItemCountNotifier();
+
+  @override
+  void dispose() {
+    _itemCountNotifier.dispose();
+    // dataBloc.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    dataBloc.eventSink.add(DataEvent(DataAction.init));
+    super.initState();
   }
 
   final ScrollController _firstController = ScrollController();
   @override
   Widget build(BuildContext context) {
-    _data.update();
+    print("dashboard build");
     return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
       return Scaffold(
         body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Image.asset(
-            'assets/logo-0.png',
-            width: 200,
-            height: 200,
-          ),
+          // NavBar(eventSink: dataBloc.eventSink),
+          const LogoWidget(),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
@@ -81,11 +95,16 @@ class _InventoryPageState extends State<InventoryPage> {
                   padding: const EdgeInsets.all(4.0),
                   child: Column(
                     children: <Widget>[
-                      Text(
-                        packageBox!.length.toString(),
-                        style:
-                            const TextStyle(color: Colors.black, fontSize: 25),
-                      ),
+                      StreamBuilder(
+                          stream: dataBloc.sizeStream,
+                          initialData: 0,
+                          builder: (context, snapshot) {
+                            return Text(
+                              '${snapshot.data}', //packageBox!.length.toString(),
+                              style: const TextStyle(
+                                  color: Colors.black, fontSize: 25),
+                            );
+                          }),
                       const Text(
                         '# inventories',
                         style: TextStyle(color: Colors.black),
@@ -94,33 +113,36 @@ class _InventoryPageState extends State<InventoryPage> {
                   ),
                 ),
               ),
-              // Container(
-              //   height: constraints.maxHeight / 12,
-              //   width: constraints.maxWidth / 3,
-              //   margin: const EdgeInsets.fromLTRB(0, 0, 0, 20.0),
-              //   decoration: BoxDecoration(
-              //       color: Colors.grey,
-              //       border: Border.all(
-              //         color: Colors.black,
-              //       ),
-              //       borderRadius: const BorderRadius.all(Radius.circular(20))),
-              //   child: Padding(
-              //     padding: const EdgeInsets.all(4.0),
-              //     child: Column(
-              //       children: <Widget>[
-              //         Text(
-              //           _itemCount().toString(),
-              //           style:
-              //               const TextStyle(color: Colors.black, fontSize: 25),
-              //         ),
-              //         const Text(
-              //           '# items',
-              //           style: TextStyle(color: Colors.black),
-              //         )
-              //       ],
-              //     ),
-              //   ),
-              // ),
+              Container(
+                height: constraints.maxHeight / 12,
+                width: constraints.maxWidth / 3,
+                margin: const EdgeInsets.fromLTRB(0, 0, 0, 20.0),
+                decoration: BoxDecoration(
+                    color: Colors.grey,
+                    border: Border.all(
+                      color: Colors.black,
+                    ),
+                    borderRadius: const BorderRadius.all(Radius.circular(20))),
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Column(
+                    children: <Widget>[
+                      AnimatedBuilder(
+                        animation: _itemCountNotifier,
+                        builder: (_, __) => Text(
+                          _itemCountNotifier.items.toString(),
+                          style: const TextStyle(
+                              color: Colors.black, fontSize: 25),
+                        ),
+                      ),
+                      const Text(
+                        '# items',
+                        style: TextStyle(color: Colors.black),
+                      )
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
           Column(children: [
@@ -131,20 +153,33 @@ class _InventoryPageState extends State<InventoryPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                SizedBox(
-                  height: constraints.maxHeight / 2.5,
-                  width: constraints.maxWidth / 1.1,
-                  child: Scrollbar(
-                    isAlwaysShown: true,
-                    controller: _firstController,
-                    child: ListView.builder(
-                      padding: const EdgeInsets.all(0),
-                      controller: _firstController,
-                      itemCount: _data.getLength(),
-                      itemBuilder: _itemBuilder,
-                    ),
-                  ),
-                )
+                StreamBuilder<List>(
+                    stream: dataBloc.dataStream,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator();
+                      } else if (snapshot.data == null) {
+                        return const Text("Loading");
+                      } else if (snapshot.hasError) {
+                        print("error");
+                        return const Text("Error");
+                      } else {
+                        return SizedBox(
+                          height: constraints.maxHeight / 2.5,
+                          width: constraints.maxWidth / 1.1,
+                          child: Scrollbar(
+                            isAlwaysShown: true,
+                            controller: _firstController,
+                            child: ListView.builder(
+                              padding: const EdgeInsets.all(0),
+                              controller: _firstController,
+                              itemCount: snapshot.data!.length,
+                              itemBuilder: _itemBuilder,
+                            ),
+                          ),
+                        );
+                      }
+                    }),
               ],
             ),
           ])
@@ -249,85 +284,38 @@ IconThemeData _customIconTheme(IconThemeData original) {
   return original.copyWith(color: ShrineColor.shrineBrown900);
 }
 
-// ThemeData _buildShrineTheme() {
-//   final ThemeData base = ThemeData.light();
-//   return base.copyWith(
-//     colorScheme: _shrineColorScheme,
-//     accentColor: shrineBrown900,
-//     primaryColor: shrinePink100,
-//     buttonColor: shrinePink100,
-//     scaffoldBackgroundColor: shrineBackgroundWhite,
-//     cardColor: shrineBackgroundWhite,
-//     textSelectionColor: shrinePink100,
-//     errorColor: shrineErrorRed,
-//     buttonTheme: const ButtonThemeData(
-//       colorScheme: _shrineColorScheme,
-//       textTheme: ButtonTextTheme.normal,
-//     ),
-//     primaryIconTheme: _customIconTheme(base.iconTheme),
-//     textTheme: _buildShrineTextTheme(base.textTheme),
-//     primaryTextTheme: _buildShrineTextTheme(base.primaryTextTheme),
-//     accentTextTheme: _buildShrineTextTheme(base.accentTextTheme),
-//     iconTheme: _customIconTheme(base.iconTheme),
-//   );
-// }
+class LogoWidget extends StatelessWidget {
+  const LogoWidget({Key? key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Image.asset(
+      'assets/packFND_3_logo.png',
+      width: 210,
+      height: 220,
+    );
+  }
+}
 
-// TextTheme _buildShrineTextTheme(TextTheme base) {
-//   return base
-//       .copyWith(
-//         headline: base.headline.copyWith(
-//           fontWeight: FontWeight.w500,
-//           letterSpacing: defaultLetterSpacing,
-//         ),
-//         title: base.title.copyWith(
-//           fontSize: 18,
-//           letterSpacing: defaultLetterSpacing,
-//         ),
-//         caption: base.caption.copyWith(
-//           fontWeight: FontWeight.w400,
-//           fontSize: 14,
-//           letterSpacing: defaultLetterSpacing,
-//         ),
-//         body2: base.body2.copyWith(
-//           fontWeight: FontWeight.w500,
-//           fontSize: 16,
-//           letterSpacing: defaultLetterSpacing,
-//         ),
-//         body1: base.body1.copyWith(
-//           letterSpacing: defaultLetterSpacing,
-//         ),
-//         subhead: base.subhead.copyWith(
-//           letterSpacing: defaultLetterSpacing,
-//         ),
-//         display1: base.display1.copyWith(
-//           letterSpacing: defaultLetterSpacing,
-//         ),
-//         button: base.button.copyWith(
-//           fontWeight: FontWeight.w500,
-//           fontSize: 14,
-//           letterSpacing: defaultLetterSpacing,
-//         ),
-//       )
-//       .apply(
-//         fontFamily: 'Rubik',
-//         displayColor: shrineBrown900,
-//         bodyColor: shrineBrown900,
-//       );
-// }
+class NavBar extends StatelessWidget {
+  const NavBar({Key? key, this.eventSink = ""}) : super(key: key);
 
-// const ColorScheme _shrineColorScheme = ColorScheme(
-//   primary: shrinePink100,
-//   primaryVariant: shrineBrown900,
-//   secondary: shrinePink50,
-//   secondaryVariant: shrineBrown900,
-//   surface: shrineSurfaceWhite,
-//   background: shrineBackgroundWhite,
-//   error: shrineErrorRed,
-//   onPrimary: shrineBrown900,
-//   onSecondary: shrineBrown900,
-//   onSurface: shrineBrown900,
-//   onBackground: shrineBrown900,
-//   onError: shrineSurfaceWhite,
-//   brightness: Brightness.light,
-// );
+  final eventSink;
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          FloatingActionButton(
+            onPressed: () {
+              if (eventSink == "") return;
+              eventSink.add(DataAction.init);
+            },
+            heroTag: 'Btn',
+            tooltip: "reload",
+            child: const Icon(Icons.image),
+          )
+        ]);
+  }
+}
+
 const defaultLetterSpacing = 0.03;

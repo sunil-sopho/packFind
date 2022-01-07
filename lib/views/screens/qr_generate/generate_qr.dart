@@ -14,6 +14,8 @@ import 'package:pack/models/package.dart';
 import 'package:pack/controllers/services/package_handler.dart';
 import 'package:pack/views/widgets/bottom_navigator.dart';
 
+import 'package:get_it/get_it.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -36,7 +38,10 @@ class QRGeneratorSharePage extends StatefulWidget {
 
 class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
   final key = GlobalKey();
-  String textdata = 'enter data';
+  String textdata = getCounter().toString();
+  final dataBloc = GetIt.instance<DataBloc>();
+  final imageBloc = GetIt.instance<ImageBloc>();
+
   final int selectedIndex = 1;
   final dynamic _packageId =
       TextEditingController(text: getCounter().toString());
@@ -44,63 +49,84 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
   final _itemList = TextEditingController();
   final _location = TextEditingController();
   File? file;
-  final List<Image> _imageList = [];
-  final List<String> _imageStringList = [];
 
   var userID = '1';
   void updatePackageId() {
-    incrementCounter();
     _packageId.text = getCounter().toString();
   }
 
-  void updateImageList() {
-    List _list = getImages();
-    for (int i = 0; i < _list.length; i++) {
-      _imageList.add(_list[i]);
-    }
-    print("Length : " + _list.length.toString());
-  }
-
-  void updateImageStringList() {
-    List _list = getImageStrings();
-    for (int i = 0; i < _list.length; i++) {
-      _imageStringList.add(_list[i]);
-    }
-    // print("Length : " + _list.length.toString());
+  @override
+  void dispose() {
+    // imageBloc.dispose();
+    // dataBloc.dispose();
+    super.dispose();
   }
 
   @override
+  void initState() {
+    dataBloc.eventSink.add(DataEvent(DataAction.init));
+    imageBloc.eventSink.add(ImageEvent(ImageAction.init));
+
+    super.initState();
+  }
+  // void updateImageList() {
+  //   List _list = getImages();
+  //   for (int i = 0; i < _list.length; i++) {
+  //     _imageList.add(_list[i]);
+  //   }
+  //   print("Length : " + _list.length.toString());
+  // }
+
+  // void updateImageStringList() {
+  //   List _list = getImageStrings();
+  //   for (int i = 0; i < _list.length; i++) {
+  //     _imageStringList.add(_list[i]);
+  //   }
+  //   // print("Length : " + _list.length.toString());
+  // }
+
+  @override
   Widget build(BuildContext context) {
-    updateImageList();
-    updateImageStringList();
+    // updateImageList();
+    // updateImageStringList();
+    print("build qr page");
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: const Text('QR Code Generator'),
-      ),
       body: Column(
         children: [
-          RepaintBoundary(
-            key: key,
-            child: Container(
-              color: Colors.white,
-              child: QrImage(
-                size: 200, //size of the QrImage widget.
-                data: textdata, //textdata used to create QR code
+          const LogoWidget(),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+            Expanded(
+              child: TextFormField(
+                enabled: false,
+                decoration: const InputDecoration(labelText: 'Package id'),
+                controller: _packageId,
               ),
             ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: TextFormField(
-              enabled: false,
-              decoration: const InputDecoration(labelText: 'Package id'),
-              controller: _packageId,
+            const SizedBox(
+              width: 40,
             ),
-          ),
+            // QrCodeWidget(textdata: textdata),
+            GestureDetector(
+                child: Hero(
+                  tag: 'package_qrcode',
+                  child: RepaintBoundary(
+                    key: key,
+                    child: Container(
+                      color: Colors.white,
+                      child: QrImage(
+                        size: 70, //size of the QrImage widget.
+                        data: textdata, //textdata used to create QR code
+                      ),
+                    ),
+                  ),
+                ),
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (_) {
+                    return DetailScreen(qrdata: textdata);
+                  }));
+                })
+          ]),
           Padding(
             padding: const EdgeInsets.all(4.0),
             child: TextFormField(
@@ -122,15 +148,29 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: GridView.builder(
-                  itemCount: _imageList.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3),
-                  itemBuilder: (BuildContext context, int index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: _imageList[index],
-                    );
+              child: StreamBuilder<List>(
+                  stream: imageBloc.dataStream,
+                  builder: (context, snapshot) {
+                    if (snapshot.data == null) {
+                      return const Center(child: Text("Loading"));
+                    } else if (snapshot.hasError) {
+                      print("error");
+                      return const Text("Error");
+                    } else {
+                      print("making grid");
+                      print(snapshot.data);
+                      return GridView.builder(
+                          itemCount: snapshot.data!.length,
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3),
+                          itemBuilder: (BuildContext context, int index) {
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: snapshot.data![index],
+                            );
+                          });
+                    }
                   }),
             ),
           ),
@@ -139,19 +179,9 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
               width: 150,
               child: OutlinedButton(
                   onPressed: () {
-                    clearImages();
-                    context.router.push(const MyHomePage());
+                    context.router.push(MyHomePage());
                   },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Icon(
-                        Icons.camera_alt,
-                        size: 20.0,
-                      ),
-                      Text('Add image'),
-                    ],
-                  ),
+                  child: const AddImagebutton(),
                   style: ButtonStyle(
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
@@ -165,24 +195,24 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
                     //rebuilds UI with new QR code
                     textdata = _packageId.text;
                   });
-                  updateImageList();
-                  updateImageStringList();
+                  // updateImageList();
+                  // updateImageStringList();
                   // clearImages();
-                  dynamic imgpath = null;
-                  if (_imageStringList.length > 0) {
-                    imgpath = _imageStringList[0];
-                  }
+                  dynamic imgList = imageBloc.getImageStringList();
                   Package newpackage = Package(
                     packageId: _packageId.text,
                     uid: userID,
                     itemList: _itemList.text,
                     location: _location.text,
-                    image: imgpath,
+                    image: imgList,
                   );
                   // print(" : : " + _packageId.text);
                   // print(newpackage.packageId);
-                  handlePackage(newpackage);
-                  updatePackageId();
+                  dataBloc.eventSink
+                      .add(DataEvent(DataAction.addPackage, newpackage));
+                  imageBloc.eventSink.add(ImageEvent(ImageAction.clearImages));
+
+                  Navigator.pop(context);
                 },
                 style: ButtonStyle(
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -197,17 +227,20 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
                         .findRenderObject() as RenderRepaintBoundary;
 //captures qr image
                     var image = await boundary.toImage();
-
+                    print("step 1");
                     ByteData? byteData =
                         await image.toByteData(format: ImageByteFormat.png);
+                    print("step 2");
 
                     Uint8List pngBytes = byteData!.buffer.asUint8List();
 //app directory for storing images.
                     final appDir = await getApplicationDocumentsDirectory();
+                    print("step 3");
 //current time
                     var datetime = DateTime.now();
 //qr image file creation
                     file = await File('${appDir.path}/$datetime.png').create();
+                    print("step 4");
 //appending data
                     await file?.writeAsBytes(pngBytes);
 //Shares QR image
@@ -232,5 +265,87 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
         selectedIndex: selectedIndex,
       ),
     );
+  }
+}
+
+class DetailScreen extends StatelessWidget {
+  const DetailScreen({Key? key, this.qrdata = ""}) : super(key: key);
+  final String qrdata;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: GestureDetector(
+        child: Center(
+          child: Hero(
+            tag: 'package_qrcode',
+            child: QrImage(
+              size: 300, //size of the QrImage widget.
+              data: qrdata, //textdata used to create QR code
+            ),
+          ),
+        ),
+        onTap: () {
+          Navigator.pop(context);
+        },
+      ),
+    );
+  }
+}
+
+class LogoWidget extends StatelessWidget {
+  const LogoWidget({Key? key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Image.asset(
+      'assets/packFND_3_logo.png',
+      width: 180,
+      height: 170,
+    );
+  }
+}
+
+class AddImagebutton extends StatelessWidget {
+  const AddImagebutton({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: const [
+        Icon(
+          Icons.camera_alt,
+          size: 20.0,
+        ),
+        Text('Add image'),
+      ],
+    );
+  }
+}
+
+class QrCodeWidget extends StatelessWidget {
+  const QrCodeWidget({Key? key, this.textdata}) : super(key: key);
+  final textdata;
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+        child: Hero(
+          tag: 'package_qrcode',
+          child: RepaintBoundary(
+            key: key,
+            child: Container(
+              color: Colors.white,
+              child: QrImage(
+                size: 70, //size of the QrImage widget.
+                data: textdata, //textdata used to create QR code
+              ),
+            ),
+          ),
+        ),
+        onTap: () {
+          Navigator.push(context, MaterialPageRoute(builder: (_) {
+            return DetailScreen(qrdata: textdata);
+          }));
+        });
   }
 }
