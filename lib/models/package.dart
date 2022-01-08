@@ -13,8 +13,8 @@ class Package extends HiveObject {
   final dynamic location;
   @HiveField(4)
   final List<String> image;
-  // @HiveField(5)
-  // String urlToImage;
+  @HiveField(5)
+  final dynamic name;
   // @HiveField(6)
   // String publishedAt;
   // @HiveField(7)
@@ -25,6 +25,7 @@ class Package extends HiveObject {
   Package({
     this.packageId,
     this.uid,
+    this.name,
     this.itemList,
     this.location,
     required this.image,
@@ -35,6 +36,7 @@ class Package extends HiveObject {
         itemList: json['itemList'],
         uid: json['uid'],
         location: json['location'],
+        name: json['name'],
         image: List<String>.from(json['image']).map((item) => item).toList(),
       );
 

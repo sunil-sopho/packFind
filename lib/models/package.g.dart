@@ -19,6 +19,7 @@ class PackageAdapter extends TypeAdapter<Package> {
     return Package(
       packageId: fields[0] as dynamic,
       uid: fields[1] as dynamic,
+      name: fields[5] as dynamic,
       itemList: fields[2] as dynamic,
       location: fields[3] as dynamic,
       image: (fields[4] as List).cast<String>(),
@@ -28,7 +29,7 @@ class PackageAdapter extends TypeAdapter<Package> {
   @override
   void write(BinaryWriter writer, Package obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.packageId)
       ..writeByte(1)
@@ -38,7 +39,9 @@ class PackageAdapter extends TypeAdapter<Package> {
       ..writeByte(3)
       ..write(obj.location)
       ..writeByte(4)
-      ..write(obj.image);
+      ..write(obj.image)
+      ..writeByte(5)
+      ..write(obj.name);
   }
 
   @override

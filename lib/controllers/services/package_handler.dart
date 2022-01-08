@@ -4,7 +4,7 @@ import 'package:pack/models/image.dart';
 import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:fluttertoast/fluttertoast.dart';
-
+import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'dart:typed_data';
 import 'dart:convert';
@@ -82,7 +82,7 @@ void incrementCounter() {
   }
 }
 
-void addImages(List<XFile>? allImages) {
+void addImages(List<XFile>? allImages) async {
   allImages?.forEach((image) {
     image.readAsBytes().then((value) {
       String imgString = Utility.base64String(value);
@@ -96,6 +96,14 @@ void clearImages() {
   for (var i = 1; i <= numImages; i++) {
     images.deleteAt(numImages - i);
   }
+}
+
+void deleteImage(int index) {
+  int numImages = images.length;
+  if (index < 0 || index >= numImages) {
+    return;
+  }
+  images.deleteAt(index);
 }
 
 List<Image> getImages() {
@@ -195,7 +203,7 @@ class DataEvent {
 
 class DataBloc {
   late Data data;
-
+  int items = 0;
   final _stateStreamController = StreamController<List>.broadcast();
   StreamSink<List> get dataSink => _stateStreamController.sink;
   Stream<List> get dataStream => _stateStreamController.stream;
@@ -203,6 +211,10 @@ class DataBloc {
   final _sizeStreamController = StreamController<int>.broadcast();
   StreamSink<int> get sizeSink => _sizeStreamController.sink;
   Stream<int> get sizeStream => _sizeStreamController.stream;
+
+  final _itemStreamController = StreamController<int>.broadcast();
+  StreamSink<int> get itemSink => _itemStreamController.sink;
+  Stream<int> get itemStream => _itemStreamController.stream;
 
   final _eventStreamController = StreamController<DataEvent>();
   StreamSink<DataEvent> get eventSink => _eventStreamController.sink;
@@ -213,23 +225,26 @@ class DataBloc {
     eventStream.listen((event) {
       print(event);
       if (event.action == DataAction.init) {
-        dataSink.add(data.getData());
+        var allpackages = data.getData();
+        dataSink.add(allpackages);
+        updateItemCount(allpackages);
         sizeSink.add(data.getLength());
+        itemSink.add(items);
       } else if (event.action == DataAction.addPackage ||
           event.action == DataAction.deletePackage) {
         if (event.action == DataAction.addPackage) {
           addPackage(event.data);
+          addItemsFromPackage(event.data);
         }
         dataSink.add(data.getData());
         sizeSink.add(data.getLength());
+        itemSink.add(items);
       } else {
         dataSink.add(data.getData());
       }
     });
   }
   void addPackage(newPackage) {
-    print("adding package ");
-    print(newPackage);
     handlePackage(newPackage);
     incrementCounter();
   }
@@ -238,7 +253,27 @@ class DataBloc {
     return getPackageFromId(id);
   }
 
+  void updateItemCount(List packages) {
+    items = 0;
+    for (int i = 0; i < packages.length; i++) {
+      if (packages[i].itemList != "") {
+        items += (",").allMatches(packages[i].itemList).length;
+        items += (" ").allMatches(packages[i].itemList).length;
+        items += 1;
+      }
+    }
+  }
+
+  void addItemsFromPackage(Package? package) {
+    if (package?.itemList != "") {
+      items += (",").allMatches(package?.itemList).length;
+      items += (" ").allMatches(package?.itemList).length;
+      items += 1;
+    }
+  }
+
   void dispose() {
+    _itemStreamController.close();
     _stateStreamController.close();
     _eventStreamController.close();
     _sizeStreamController.close();
@@ -247,11 +282,13 @@ class DataBloc {
 
 enum ImageAction { addImage, deleteImage, addImages, init, clearImages }
 
+// enum ImageActionData { List<XFile>?,List<int>?}
+
 class ImageEvent {
   final ImageAction action;
   List<XFile>? data = [];
-
-  ImageEvent(this.action, [this.data]);
+  int? deleteIndex = 0;
+  ImageEvent(this.action, [this.data, this.deleteIndex]);
 }
 
 class ImageBloc {
@@ -268,17 +305,24 @@ class ImageBloc {
 
   ImageBloc() {
     eventStream.listen((event) {
-      print(event);
+      print(event.action);
+      print(event.deleteIndex);
       if (event.action == ImageAction.init) {
-        var imageList = updateImageList();
+        List imageList = updateImageList();
         dataSink.add(imageList);
       } else if (event.action == ImageAction.addImages) {
         print(event.data);
+        updateImageList2(event.data);
         addImages(event.data);
-        var imageList = updateImageList();
-        dataSink.add(imageList);
+
+        // print("data sink added");
+        // print(imageList);
+        // dataSink.add(imageList);
       } else if (event.action == ImageAction.clearImages) {
         clear();
+      } else if (event.action == ImageAction.deleteImage) {
+        print(event.deleteIndex);
+        handleDelete(event.deleteIndex);
       }
     });
   }
@@ -286,6 +330,32 @@ class ImageBloc {
   List updateImageList() {
     List _list = getImages();
     return _list;
+  }
+
+  void handleDelete(int? index) {
+    if (index == null) return;
+    print(index);
+    deleteImage(index);
+    eventSink.add(ImageEvent(ImageAction.init));
+  }
+
+  void updateImageList2(data) async {
+    List _list = getImages();
+    // data?.forEach((image) {
+    for (int i = 0; i < data.length; i++) {
+      var img = data[i];
+      // var img_bytes = await img.readAsBytes();
+      img = Image.file(
+        File(img.path),
+        fit: BoxFit.cover,
+      );
+      // var img = img.decodeImage(img_bytes);
+      _list.add(img);
+    }
+    ;
+    print("data sink added");
+    print(_list);
+    dataSink.add(_list);
   }
 
   List<String> getImageStringList() {

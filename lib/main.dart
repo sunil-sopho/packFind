@@ -53,6 +53,15 @@ void main() async {
 class App extends StatelessWidget {
   App({Key? key}) : super(key: key);
   final _appRouter = Routes();
+  final dataBloc = GetIt.instance<DataBloc>();
+  final imageBloc = GetIt.instance<ImageBloc>();
+
+  @override
+  void dispose() {
+    imageBloc.dispose();
+    dataBloc.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     print("building app");

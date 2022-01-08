@@ -34,60 +34,53 @@ class _PackageDetailScreenState extends State<PackageDetailScreen> {
     updateGallery();
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Search Results"),
+        title: widget.packageList?.name != null
+            ? Text("Package: ${widget.packageList?.name}")
+            : const Text("Package Details"),
       ),
       body: Center(
         child: Column(
           children: [
             const SizedBox(
-              height: 10,
+              height: 20,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                const Text(
-                  'List of instructions:  ',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 22,
-                  ),
-                ),
-                Text(
-                  widget.packageList!.itemList,
-                  style: const TextStyle(
-                    fontSize: 18,
-                  ),
-                ),
-              ],
+            const Text(
+              'List of instructions:  ',
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 22,
+              ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                const Text(
-                  'Location is  :  ',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 22,
-                  ),
-                ),
-                Text(
-                  widget.packageList!.location,
-                  style: const TextStyle(
-                    fontSize: 18,
-                  ),
-                ),
-              ],
+            Text(
+              widget.packageList!.itemList,
+              style: const TextStyle(
+                fontSize: 18,
+              ),
             ),
+            const Text(
+              'Location is  :  ',
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 22,
+              ),
+            ),
+            Text(
+              widget.packageList!.location,
+              style: const TextStyle(
+                fontSize: 18,
+              ),
+            ),
+
             // Container(
             //   margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
             //   constraints: const BoxConstraints(maxHeight: 300, maxWidth: 300),
             //   decoration: const BoxDecoration(color: Colors.grey),
             //   child: _data.getImage(int.parse(packageList.packageId) - 1),
             // )
-            Container(
-                height: 400,
+            SizedBox(
+                height: 300,
                 child: PhotoViewGallery.builder(
                   scrollPhysics: const BouncingScrollPhysics(),
                   builder: (BuildContext context, int index) {
@@ -100,7 +93,7 @@ class _PackageDetailScreenState extends State<PackageDetailScreen> {
                   },
                   itemCount: galleryItems.length,
                   loadingBuilder: (context, event) => Center(
-                    child: Container(
+                    child: SizedBox(
                       width: 20.0,
                       height: 20.0,
                       child: CircularProgressIndicator(
@@ -118,7 +111,7 @@ class _PackageDetailScreenState extends State<PackageDetailScreen> {
             Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  SizedBox(height: 40),
+                  const SizedBox(height: 40),
                   QrCodeWidget(textdata: widget.packageList?.packageId)
                 ])
           ],
