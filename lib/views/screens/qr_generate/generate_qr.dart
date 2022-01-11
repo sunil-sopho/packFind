@@ -248,11 +248,10 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
                     stream: imageBloc.dataStream,
                     builder: (context, snapshot) {
                       if (snapshot.data == null) {
-                        return const SliverToBoxAdapter(
-                            child: Center(child: Text("Loading")));
+                        return const Center(child: Text("Loading"));
                       } else if (snapshot.hasError) {
                         print("error");
-                        return const SliverToBoxAdapter(child: Text("Error"));
+                        return const Text("Error");
                       } else {
                         print("making grid");
                         print(snapshot.data);

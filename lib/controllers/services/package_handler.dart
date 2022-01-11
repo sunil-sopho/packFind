@@ -292,9 +292,6 @@ class ImageEvent {
 }
 
 class ImageBloc {
-  final List<Image> _imageList = [];
-  final List<String> _imageStringList = [];
-
   final _stateStreamController = StreamController<List>.broadcast();
   StreamSink<List> get dataSink => _stateStreamController.sink;
   Stream<List> get dataStream => _stateStreamController.stream;

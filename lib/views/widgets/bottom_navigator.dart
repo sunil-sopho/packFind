@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:auto_route/src/router/auto_router_x.dart';
 import 'package:pack/views/screens/home.dart';
 import 'package:pack/views/screens/dashboard.dart';
 import 'package:pack/views/screens/landing.dart';
@@ -28,26 +28,29 @@ class _BottomNavigatorState extends State<BottomNavigator> {
       setState(() {
         _selectedIndex = 0;
       });
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const InventoryPage()),
-      );
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => const InventoryPage()),
+      // );
+      context.router.pushNamed('/inventory-page');
     } else if (index == 1 && _selectedIndex != 1) {
       setState(() {
         _selectedIndex = 1;
       });
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const QRGeneratorSharePage()),
-      );
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => const QRGeneratorSharePage()),
+      // );
+      context.router.pushNamed('/q-rgenerator-share-page');
     } else if (index == 2 && _selectedIndex != 2) {
       setState(() {
         _selectedIndex = 2;
       });
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const PackageFinder()),
-      );
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => const PackageFinder()),
+      // );
+      context.router.pushNamed('/package-finder');
     }
   }
 
