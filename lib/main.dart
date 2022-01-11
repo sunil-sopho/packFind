@@ -11,12 +11,12 @@ import 'package:pack/controllers/services/package_handler.dart';
 final getIt = GetIt.instance;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   final docPath = await getApplicationDocumentsDirectory();
 
   Hive.init(docPath.path);
   Hive.registerAdapter(PackageAdapter());
   Hive.registerAdapter(ImgAdapter());
+  // flutter boxes related to data storage
   await Hive.openBox<Package>('packageBox');
   await Hive.openBox('countBox');
   await Hive.openBox<Img>('imageBox');
@@ -27,6 +27,7 @@ void main() async {
     await Hive.box('countBox').put('idCounter', 1);
   }
 
+  // settings and user information boxes
   await Hive.openBox('settingsBox');
   await Hive.openBox('userBox');
 

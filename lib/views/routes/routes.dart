@@ -6,7 +6,7 @@ import 'package:pack/views/screens/qr_generate/generate_qr.dart';
 import 'package:pack/views/screens/qr_generate/upload_image.dart';
 import 'package:pack/views/screens/scan/scan_qr.dart';
 import 'package:pack/views/screens/scan/scan_result.dart';
-import 'package:pack/views/screens/search_screen/item_detailed_result.dart';
+import 'package:pack/views/screens/package_detail_screen/package_detail_screen.dart';
 import 'package:pack/views/screens/search_screen/search.dart';
 import 'package:pack/views/screens/splash/splash_screen.dart';
 
