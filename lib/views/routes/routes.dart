@@ -8,6 +8,7 @@ import 'package:pack/views/screens/scan/scan_qr.dart';
 import 'package:pack/views/screens/scan/scan_result.dart';
 import 'package:pack/views/screens/search_screen/item_detailed_result.dart';
 import 'package:pack/views/screens/search_screen/search.dart';
+import 'package:pack/views/screens/splash/splash_screen.dart';
 
 @AdaptiveAutoRouter(replaceInRouteName: 'Route,Page', routes: <AutoRoute>[
   AutoRoute(page: Home, initial: true),
@@ -19,5 +20,6 @@ import 'package:pack/views/screens/search_screen/search.dart';
   AutoRoute(page: PackageFinder),
   AutoRoute(page: Information),
   AutoRoute(page: PackageDetailScreen),
+  AutoRoute(page: SplashScreen),
 ])
 class $Routes {}

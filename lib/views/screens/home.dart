@@ -15,14 +15,9 @@ class Home extends StatelessWidget {
             width: 300,
             height: 300,
           ),
-          // Image.asset(
-          //   'assets/img-txt.jpeg',
-          //   width: 200,
-          //   height: 200,
-          // ),
           ElevatedButton.icon(
               onPressed: () {
-                context.router.push(InventoryPage());
+                context.router.push(const SplashScreen());
               },
               label: const Text('Login to Find'),
               icon: const Icon(Icons.verified_user_rounded),
@@ -31,15 +26,14 @@ class Home extends StatelessWidget {
                       RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(18.0),
               )))),
-
           FractionalTranslation(
-            translation: Offset(1.5, 1.5),
+            translation: const Offset(1.5, 1.5),
             child: ClipRRect(
                 borderRadius: BorderRadius.circular(100.0),
-                child: SizedBox(
+                child: const SizedBox(
                   height: 100,
                   width: 100,
-                  child: const ColoredBox(color: Colors.yellow),
+                  child: ColoredBox(color: Colors.yellow),
                 )),
           ),
         ]),

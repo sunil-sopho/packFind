@@ -8,6 +8,7 @@ import 'package:pack/views/styles/colors.dart';
 import 'package:pack/views/widgets/bottom_navigator.dart';
 
 import 'package:get_it/get_it.dart';
+import 'package:pack/views/widgets/common.dart';
 // void main() => runApp(MyApp());
 
 // class MyApp extends StatelessWidget {
@@ -31,34 +32,13 @@ class InventoryPage extends StatefulWidget {
   _InventoryPageState createState() => _InventoryPageState();
 }
 
-class ItemCountNotifier extends ChangeNotifier {
-  int items = 0;
-  void updateItemCount() {
-    for (int i = 0; i < packageBox!.length; i++) {
-      if (packageBox!.values.toList()[i].itemList == "") {
-        items += 0;
-      } else {
-        items +=
-            (",").allMatches(packageBox!.values.toList()[i].itemList).length;
-        items +=
-            (" ").allMatches(packageBox!.values.toList()[i].itemList).length;
-        items += 1;
-      }
-    }
-    notifyListeners();
-  }
-}
-
 class _InventoryPageState extends State<InventoryPage> {
   // final Data _data = Data();
   final dataBloc = GetIt.instance<DataBloc>();
   final int selectedIndex = 0;
-  final _itemCountNotifier = ItemCountNotifier();
 
   @override
   void dispose() {
-    _itemCountNotifier.dispose();
-    // dataBloc.dispose();
     super.dispose();
   }
 
@@ -77,7 +57,7 @@ class _InventoryPageState extends State<InventoryPage> {
       return Scaffold(
         body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           // NavBar(eventSink: dataBloc.eventSink),
-          const LogoWidget(),
+          const LogoWidget(width: 210, height: 220),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
@@ -127,14 +107,16 @@ class _InventoryPageState extends State<InventoryPage> {
                   padding: const EdgeInsets.all(4.0),
                   child: Column(
                     children: <Widget>[
-                      AnimatedBuilder(
-                        animation: _itemCountNotifier,
-                        builder: (_, __) => Text(
-                          _itemCountNotifier.items.toString(),
-                          style: const TextStyle(
-                              color: Colors.black, fontSize: 25),
-                        ),
-                      ),
+                      StreamBuilder(
+                          stream: dataBloc.itemStream,
+                          initialData: 0,
+                          builder: (context, snapshot) {
+                            return Text(
+                              '${snapshot.data}',
+                              style: const TextStyle(
+                                  color: Colors.black, fontSize: 25),
+                            );
+                          }),
                       const Text(
                         '# items',
                         style: TextStyle(color: Colors.black),
@@ -263,18 +245,24 @@ class _InventoryPageState extends State<InventoryPage> {
 
       key: ValueKey(_foundPackages[index].packageId),
       color: Colors.amberAccent,
-      elevation: 4,
+      elevation: 10,
       margin: const EdgeInsets.symmetric(vertical: 6),
       child: ListTile(
         onTap: () {
           context.router
               .push(PackageDetailScreen(packageList: _foundPackages[index]));
         },
-        leading: Text('Inventory Id: ' +
+        title: Text('Inventory Id: ' +
             _foundPackages[index].packageId.toString() +
             '\n' +
             'Instruction List: ' +
             _foundPackages[index].itemList),
+        trailing: Container(
+            width: 70,
+            height: 70,
+            child: QrCodeTrailing(
+                textdata: _foundPackages[index].packageId.toString(),
+                size: 90)),
       ),
     );
   }
@@ -282,18 +270,6 @@ class _InventoryPageState extends State<InventoryPage> {
 
 IconThemeData _customIconTheme(IconThemeData original) {
   return original.copyWith(color: ShrineColor.shrineBrown900);
-}
-
-class LogoWidget extends StatelessWidget {
-  const LogoWidget({Key? key}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return Image.asset(
-      'assets/packFND_3_logo.png',
-      width: 210,
-      height: 220,
-    );
-  }
 }
 
 class NavBar extends StatelessWidget {
