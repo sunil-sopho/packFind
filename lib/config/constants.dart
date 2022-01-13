@@ -49,3 +49,14 @@ OutlineInputBorder outlineInputBorder() {
     borderSide: BorderSide(color: kTextColor),
   );
 }
+
+class PackageNavbarSettings {
+  static const String edit = 'Edit';
+//  static const String Settings = 'Settings';
+  static const String delete = 'Delete';
+
+  static const List<String> choices = <String>[
+    edit,
+    delete,
+  ];
+}

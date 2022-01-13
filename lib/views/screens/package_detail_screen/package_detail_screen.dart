@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pack/config/constants.dart';
 import 'package:pack/models/package.dart';
 import 'package:pack/controllers/services/package_handler.dart';
 import 'package:photo_view/photo_view.dart';
@@ -13,6 +14,15 @@ class PackageDetailScreen extends StatefulWidget {
 
   @override
   State<PackageDetailScreen> createState() => _PackageDetailScreenState();
+}
+
+void handleClick(String value, dynamic packageId) {
+  switch (value) {
+    case PackageNavbarSettings.edit:
+      break;
+    case PackageNavbarSettings.delete:
+      break;
+  }
 }
 
 class _PackageDetailScreenState extends State<PackageDetailScreen> {
@@ -38,6 +48,23 @@ class _PackageDetailScreenState extends State<PackageDetailScreen> {
         title: widget.packageList?.name != null
             ? Text("Package: ${widget.packageList?.name}")
             : const Text("Package Details"),
+        actions: <Widget>[
+          PopupMenuButton<String>(
+            elevation: 10.0,
+            padding: const EdgeInsets.all(0.0),
+            offset: const Offset(-10.0, kToolbarHeight),
+            onSelected: (value) =>
+                handleClick(value, widget.packageList?.packageId),
+            itemBuilder: (BuildContext context) {
+              return PackageNavbarSettings.choices.map((String choice) {
+                return PopupMenuItem<String>(
+                  value: choice,
+                  child: Text(choice),
+                );
+              }).toList();
+            },
+          ),
+        ],
       ),
       body: Center(
         child: Column(

@@ -67,26 +67,11 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
     print("build qr page");
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body:
-          // Column(
-          //   children: [
-          // const LogoWidget(width: 180, height: 170),
-          CustomScrollView(slivers: <Widget>[
-        // child Column(children: [
+      body: CustomScrollView(slivers: <Widget>[
         const SliverToBoxAdapter(
           child: SizedBox(),
         ),
-        // const SliverAppBar(
-        //   // pinned: true,
-        //   expandedHeight: 120.0,
-        //   backgroundColor: Colors.white,
-        //   // collapsedHeight: 100,
-        //   flexibleSpace: FlexibleSpaceBar(
-        //     title: LogoWidget(width: 180, height: 170),
-        //   ),
-        //   // title: LogoWidget(width: 180, height: 170),
-        //   stretch: true,
-        // ),
+
         SliverToBoxAdapter(
             child: Container(
                 child: Column(children: [
