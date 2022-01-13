@@ -193,46 +193,7 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
                         RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(18.0),
                 )))),
-            OutlinedButton(
-                child: const Text('Share'),
-                onPressed: () async {
-                  try {
-                    var image = await QrPainter(
-                      data: textdata,
-                      version: QrVersions.auto,
-                      gapless: false,
-                    ).toImage(200);
-
-                    ByteData? byteData =
-                        await image.toByteData(format: ImageByteFormat.png);
-                    print("step 2");
-
-                    Uint8List pngBytes = byteData!.buffer.asUint8List();
-//app directory for storing images.
-                    final appDir = await getApplicationDocumentsDirectory();
-                    print("step 3");
-//current time
-
-//qr image file creation
-                    file = await File('${appDir.path}/qr_code(packFND).png')
-                        .create();
-                    print("step 4");
-//appending data
-                    await file?.writeAsBytes(pngBytes);
-//Shares QR image
-                    await Share.shareFiles([file!.path],
-                        mimeTypes: ["image/png"],
-                        text: "Qr code for package",
-                        subject: "Qr code for package");
-                  } catch (e) {
-                    print(e.toString());
-                  }
-                },
-                style: ButtonStyle(
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18.0),
-                ))))
+            QrShareButton(textdata: textdata)
           ]),
         ),
         const SliverPadding(

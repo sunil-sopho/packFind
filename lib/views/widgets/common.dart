@@ -1,10 +1,15 @@
 // contains common widgets used
 
 // inserts logo
+import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui';
+import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:pack/config/constants.dart';
 import 'package:pack/controllers/utils.dart';
+import 'package:share_plus/share_plus.dart';
 
 class LogoWidget extends StatelessWidget {
   const LogoWidget({Key? key, this.width = 210, this.height = 220})
@@ -131,5 +136,54 @@ class DefaultButton extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class QrShareButton extends StatelessWidget {
+  const QrShareButton({Key? key, required this.textdata}) : super(key: key);
+  final String textdata;
+
+  @override
+  Widget build(BuildContext context) {
+    return OutlinedButton(
+        child: const Text('Share'),
+        onPressed: () async {
+          try {
+            var image = await QrPainter(
+              data: textdata,
+              version: QrVersions.auto,
+              gapless: false,
+            ).toImage(200);
+
+            ByteData? byteData =
+                await image.toByteData(format: ImageByteFormat.png);
+            print("step 2");
+
+            Uint8List pngBytes = byteData!.buffer.asUint8List();
+//app directory for storing images.
+            final appDir = await getApplicationDocumentsDirectory();
+            print("step 3");
+//current time
+
+//qr image file creation
+            var file =
+                await File('${appDir.path}/qr_code(packFND).png').create();
+            print("step 4");
+//appending data
+            await file.writeAsBytes(pngBytes);
+//Shares QR image
+            await Share.shareFiles([file.path],
+                mimeTypes: ["image/png"],
+                text: "Qr code for package",
+                subject: "Qr code for package");
+          } catch (e) {
+            print(e.toString());
+          }
+        },
+        style: ButtonStyle(
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18.0),
+        ))));
   }
 }

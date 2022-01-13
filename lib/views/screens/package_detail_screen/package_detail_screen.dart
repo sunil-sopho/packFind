@@ -4,6 +4,7 @@ import 'package:pack/controllers/services/package_handler.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:pack/views/widgets/common.dart';
 
 class PackageDetailScreen extends StatefulWidget {
   final Package? packageList;
@@ -112,7 +113,8 @@ class _PackageDetailScreenState extends State<PackageDetailScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   const SizedBox(height: 40),
-                  QrCodeWidget(textdata: widget.packageList?.packageId)
+                  QrCodeWidget(textdata: widget.packageList?.packageId),
+                  QrShareButton(textdata: widget.packageList?.packageId)
                 ])
           ],
         ),
