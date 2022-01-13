@@ -17,6 +17,22 @@ class SplashBody extends StatefulWidget {
 }
 
 class _SplashBodyState extends State<SplashBody> {
+  @override
+  void initState() {
+    super.initState();
+    navigateUser();
+  }
+
+  void navigateUser() async {
+    // if (FirebaseAuth.instance.currentUser != null) {
+    //   Navigator.pushReplacement(
+    //       context, MaterialPageRoute(builder: (context) => Screen1()));
+    // } else {
+    //   Navigator.pushReplacement(
+    //       context, MaterialPageRoute(builder: (context) => LoginPage()));
+    // }
+  }
+
   int currentPage = 0;
   List<Map<String, String>> splashData = [
     {
