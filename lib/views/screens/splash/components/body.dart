@@ -1,6 +1,7 @@
 // ignore: implementation_imports
 import 'package:auto_route/src/router/auto_router_x.dart';
 import 'package:flutter/material.dart';
+import 'package:pack/views/screens/sign_in/sign_in_screen.dart';
 import 'package:pack/views/widgets/common.dart';
 import 'package:pack/views/routes/routes.gr.dart';
 
@@ -95,7 +96,7 @@ class _SplashBodyState extends State<SplashBody> {
                       press: () {
                         // print("btn pressed");
                         context.router.pop();
-                        context.router.push(const InventoryPage());
+                        context.router.pushNamed('/sign-in-screen');
                       },
                     ),
                     const Spacer(),
