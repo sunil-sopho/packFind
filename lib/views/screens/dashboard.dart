@@ -9,19 +9,6 @@ import 'package:pack/views/widgets/bottom_navigator.dart';
 
 import 'package:get_it/get_it.dart';
 import 'package:pack/views/widgets/common.dart';
-// void main() => runApp(MyApp());
-
-// class MyApp extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       title: 'Flutter Demo',
-//       debugShowCheckedModeBanner: false,
-//       theme: _buildShrineTheme(),
-//       home: InventoryPage(),
-//     );
-//   }
-// }
 
 Box<Package>? packageBox = Hive.box<Package>('packageBox');
 
@@ -57,76 +44,89 @@ class _InventoryPageState extends State<InventoryPage> {
       return Scaffold(
         body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           // NavBar(eventSink: dataBloc.eventSink),
-          const LogoWidget(width: 210, height: 220),
+          const LogoWidget(width: 210, height: 200),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              Container(
-                height: constraints.maxHeight / 12,
-                width: constraints.maxWidth / 3,
-                margin: const EdgeInsets.fromLTRB(0, 0, 0, 20.0),
-                decoration: BoxDecoration(
-                    color: Colors.grey,
-                    border: Border.all(
-                      color: Colors.black,
+              PhysicalModel(
+                  elevation: 10,
+                  color: Colors.grey,
+                  shadowColor: Colors.black,
+                  borderRadius: BorderRadius.circular(20),
+                  child: Container(
+                    height: constraints.maxHeight / 12,
+                    width: constraints.maxWidth / 3,
+                    // margin: const EdgeInsets.fromLTRB(0, 0, 0, 20.0),
+                    decoration: BoxDecoration(
+                        color: Colors.grey,
+                        border: Border.all(
+                          color: Colors.black,
+                        ),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(20))),
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Column(
+                        children: <Widget>[
+                          StreamBuilder(
+                              stream: dataBloc.sizeStream,
+                              initialData: 0,
+                              builder: (context, snapshot) {
+                                return Text(
+                                  '${snapshot.data}', //packageBox!.length.toString(),
+                                  style: const TextStyle(
+                                      color: Colors.black, fontSize: 25),
+                                );
+                              }),
+                          const Text(
+                            '# inventories',
+                            style: TextStyle(color: Colors.black),
+                          )
+                        ],
+                      ),
                     ),
-                    borderRadius: const BorderRadius.all(Radius.circular(20))),
-                child: Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Column(
-                    children: <Widget>[
-                      StreamBuilder(
-                          stream: dataBloc.sizeStream,
-                          initialData: 0,
-                          builder: (context, snapshot) {
-                            return Text(
-                              '${snapshot.data}', //packageBox!.length.toString(),
-                              style: const TextStyle(
-                                  color: Colors.black, fontSize: 25),
-                            );
-                          }),
-                      const Text(
-                        '# inventories',
-                        style: TextStyle(color: Colors.black),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              Container(
-                height: constraints.maxHeight / 12,
-                width: constraints.maxWidth / 3,
-                margin: const EdgeInsets.fromLTRB(0, 0, 0, 20.0),
-                decoration: BoxDecoration(
-                    color: Colors.grey,
-                    border: Border.all(
-                      color: Colors.black,
+                  )),
+              PhysicalModel(
+                  elevation: 10,
+                  color: Colors.grey,
+                  shadowColor: Colors.black,
+                  borderRadius: BorderRadius.circular(20),
+                  child: Container(
+                    height: constraints.maxHeight / 12,
+                    width: constraints.maxWidth / 3,
+                    // margin: const EdgeInsets.fromLTRB(0, 0, 0, 20.0),
+                    decoration: BoxDecoration(
+                        color: Colors.grey,
+                        border: Border.all(
+                          color: Colors.black,
+                        ),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(20))),
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Column(
+                        children: <Widget>[
+                          StreamBuilder(
+                              stream: dataBloc.itemStream,
+                              initialData: 0,
+                              builder: (context, snapshot) {
+                                return Text(
+                                  '${snapshot.data}',
+                                  style: const TextStyle(
+                                      color: Colors.black, fontSize: 25),
+                                );
+                              }),
+                          const Text(
+                            '# items',
+                            style: TextStyle(color: Colors.black),
+                          )
+                        ],
+                      ),
                     ),
-                    borderRadius: const BorderRadius.all(Radius.circular(20))),
-                child: Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Column(
-                    children: <Widget>[
-                      StreamBuilder(
-                          stream: dataBloc.itemStream,
-                          initialData: 0,
-                          builder: (context, snapshot) {
-                            return Text(
-                              '${snapshot.data}',
-                              style: const TextStyle(
-                                  color: Colors.black, fontSize: 25),
-                            );
-                          }),
-                      const Text(
-                        '# items',
-                        style: TextStyle(color: Colors.black),
-                      )
-                    ],
-                  ),
-                ),
-              ),
+                  )),
             ],
           ),
+          const Spacer(),
           Column(children: [
             const Text(
               "Inventories",
