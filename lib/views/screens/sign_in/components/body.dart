@@ -1,5 +1,6 @@
 import 'package:auto_route/src/router/auto_router_x.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:pack/controllers/api/google_signin_api.dart';
 import 'package:pack/controllers/utils.dart';
 // import 'package:pack/views/widgets/default_button.dart';
@@ -154,6 +155,7 @@ class Body extends StatelessWidget {
       // }
       // Rouut.navigator.pop();
       // Rouut.navigator.pushNamed(Rouut.appBase);
+      Hive.box('userBox').put('isLoggedIn', true);
       context.router.pushNamed('/inventory-page');
       // analytics.logEvent(
       //     name: "signed_in_as_google",
@@ -175,6 +177,7 @@ class Body extends StatelessWidget {
       //   Rouut.navigator.pop();
       //   // TODO: why we did, we don't know
       // }
+      Hive.box('userBox').put('isLoggedIn', true);
       context.router.pushNamed('/inventory-page');
 
       // Rouut.navigator.pop();
