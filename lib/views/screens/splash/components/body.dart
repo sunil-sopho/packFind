@@ -1,6 +1,7 @@
 // ignore: implementation_imports
 import 'package:auto_route/src/router/auto_router_x.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:pack/views/screens/sign_in/sign_in_screen.dart';
 import 'package:pack/views/widgets/common.dart';
 import 'package:pack/views/routes/routes.gr.dart';
@@ -21,17 +22,15 @@ class _SplashBodyState extends State<SplashBody> {
   @override
   void initState() {
     super.initState();
-    navigateUser();
   }
 
-  void navigateUser() async {
-    // if (FirebaseAuth.instance.currentUser != null) {
-    //   Navigator.pushReplacement(
-    //       context, MaterialPageRoute(builder: (context) => Screen1()));
-    // } else {
-    //   Navigator.pushReplacement(
-    //       context, MaterialPageRoute(builder: (context) => LoginPage()));
-    // }
+  void navigateUser(BuildContext context) async {
+    final _isLoggedIn = await Hive.box('userBox').get('isLoggedIn');
+
+    if (_isLoggedIn) {
+      context.router.pop();
+      context.router.pushNamed('/inventory-page');
+    }
   }
 
   int currentPage = 0;
@@ -54,6 +53,7 @@ class _SplashBodyState extends State<SplashBody> {
   ];
   @override
   Widget build(BuildContext context) {
+    // navigateUser(context);
     return SafeArea(
       child: SizedBox(
         width: double.infinity,
