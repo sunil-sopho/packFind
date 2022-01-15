@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:pack/config/constants.dart';
 import 'package:pack/models/package.dart';
 import 'package:pack/controllers/services/package_handler.dart';
@@ -16,17 +17,16 @@ class PackageDetailScreen extends StatefulWidget {
   State<PackageDetailScreen> createState() => _PackageDetailScreenState();
 }
 
-void handleClick(String value, dynamic packageId) {
-  switch (value) {
-    case PackageNavbarSettings.edit:
-      break;
-    case PackageNavbarSettings.delete:
-      break;
-  }
-}
-
 class _PackageDetailScreenState extends State<PackageDetailScreen> {
-  final _data = Data();
+  final dataBloc = GetIt.instance<DataBloc>();
+
+  // Data? _data;
+
+  @override
+  void initState() {
+    // _data = dataBloc.data;
+    super.initState();
+  }
 
   List<Image> galleryItems = [];
 
@@ -36,7 +36,22 @@ class _PackageDetailScreenState extends State<PackageDetailScreen> {
     galleryItems.clear();
     if (widget.packageList != null) {
       galleryItems.addAll(
-          _data.getImages(int.parse(widget.packageList?.packageId) - 1));
+          // _data!.getImages(int.parse(widget.packageList?.packageId) - 1));
+          (widget.packageList != null)
+              ? getImagesfromStringList(widget.packageList!.image)
+              : getImagesfromStringList([]));
+    }
+  }
+
+  void handleClick(String value, dynamic package) {
+    switch (value) {
+      case PackageNavbarSettings.edit:
+        Navigator.pop(context);
+        break;
+      case PackageNavbarSettings.delete:
+        dataBloc.eventSink.add(DataEvent(DataAction.deletePackage, package));
+        Navigator.pop(context);
+        break;
     }
   }
 
@@ -53,8 +68,7 @@ class _PackageDetailScreenState extends State<PackageDetailScreen> {
             elevation: 10.0,
             padding: const EdgeInsets.all(0.0),
             offset: const Offset(-10.0, kToolbarHeight),
-            onSelected: (value) =>
-                handleClick(value, widget.packageList?.packageId),
+            onSelected: (value) => handleClick(value, widget.packageList),
             itemBuilder: (BuildContext context) {
               return PackageNavbarSettings.choices.map((String choice) {
                 return PopupMenuItem<String>(

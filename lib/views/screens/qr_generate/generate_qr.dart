@@ -5,6 +5,7 @@ import 'package:auto_route/src/router/auto_router_x.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:pack/views/routes/routes.gr.dart';
 import 'package:pack/views/widgets/common.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -18,7 +19,9 @@ import 'package:pack/views/widgets/bottom_navigator.dart';
 import 'package:get_it/get_it.dart';
 
 class QRGeneratorSharePage extends StatefulWidget {
-  const QRGeneratorSharePage({Key? key}) : super(key: key);
+  final Package? package;
+
+  const QRGeneratorSharePage({Key? key, this.package}) : super(key: key);
 
   @override
   _QRGeneratorSharePageState createState() => _QRGeneratorSharePageState();
@@ -33,6 +36,7 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
   final int selectedIndex = 1;
   final dynamic _packageId =
       TextEditingController(text: getCounter().toString());
+
   // _packageId.text = getCounter();
   final _itemList = TextEditingController();
   final _location = TextEditingController();
@@ -40,9 +44,6 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
   File? file;
 
   var userID = '1';
-  void updatePackageId() {
-    _packageId.text = getCounter().toString();
-  }
 
   @override
   void dispose() {
@@ -58,13 +59,27 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
   void initState() {
     dataBloc.eventSink.add(DataEvent(DataAction.init));
     imageBloc.eventSink.add(ImageEvent(ImageAction.init));
-
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    String _locationText = "";
+    String _nameText = "";
+    String _itemListText = "";
+    String _packageIdText = getCounter().toString();
     print("build qr page");
+    if (widget.package != null) {
+      _packageIdText = widget.package!.packageId;
+      userID = widget.package!.uid;
+      _locationText = widget.package!.location;
+      _nameText = widget.package!.name;
+      _itemListText = widget.package!.itemList;
+      // List<Image> _images =
+      //     dataBloc.data.getImages(int.parse(package!.packageId - 1));
+      // List<XFile> _imageList = _images.map((e) => e.image).toList();
+      // imageBloc.eventSink.add(ImageEvent(ImageAction.addImages, _imageList));
+    }
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: CustomScrollView(slivers: <Widget>[
@@ -81,7 +96,7 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
               child: TextFormField(
                 enabled: false,
                 decoration: const InputDecoration(labelText: 'Package id'),
-                controller: _packageId,
+                controller: _packageId..text = _packageIdText,
               ),
             ),
             const SizedBox(
@@ -103,7 +118,7 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
                   ),
                   labelText: 'Name',
                   hintText: 'Name of person or Package'),
-              controller: _name,
+              controller: _name..text = _nameText,
             ),
           ),
           Padding(
@@ -120,7 +135,7 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
                     ),
                 labelText: 'List of items',
               ),
-              controller: _itemList,
+              controller: _itemList..text = _itemListText,
             ),
           ),
           Padding(
@@ -131,7 +146,7 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
                   fillColor: Color(0xFFFFFFFF),
                   suffixIcon: Icon(Icons.map, color: Colors.blue),
                   border: UnderlineInputBorder()),
-              controller: _location,
+              controller: _location..text = _locationText,
             ),
           )
         ]))),
