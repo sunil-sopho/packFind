@@ -41,6 +41,19 @@ void handlePackage(Package package) async {
   }
 }
 
+void handleDelete(Package package) async {
+  packages.delete(package.packageId);
+  // print(packages.length);
+
+  Fluttertoast.showToast(
+    msg: 'Deleted package details',
+    gravity: ToastGravity.BOTTOM,
+    backgroundColor: Colors.black,
+    timeInSecForIosWeb: 3,
+    toastLength: Toast.LENGTH_SHORT,
+  );
+}
+
 Package? getPackageFromId(String id) {
   if (packages.containsKey(id)) {
     return packages.get(id);
@@ -192,6 +205,18 @@ class Data {
   }
 }
 
+List<Image> getImagesfromStringList(List<String> images) {
+  List<Image> _list = [];
+  if (images.isNotEmpty) {
+    for (int i = 0; i < images.length; i++) {
+      _list.add(Utility.imageFromBase64String(images[i]));
+    }
+    return _list;
+  }
+  _list.add(Image.asset('assets/logo-0.png'));
+  return _list;
+}
+
 enum DataAction { addPackage, deletePackage, updatePackage, init }
 
 class DataEvent {
@@ -230,13 +255,24 @@ class DataBloc {
         updateItemCount(allpackages);
         sizeSink.add(data.getLength());
         itemSink.add(items);
-      } else if (event.action == DataAction.addPackage ||
-          event.action == DataAction.deletePackage) {
-        if (event.action == DataAction.addPackage) {
-          addPackage(event.data);
-          addItemsFromPackage(event.data);
-        }
+      } else if (event.action == DataAction.addPackage) {
+        addPackage(event.data);
+        addItemsFromPackage(event.data);
         dataSink.add(data.getData());
+        sizeSink.add(data.getLength());
+        itemSink.add(items);
+      } else if (event.action == DataAction.deletePackage) {
+        deletePackage(event.data);
+        var allpackages = data.getData();
+        updateItemCount(allpackages);
+        dataSink.add(allpackages);
+        sizeSink.add(data.getLength());
+        itemSink.add(items);
+      } else if (event.action == DataAction.updatePackage) {
+        updatePackage(event.data);
+        var allpackages = data.getData();
+        updateItemCount(allpackages);
+        dataSink.add(allpackages);
         sizeSink.add(data.getLength());
         itemSink.add(items);
       } else {
@@ -247,6 +283,14 @@ class DataBloc {
   void addPackage(newPackage) {
     handlePackage(newPackage);
     incrementCounter();
+  }
+
+  void deletePackage(package) {
+    handleDelete(package);
+  }
+
+  void updatePackage(newPackage) {
+    handlePackage(newPackage);
   }
 
   Package? getPackage(String id) {
