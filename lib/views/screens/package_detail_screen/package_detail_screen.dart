@@ -3,10 +3,12 @@ import 'package:get_it/get_it.dart';
 import 'package:pack/config/constants.dart';
 import 'package:pack/models/package.dart';
 import 'package:pack/controllers/services/package_handler.dart';
+import 'package:pack/views/routes/routes.gr.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:pack/views/widgets/common.dart';
+import 'package:auto_route/src/router/auto_router_x.dart';
 
 class PackageDetailScreen extends StatefulWidget {
   final Package? packageList;
@@ -47,6 +49,7 @@ class _PackageDetailScreenState extends State<PackageDetailScreen> {
     switch (value) {
       case PackageNavbarSettings.edit:
         Navigator.pop(context);
+        context.router.push(QRGeneratorSharePage(package: package));
         break;
       case PackageNavbarSettings.delete:
         dataBloc.eventSink.add(DataEvent(DataAction.deletePackage, package));
