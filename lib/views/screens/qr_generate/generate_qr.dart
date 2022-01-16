@@ -71,6 +71,7 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
     print("build qr page");
     if (widget.package != null) {
       _packageIdText = widget.package!.packageId;
+      textdata = widget.package!.packageId;
       userID = widget.package!.uid;
       _locationText = widget.package!.location;
       _nameText = widget.package!.name;

@@ -26,7 +26,7 @@ class LandHome extends StatelessWidget {
               )))),
           ElevatedButton(
               onPressed: () {
-                context.router.push(const QRGeneratorSharePage());
+                context.router.push(QRGeneratorSharePage());
               },
               child: const Text('Create inventory'),
               style: ButtonStyle(

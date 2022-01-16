@@ -42,8 +42,12 @@ class Routes extends _i12.RootStackRouter {
           routeData: routeData, child: const _i2.LandHome());
     },
     QRGeneratorSharePage.name: (routeData) {
+      final args = routeData.argsAs<QRGeneratorSharePageArgs>(
+          orElse: () => const QRGeneratorSharePageArgs());
       return _i12.AdaptivePage<dynamic>(
-          routeData: routeData, child: const _i3.QRGeneratorSharePage());
+          routeData: routeData,
+          child:
+              _i3.QRGeneratorSharePage(key: args.key, package: args.package));
     },
     ScanQRPage.name: (routeData) {
       return _i12.AdaptivePage<dynamic>(
@@ -135,11 +139,27 @@ class LandHome extends _i12.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i3.QRGeneratorSharePage]
-class QRGeneratorSharePage extends _i12.PageRouteInfo<void> {
-  const QRGeneratorSharePage()
-      : super(QRGeneratorSharePage.name, path: '/q-rgenerator-share-page');
+class QRGeneratorSharePage
+    extends _i12.PageRouteInfo<QRGeneratorSharePageArgs> {
+  QRGeneratorSharePage({_i13.Key? key, _i14.Package? package})
+      : super(QRGeneratorSharePage.name,
+            path: '/q-rgenerator-share-page',
+            args: QRGeneratorSharePageArgs(key: key, package: package));
 
   static const String name = 'QRGeneratorSharePage';
+}
+
+class QRGeneratorSharePageArgs {
+  const QRGeneratorSharePageArgs({this.key, this.package});
+
+  final _i13.Key? key;
+
+  final _i14.Package? package;
+
+  @override
+  String toString() {
+    return 'QRGeneratorSharePageArgs{key: $key, package: $package}';
+  }
 }
 
 /// generated route for
