@@ -217,6 +217,16 @@ List<Image> getImagesfromStringList(List<String> images) {
   return _list;
 }
 
+List<Image> getImagesfromStringListForEditing(List<String> images) {
+  List<Image> _list = [];
+  if (images.isNotEmpty) {
+    for (int i = 0; i < images.length; i++) {
+      _list.add(Utility.imageFromBase64String(images[i]));
+    }
+  }
+  return _list;
+}
+
 enum DataAction { addPackage, deletePackage, updatePackage, init }
 
 class DataEvent {

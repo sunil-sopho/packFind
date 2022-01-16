@@ -77,8 +77,9 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
       _nameText = widget.package!.name;
       _itemListText = widget.package!.itemList;
       // List<Image> _images =
-      //     dataBloc.data.getImages(int.parse(package!.packageId - 1));
-      // List<XFile> _imageList = _images.map((e) => e.image).toList();
+      //     getImagesfromStringListForEditing(widget.package!.image);
+      // List<XFile> _imageList =
+      //     _images.map((e) => e.image).cast<XFile>().toList();
       // imageBloc.eventSink.add(ImageEvent(ImageAction.addImages, _imageList));
     }
     return Scaffold(
