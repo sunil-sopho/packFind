@@ -58,6 +58,8 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
   @override
   void initState() {
     dataBloc.eventSink.add(DataEvent(DataAction.init));
+    imageBloc.eventSink.add(
+        ImageEvent(ImageAction.addStringImages, [], -1, widget.package?.image));
     imageBloc.eventSink.add(ImageEvent(ImageAction.init));
     super.initState();
   }
@@ -80,7 +82,7 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
       //     getImagesfromStringListForEditing(widget.package!.image);
       // List<XFile> _imageList =
       //     _images.map((e) => e.image).cast<XFile>().toList();
-      // imageBloc.eventSink.add(ImageEvent(ImageAction.addImages, _imageList));
+
     }
     return Scaffold(
       resizeToAvoidBottomInset: false,

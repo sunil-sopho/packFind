@@ -104,6 +104,12 @@ void addImages(List<XFile>? allImages) async {
   });
 }
 
+void addStringImages(List<String>? allImages) async {
+  allImages?.forEach((imgString) {
+    images.add(Img(img: imgString));
+  });
+}
+
 void clearImages() {
   int numImages = images.length;
   for (var i = 1; i <= numImages; i++) {
@@ -334,7 +340,14 @@ class DataBloc {
   }
 }
 
-enum ImageAction { addImage, deleteImage, addImages, init, clearImages }
+enum ImageAction {
+  addImage,
+  deleteImage,
+  addImages,
+  init,
+  clearImages,
+  addStringImages
+}
 
 // enum ImageActionData { List<XFile>?,List<int>?}
 
@@ -342,7 +355,8 @@ class ImageEvent {
   final ImageAction action;
   List<XFile>? data = [];
   int? deleteIndex = 0;
-  ImageEvent(this.action, [this.data, this.deleteIndex]);
+  List<String>? stringImages = [];
+  ImageEvent(this.action, [this.data, this.deleteIndex, this.stringImages]);
 }
 
 class ImageBloc {
@@ -374,6 +388,8 @@ class ImageBloc {
       } else if (event.action == ImageAction.deleteImage) {
         print(event.deleteIndex);
         handleDelete(event.deleteIndex);
+      } else if (event.action == ImageAction.addStringImages) {
+        addStringImages(event.stringImages);
       }
     });
   }
