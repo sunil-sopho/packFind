@@ -150,9 +150,10 @@ class QrShareButton extends StatelessWidget {
         onPressed: () async {
           try {
             var image = await QrPainter(
+              emptyColor: Colors.white,
               data: textdata,
               version: QrVersions.auto,
-              gapless: false,
+              gapless: true,
             ).toImage(200);
 
             ByteData? byteData =
