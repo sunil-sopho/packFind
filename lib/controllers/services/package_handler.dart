@@ -19,6 +19,8 @@ void handlePackage(Package package) async {
   if (!isPresent) {
     packages.put(package.packageId, package);
     // print(packages.length);
+    incrementCounter();
+
     Fluttertoast.showToast(
       msg: 'Added new package',
       backgroundColor: Colors.black,
@@ -298,7 +300,6 @@ class DataBloc {
   }
   void addPackage(newPackage) {
     handlePackage(newPackage);
-    incrementCounter();
   }
 
   void deletePackage(package) {

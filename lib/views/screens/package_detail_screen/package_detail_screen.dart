@@ -83,14 +83,14 @@ class _PackageDetailScreenState extends State<PackageDetailScreen> {
           ),
         ],
       ),
-      body: Center(
+      body: SingleChildScrollView(
         child: Column(
           children: [
             const SizedBox(
               height: 20,
             ),
             const Text(
-              'List of instructions:  ',
+              'List of items :  ',
               style: TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.bold,

@@ -252,10 +252,10 @@ class _InventoryPageState extends State<InventoryPage> {
           context.router
               .push(PackageDetailScreen(packageList: _foundPackages[index]));
         },
-        title: Text('Inventory Id: ' +
-            _foundPackages[index].packageId.toString() +
+        title: Text('Inventory Name: ' +
+            _foundPackages[index].name.toString() +
             '\n' +
-            'Instruction List: ' +
+            'Item List: ' +
             _foundPackages[index].itemList),
         trailing: Container(
             width: 70,
