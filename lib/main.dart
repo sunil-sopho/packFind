@@ -1,12 +1,14 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:hive/hive.dart';
 import 'package:pack/views/routes/routes.gr.dart';
 import 'package:get_it/get_it.dart';
 import 'package:pack/models/package.dart';
 import 'package:pack/models/image.dart';
 import 'package:pack/controllers/services/package_handler.dart';
+import 'package:pack/controllers/providers/settings.dart';
 
 final getIt = GetIt.instance;
 void main() async {
@@ -48,7 +50,15 @@ void main() async {
   getIt.registerSingleton<DataBloc>(dataBloc);
   getIt.registerSingleton<ImageBloc>(imageBloc);
 
-  runApp(App());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<SettingsProvider>(
+            create: (_) => SettingsProvider()),
+      ],
+      child: App(),
+    ),
+  );
 }
 
 class App extends StatelessWidget {
@@ -67,9 +77,22 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     print("building app");
 
-    return MaterialApp.router(
-      routeInformationParser: _appRouter.defaultRouteParser(),
-      routerDelegate: AutoRouterDelegate(_appRouter),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      supportedLocales: const [
+        Locale('en', ''),
+      ],
+      home: MaterialApp.router(
+        routerDelegate: _appRouter.delegate(
+          initialRoutes: [
+            if (Hive.box('userBox').get('isLoggedIn'))
+              const InventoryPage()
+            else
+              const SplashScreen(),
+          ],
+        ),
+        routeInformationParser: _appRouter.defaultRouteParser(),
+      ),
     );
   }
 }

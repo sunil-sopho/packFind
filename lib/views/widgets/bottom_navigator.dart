@@ -51,6 +51,15 @@ class _BottomNavigatorState extends State<BottomNavigator> {
       //   MaterialPageRoute(builder: (context) => const PackageFinder()),
       // );
       context.router.pushNamed('/package-finder');
+    } else if (index == 3 && _selectedIndex != 3) {
+      setState(() {
+        _selectedIndex = 3;
+      });
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => const PackageFinder()),
+      // );
+      context.router.pushNamed('/settings-screen');
     }
   }
 
@@ -59,8 +68,8 @@ class _BottomNavigatorState extends State<BottomNavigator> {
     return (BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
       backgroundColor: Colors.white, //Color(0xFF6200EE),
-      selectedItemColor: Colors.blue,
-      unselectedItemColor: Colors.blue.withOpacity(.60),
+      selectedItemColor: Colors.orange, //Color(0xFF6200EE)
+      unselectedItemColor: Colors.orange.withOpacity(.60),
       selectedFontSize: 14,
       unselectedFontSize: 14,
       currentIndex: _selectedIndex,
@@ -77,7 +86,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
           label: "",
           icon: Icon(
             Icons.add_circle,
-            size: 55,
+            size: 35,
           ),
         ),
         BottomNavigationBarItem(
@@ -87,10 +96,13 @@ class _BottomNavigatorState extends State<BottomNavigator> {
             size: 35,
           ),
         ),
-        // BottomNavigationBarItem(
-        //   title: Text('News'),
-        //   icon: Icon(Icons.library_books),
-        // ),
+        BottomNavigationBarItem(
+          label: '',
+          icon: Icon(
+            Icons.account_circle,
+            size: 35,
+          ),
+        ),
       ],
     ));
   }

@@ -8,6 +8,7 @@ import 'package:pack/views/screens/scan/scan_qr.dart';
 import 'package:pack/views/screens/scan/scan_result.dart';
 import 'package:pack/views/screens/package_detail_screen/package_detail_screen.dart';
 import 'package:pack/views/screens/search_screen/search.dart';
+import 'package:pack/views/screens/settings_screen/settings.dart';
 import 'package:pack/views/screens/sign_in/sign_in_screen.dart';
 import 'package:pack/views/screens/splash/splash_screen.dart';
 
@@ -22,6 +23,7 @@ import 'package:pack/views/screens/splash/splash_screen.dart';
   AutoRoute(page: Information),
   AutoRoute(page: PackageDetailScreen),
   AutoRoute(page: SignInScreen),
+  AutoRoute(page: SettingsScreen),
   AutoRoute(page: SplashScreen, initial: true),
 ])
 class $Routes {}
