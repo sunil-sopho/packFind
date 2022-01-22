@@ -1,7 +1,10 @@
 // // Flutter imports:
 import 'package:auto_route/src/router/auto_router_x.dart';
+import 'package:pack/config/constants.dart';
 import 'package:pack/controllers/api/google_signin_api.dart';
 import 'package:pack/controllers/utils.dart';
+import 'package:pack/controllers/providers/settings.dart';
+import 'package:provider/provider.dart';
 import 'package:pack/main.dart';
 import 'package:flutter/material.dart';
 
@@ -9,15 +12,12 @@ import 'package:flutter/material.dart';
 // import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 // import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 // import 'package:pack/controllers/api/google_signin_api.dart';
-// import 'package:pack/views/routes/rouut.dart';
 // import 'package:pack/views/styles/baseStyles.dart';
-// import 'package:provider/provider.dart';
-// import 'package:pack/config/constants.dart';
 // import './account-setting.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 // // Project imports:
-// import 'package:pack/controller/providers/settings.dart';
+//
 // import 'package:pack/config/global.dart';
 // import 'package:pack/views/styles/colors.dart';
 // import 'package:pack/views/styles/text_style.dart';
@@ -30,6 +30,7 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: kPrimaryColor,
         elevation: 1,
         title: const Text('Settings'
             // AppLocalizations.of(context).translate('settings'),
@@ -48,6 +49,7 @@ class SettingsScreen extends StatelessWidget {
           Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          const SizedBox(height: 20),
           space(),
           profileImageBtn(),
           space(),
@@ -108,9 +110,9 @@ class SettingsScreen extends StatelessWidget {
             press: () {
               GoogleSignInApi.logout();
               context.router.pushNamed('/');
-              // analytics.logEvent(
-              //   name: "signed_out",
-              // );
+              analytics.logEvent(
+                name: "signed_out",
+              );
             },
           ),
         ],
@@ -139,9 +141,9 @@ class SettingsScreen extends StatelessWidget {
         clipBehavior: Clip.none,
         children: [
           const CircleAvatar(
-            backgroundImage: NetworkImage(
-                'https://st.depositphotos.com/1779253/5140/v/600/depositphotos_51405259-stock-illustration-male-avatar-profile-picture-use.jpg'),
-          ),
+              backgroundImage: NetworkImage(
+                  'https://www.woolha.com/media/2020/03/eevee.png'),
+              backgroundColor: kPrimaryDarkColor),
           Positioned(
             right: -16,
             bottom: 0,
@@ -183,10 +185,11 @@ class ProfileMenu extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: TextButton(
         style: TextButton.styleFrom(
-          primary: Colors.black, //kPrimaryColor,
-          backgroundColor: Colors.yellow,
+          primary: Colors.black87, //kPrimaryColor,
+          backgroundColor: const Color(0xFFF5F6F9), //kBackgroundColor
+          padding: const EdgeInsets.all(20),
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
           textStyle: const TextStyle(fontSize: 20),
         ),
         onPressed: press,

@@ -1,5 +1,6 @@
 import 'package:auto_route/src/router/auto_router_x.dart';
 import 'package:flutter/material.dart';
+import 'package:pack/config/constants.dart';
 import 'package:pack/models/package.dart';
 import 'package:hive/hive.dart';
 import 'package:pack/views/routes/routes.gr.dart';
@@ -244,7 +245,7 @@ class _InventoryPageState extends State<InventoryPage> {
       // ),
 
       key: ValueKey(_foundPackages[index].packageId),
-      color: Colors.amberAccent,
+      color: Color(0xFFAE42F9), //Colors.amberAccent,
       elevation: 10,
       margin: const EdgeInsets.symmetric(vertical: 6),
       child: ListTile(
