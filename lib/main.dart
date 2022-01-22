@@ -1,4 +1,6 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -10,10 +12,14 @@ import 'package:pack/models/image.dart';
 import 'package:pack/controllers/services/package_handler.dart';
 import 'package:pack/controllers/providers/settings.dart';
 
+late FirebaseAnalytics analytics;
 final getIt = GetIt.instance;
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final docPath = await getApplicationDocumentsDirectory();
+  await Firebase.initializeApp();
+  analytics = FirebaseAnalytics.instance;
 
   Hive.init(docPath.path);
   Hive.registerAdapter(PackageAdapter());
@@ -34,7 +40,7 @@ void main() async {
   await Hive.openBox('userBox');
 
   final _isDarkModeOn = await Hive.box('settingsBox').get('isDarkModeOn');
-  // SettingsProvider().darkTheme(_isDarkModeOn ?? false);
+  SettingsProvider().darkTheme(_isDarkModeOn ?? false);
 
   final _isLoggedIn = await Hive.box('userBox').get('isLoggedIn');
 
