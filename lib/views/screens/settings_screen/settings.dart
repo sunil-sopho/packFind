@@ -4,6 +4,7 @@ import 'package:pack/config/constants.dart';
 import 'package:pack/controllers/api/google_signin_api.dart';
 import 'package:pack/controllers/utils.dart';
 import 'package:pack/controllers/providers/settings.dart';
+import 'package:pack/views/styles/baseStyles.dart';
 import 'package:provider/provider.dart';
 import 'package:pack/main.dart';
 import 'package:flutter/material.dart';
@@ -29,95 +30,93 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: kPrimaryColor,
-        elevation: 1,
-        title: const Text('Settings'
-            // AppLocalizations.of(context).translate('settings'),
-            // style: AppTextStyle.appBarTitle.copyWith(
-            //   fontSize: 18,
-            //   color: Provider.of<SettingsProvider>(context, listen: false)
-            //           .isDarkThemeOn
-            //       ? AppColor.background
-            //       : AppColor.onBackground,
-            // ),
-            ),
-      ),
-      body:
-          // Consumer<SettingsProvider>(
-          //   builder: (context, settingsProvider, child) =>
-          Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          const SizedBox(height: 20),
-          space(),
-          profileImageBtn(),
-          space(),
-          ProfileMenu(
-            text:
-                'my_account', //AppLocalizations.of(context).translate('my_account'),
-            icon: "assets/user.svg",
-            press: () {
-              // Navigator.push(
-              //     context,
-              //     new MaterialPageRoute(
-              //       builder: (context) => AccountSetting(),
-              //     ));
-            },
+        appBar: AppBar(
+          backgroundColor: kPrimaryColor,
+          elevation: 1,
+          title: const Text('Settings'
+              // AppLocalizations.of(context).translate('settings'),
+              // style: AppTextStyle.appBarTitle.copyWith(
+              //   fontSize: 18,
+              //   color: Provider.of<SettingsProvider>(context, listen: false)
+              //           .isDarkThemeOn
+              //       ? AppColor.background
+              //       : AppColor.onBackground,
+              // ),
+              ),
+        ),
+        body: Consumer<SettingsProvider>(
+          builder: (context, settingsProvider, child) => Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const SizedBox(height: 20),
+              space(),
+              profileImageBtn(settingsProvider),
+              space(),
+              ProfileMenu(
+                text:
+                    'my_account', //AppLocalizations.of(context).translate('my_account'),
+                icon: "assets/user.svg",
+                press: () {
+                  // Navigator.push(
+                  //     context,
+                  //     new MaterialPageRoute(
+                  //       builder: (context) => AccountSetting(),
+                  //     ));
+                },
+              ),
+              // spaceLow(),
+              // ProfileMenu(
+              //   text: settingsProvider.isDarkThemeOn
+              //       ? AppLocalizations.of(context).translate('switch_to_light')
+              //       : AppLocalizations.of(context).translate('switch_to_dark'),
+              //   icon: "assets/icons/settings.svg",
+              //   press: () {
+              //     settingsProvider.darkTheme(!settingsProvider.isDarkThemeOn);
+              //     analytics.logEvent(
+              //         name: "switched_app_theme",
+              //         parameters: <String, dynamic>{
+              //           'switched_to':
+              //               settingsProvider.isDarkThemeOn ? 'dark' : 'light'
+              //         });
+              //   },
+              // ),
+              // spaceLow(),
+              // ProfileMenu(
+              //   text: settingsProvider.getActiveLanguageCode() == 'en'
+              //       ? AppLocalizations.of(context).translate('change_to_kr')
+              //       : AppLocalizations.of(context).translate('change_to_en'),
+              //   icon: "assets/icons/settings.svg",
+              //   press: () {
+              //     print(settingsProvider.getActiveLanguageCode());
+              //     if (settingsProvider.getActiveLanguageCode() == "en") {
+              //       settingsProvider.setLang("Korean");
+              //     } else {
+              //       settingsProvider.setLang("English");
+              //     }
+              //     // analytics.logEvent(
+              //     //     name: "switched_app_lang",
+              //     //     parameters: <String, dynamic>{
+              //     //       'switched_to':
+              //     //           settingsProvider.getActiveLanguageCode() == 'en' ? 'en' : 'kr'
+              //     //     });
+              //   },
+              // ),
+              spaceLow(),
+              ProfileMenu(
+                text:
+                    "log out", //AppLocalizations.of(context).translate("log_out"),
+                icon: "assets/logout.svg",
+                press: () {
+                  GoogleSignInApi.logout();
+                  context.router.pushNamed('/');
+                  analytics.logEvent(
+                    name: "signed_out",
+                  );
+                },
+              ),
+            ],
           ),
-          // spaceLow(),
-          // ProfileMenu(
-          //   text: settingsProvider.isDarkThemeOn
-          //       ? AppLocalizations.of(context).translate('switch_to_light')
-          //       : AppLocalizations.of(context).translate('switch_to_dark'),
-          //   icon: "assets/icons/settings.svg",
-          //   press: () {
-          //     settingsProvider.darkTheme(!settingsProvider.isDarkThemeOn);
-          //     analytics.logEvent(
-          //         name: "switched_app_theme",
-          //         parameters: <String, dynamic>{
-          //           'switched_to':
-          //               settingsProvider.isDarkThemeOn ? 'dark' : 'light'
-          //         });
-          //   },
-          // ),
-          // spaceLow(),
-          // ProfileMenu(
-          //   text: settingsProvider.getActiveLanguageCode() == 'en'
-          //       ? AppLocalizations.of(context).translate('change_to_kr')
-          //       : AppLocalizations.of(context).translate('change_to_en'),
-          //   icon: "assets/icons/settings.svg",
-          //   press: () {
-          //     print(settingsProvider.getActiveLanguageCode());
-          //     if (settingsProvider.getActiveLanguageCode() == "en") {
-          //       settingsProvider.setLang("Korean");
-          //     } else {
-          //       settingsProvider.setLang("English");
-          //     }
-          //     // analytics.logEvent(
-          //     //     name: "switched_app_lang",
-          //     //     parameters: <String, dynamic>{
-          //     //       'switched_to':
-          //     //           settingsProvider.getActiveLanguageCode() == 'en' ? 'en' : 'kr'
-          //     //     });
-          //   },
-          // ),
-          spaceLow(),
-          ProfileMenu(
-            text:
-                "log out", //AppLocalizations.of(context).translate("log_out"),
-            icon: "assets/logout.svg",
-            press: () {
-              GoogleSignInApi.logout();
-              context.router.pushNamed('/');
-              analytics.logEvent(
-                name: "signed_out",
-              );
-            },
-          ),
-        ],
-      ),
-    );
+        ));
   }
 
   Widget space() {
@@ -132,7 +131,7 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  Widget profileImageBtn() {
+  Widget profileImageBtn(settingsProvider) {
     return SizedBox(
       height: 115,
       width: 115,
@@ -140,9 +139,8 @@ class SettingsScreen extends StatelessWidget {
         fit: StackFit.expand,
         clipBehavior: Clip.none,
         children: [
-          const CircleAvatar(
-              backgroundImage: NetworkImage(
-                  'https://www.woolha.com/media/2020/03/eevee.png'),
+          CircleAvatar(
+              backgroundImage: NetworkImage(settingsProvider.userProfilePic),
               backgroundColor: kPrimaryDarkColor),
           Positioned(
             right: -16,
@@ -197,11 +195,10 @@ class ProfileMenu extends StatelessWidget {
           children: [
             SvgPicture.asset(
               icon,
-              color: Colors.black,
-              // Provider.of<SettingsProvider>(context, listen: true)
-              //         .isDarkThemeOn
-              //     ? BaseStyles.onBackgroundDark
-              //     : BaseStyles.onBackground,
+              color: Provider.of<SettingsProvider>(context, listen: true)
+                      .isDarkThemeOn
+                  ? BaseStyles.onBackgroundDark
+                  : BaseStyles.onBackground,
               width: 22,
             ),
             const SizedBox(width: 20),

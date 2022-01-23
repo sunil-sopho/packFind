@@ -245,7 +245,7 @@ class _InventoryPageState extends State<InventoryPage> {
       // ),
 
       key: ValueKey(_foundPackages[index].packageId),
-      color: Color(0xFFAE42F9), //Colors.amberAccent,
+      color: Colors.amberAccent,
       elevation: 10,
       margin: const EdgeInsets.symmetric(vertical: 6),
       child: ListTile(

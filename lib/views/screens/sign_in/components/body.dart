@@ -2,6 +2,7 @@ import 'package:auto_route/src/router/auto_router_x.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:pack/controllers/api/google_signin_api.dart';
+import 'package:pack/controllers/providers/settings.dart';
 import 'package:pack/controllers/utils.dart';
 // import 'package:pack/views/widgets/default_button.dart';
 // import 'package:pack/controller/providers/settings.dart';
@@ -10,6 +11,7 @@ import 'package:pack/controllers/utils.dart';
 // import 'package:pack/views/routes/routes.gr.dart';
 // import 'package:pack/views/widgets/no_account_text.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
+import 'package:provider/provider.dart';
 // import 'package:pack/views/widgets/socal_card.dart';
 // import 'package:provider/provider.dart';
 // import 'package:pack/utils/size_config.dart';
@@ -137,18 +139,18 @@ class Body extends StatelessWidget {
   Future signInGoogle(BuildContext context) async {
     final user = await GoogleSignInApi.login();
     print("user --------------- ${user}");
-
+    final settings = Provider.of<SettingsProvider>(context, listen: false);
     if (user != null) {
-      print("signed in ${user}");
+      print("signed in $user");
       print("signed in ${user.photoUrl}");
       // final ggAuth = await user.authentication;
       // print(ggAuth.idToken);
       // print(ggAuth.accessToken);
 
       // print("auth token :${user.getAuthResponse().id_token}")
-      // settingsProvider.setUserProfilePic(user.photoUrl);
-      // settingsProvider.setUserFullName(user.displayName);
-      // if (settings != null) settings.googleSignInAccount = user;
+      settings.setUserProfilePic(user.photoUrl ?? '');
+      settings.setUserFullName(user.displayName ?? '');
+      settings.googleSignInAccount = user;
       // while (Rouut.navigator.canPop()) {
       //   Rouut.navigator.pop();
       //   // TODO: why we did, we don't know
@@ -156,6 +158,7 @@ class Body extends StatelessWidget {
       // Rouut.navigator.pop();
       // Rouut.navigator.pushNamed(Rouut.appBase);
       Hive.box('userBox').put('isLoggedIn', true);
+      context.router.popUntilRoot();
       context.router.pushNamed('/inventory-page');
       // analytics.logEvent(
       //     name: "signed_in_as_google",
@@ -168,16 +171,17 @@ class Body extends StatelessWidget {
 
   Future signInGuest(BuildContext context) async {
     final user = await GoogleSignInApi.loginGuest();
-
+    final settings = Provider.of<SettingsProvider>(context, listen: false);
     if (user != null) {
-      // settingsProvider.setUserProfilePic(user.photoUrl);
-      // settingsProvider.setUserFullName(user.displayName);
+      settings.setUserProfilePic(user.photoUrl);
+      settings.setUserFullName(user.displayName);
       // if (settings != null) settings.googleSignInAccount = user;
       // while (Rouut.navigator.canPop()) {
       //   Rouut.navigator.pop();
       //   // TODO: why we did, we don't know
       // }
       Hive.box('userBox').put('isLoggedIn', true);
+      context.router.popUntilRoot();
       context.router.pushNamed('/inventory-page');
 
       // Rouut.navigator.pop();
@@ -194,9 +198,9 @@ class Body extends StatelessWidget {
 
 showAlertDialog(BuildContext context) {
   final ButtonStyle flatButtonStyle = TextButton.styleFrom(
-    minimumSize: Size(60, 34),
+    minimumSize: const Size(60, 34),
     backgroundColor: Colors.grey,
-    padding: EdgeInsets.all(0),
+    padding: const EdgeInsets.all(0),
   );
   // Create button
   Widget okButton = TextButton(
