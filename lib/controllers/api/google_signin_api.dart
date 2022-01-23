@@ -17,17 +17,20 @@ class GoogleSignInApi {
     try {
       final user = await _googleSignIn.signIn();
       print("google");
-      print(user);
-      final gKey = await user?.authentication;
+      if (user == null) {
+        return null;
+      }
+
+      final gKey = await user.authentication;
 
       // final accessToken = gKey?.accessToken;
-      final idToken = gKey?.idToken;
+      final idToken = gKey.idToken;
       // print(idToken);
 
       // Checking if email and name is null
-      assert(user?.email != null);
-      assert(user?.displayName != null);
-      assert(user?.photoUrl != null);
+      assert(user.email != null);
+      assert(user.displayName != null);
+      assert(user.photoUrl != null);
 
       // var url = Uri.parse(weburl + 'login');
       // var response = await http.post(url, body: {'idToken': idToken});

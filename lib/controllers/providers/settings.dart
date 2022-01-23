@@ -11,7 +11,7 @@ class SettingsProvider extends ChangeNotifier {
   String localeCode = "en";
   late GoogleSignInAccount googleSignInAccount;
   String userProfilePic = Hive.box('userBox').get('userProfilePic') ??
-      'https://st.depositphotos.com/1779253/5140/v/600/depositphotos_51405259-stock-illustration-male-avatar-profile-picture-use.jpg';
+      'https://www.woolha.com/media/2020/03/eevee.png';
   String userFullName = Hive.box('userBox').get('userFullName') ?? '';
 
   String getActiveLanguageCode() {
