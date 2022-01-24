@@ -53,7 +53,7 @@ class GoogleSignInApi {
       return user;
     } catch (error) {
       print(error);
-      return null;
+      rethrow;
     }
   }
 
@@ -64,7 +64,8 @@ class GoogleSignInApi {
       // add sample credentials
       user.email = "samples@example.com";
       user.displayName = "Ted Ross";
-      user.photoUrl = "https://i.ibb.co/0CkNsSk/user.png"; //sample image
+      user.photoUrl = "https://www.woolha.com/media/2020/03/eevee.png";
+      //"https://i.ibb.co/0CkNsSk/user.png"; //sample image
 
       // var url = Uri.parse(weburl + 'login_guest');
       // var response = await http.post(url);
