@@ -137,8 +137,13 @@ class Body extends StatelessWidget {
   }
 
   Future signInGoogle(BuildContext context) async {
-    final user = await GoogleSignInApi.login();
-    print("user --------------- ${user}");
+    var user;
+    try {
+      user = await GoogleSignInApi.login();
+    } catch (error) {
+      showAlertDialog(context, msg: error.toString());
+    }
+    print("user --------------- $user");
     final settings = Provider.of<SettingsProvider>(context, listen: false);
     if (user != null) {
       print("signed in $user");
@@ -166,6 +171,8 @@ class Body extends StatelessWidget {
       //       "user_email": user.email,
       //       "user_display_name": user.displayName
       //     });
+    } else {
+      showAlertDialog(context, msg: 'user is null');
     }
   }
 
@@ -196,7 +203,7 @@ class Body extends StatelessWidget {
   }
 }
 
-showAlertDialog(BuildContext context) {
+showAlertDialog(BuildContext context, {String? msg}) {
   final ButtonStyle flatButtonStyle = TextButton.styleFrom(
     minimumSize: const Size(60, 34),
     backgroundColor: Colors.grey,
@@ -217,7 +224,7 @@ showAlertDialog(BuildContext context) {
   // Create AlertDialog
   AlertDialog alert = AlertDialog(
     title: const Text("Coming Soon..."),
-    content: const Text("Currently this login method is not available."),
+    content: Text(msg ?? "Currently this login method is not available."),
     actions: [
       okButton,
     ],

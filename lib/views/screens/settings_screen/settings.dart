@@ -64,22 +64,24 @@ class SettingsScreen extends StatelessWidget {
                   //     ));
                 },
               ),
-              // spaceLow(),
-              // ProfileMenu(
-              //   text: settingsProvider.isDarkThemeOn
-              //       ? AppLocalizations.of(context).translate('switch_to_light')
-              //       : AppLocalizations.of(context).translate('switch_to_dark'),
-              //   icon: "assets/icons/settings.svg",
-              //   press: () {
-              //     settingsProvider.darkTheme(!settingsProvider.isDarkThemeOn);
-              //     analytics.logEvent(
-              //         name: "switched_app_theme",
-              //         parameters: <String, dynamic>{
-              //           'switched_to':
-              //               settingsProvider.isDarkThemeOn ? 'dark' : 'light'
-              //         });
-              //   },
-              // ),
+              spaceLow(),
+              ProfileMenu(
+                text: settingsProvider.isDarkThemeOn
+                    ? 'switch to light'
+                    : 'switch to dark',
+                // ? AppLocalizations.of(context).translate('switch_to_light')
+                // : AppLocalizations.of(context).translate('switch_to_dark'),
+                icon: "assets/logout.svg", //"assets/icons/settings.svg",
+                press: () {
+                  settingsProvider.darkTheme(!settingsProvider.isDarkThemeOn);
+                  analytics.logEvent(
+                      name: "switched_app_theme",
+                      parameters: <String, dynamic>{
+                        'switched_to':
+                            settingsProvider.isDarkThemeOn ? 'dark' : 'light'
+                      });
+                },
+              ),
               // spaceLow(),
               // ProfileMenu(
               //   text: settingsProvider.getActiveLanguageCode() == 'en'
@@ -108,7 +110,8 @@ class SettingsScreen extends StatelessWidget {
                 icon: "assets/logout.svg",
                 press: () {
                   GoogleSignInApi.logout();
-                  context.router.pushNamed('/');
+                  context.router.popUntilRoot();
+                  context.router.replaceNamed('/');
                   analytics.logEvent(
                     name: "signed_out",
                   );
