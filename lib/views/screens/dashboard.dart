@@ -45,125 +45,64 @@ class _InventoryPageState extends State<InventoryPage> {
       return Scaffold(
         body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           // NavBar(eventSink: dataBloc.eventSink),
-          const LogoWidget(width: 210, height: 200),
+          const Padding(
+              padding: EdgeInsets.only(top: 10),
+              child: LogoWidget(width: 210, height: 120)),
+          const SizedBox(height: 15),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              PhysicalModel(
-                  elevation: 10,
-                  color: Colors.grey,
-                  shadowColor: Colors.black,
-                  borderRadius: BorderRadius.circular(20),
-                  child: Container(
-                    height: constraints.maxHeight / 12,
-                    width: constraints.maxWidth / 3,
-                    // margin: const EdgeInsets.fromLTRB(0, 0, 0, 20.0),
-                    decoration: BoxDecoration(
-                        color: Colors.grey,
-                        border: Border.all(
-                          color: Colors.black,
-                        ),
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(20))),
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Column(
-                        children: <Widget>[
-                          StreamBuilder(
-                              stream: dataBloc.sizeStream,
-                              initialData: 0,
-                              builder: (context, snapshot) {
-                                return Text(
-                                  '${snapshot.data}', //packageBox!.length.toString(),
-                                  style: const TextStyle(
-                                      color: Colors.black, fontSize: 25),
-                                );
-                              }),
-                          const Text(
-                            '# inventories',
-                            style: TextStyle(color: Colors.black),
-                          )
-                        ],
-                      ),
-                    ),
-                  )),
-              PhysicalModel(
-                  elevation: 10,
-                  color: Colors.grey,
-                  shadowColor: Colors.black,
-                  borderRadius: BorderRadius.circular(20),
-                  child: Container(
-                    height: constraints.maxHeight / 12,
-                    width: constraints.maxWidth / 3,
-                    // margin: const EdgeInsets.fromLTRB(0, 0, 0, 20.0),
-                    decoration: BoxDecoration(
-                        color: Colors.grey,
-                        border: Border.all(
-                          color: Colors.black,
-                        ),
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(20))),
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Column(
-                        children: <Widget>[
-                          StreamBuilder(
-                              stream: dataBloc.itemStream,
-                              initialData: 0,
-                              builder: (context, snapshot) {
-                                return Text(
-                                  '${snapshot.data}',
-                                  style: const TextStyle(
-                                      color: Colors.black, fontSize: 25),
-                                );
-                              }),
-                          const Text(
-                            '# items',
-                            style: TextStyle(color: Colors.black),
-                          )
-                        ],
-                      ),
-                    ),
-                  )),
+              DisplayBox(
+                  constraints: constraints,
+                  informationStream: dataBloc.sizeStream,
+                  icon: Icons.archive,
+                  textdata: 'Packages'),
+              DisplayBox(
+                  constraints: constraints,
+                  icon: Icons.my_library_books,
+                  informationStream: dataBloc.itemStream,
+                  textdata: 'Items')
             ],
           ),
-          const Spacer(),
+          const SizedBox(
+            height: 20,
+          ),
           Column(children: [
             const Text(
               "Inventories",
               style: TextStyle(fontSize: 20),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                StreamBuilder<List>(
-                    stream: dataBloc.dataStream,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const CircularProgressIndicator();
-                      } else if (snapshot.data == null) {
-                        return const Text("Loading");
-                      } else if (snapshot.hasError) {
-                        print("error");
-                        return const Text("Error");
-                      } else {
-                        return SizedBox(
-                          height: constraints.maxHeight / 2.5,
-                          width: constraints.maxWidth / 1.1,
-                          child: Scrollbar(
-                            isAlwaysShown: true,
+            SizedBox(
+              height: 350,
+              // mainAxisAlignment: MainAxisAlignment.spaceAround,
+              child: StreamBuilder<List>(
+                  stream: dataBloc.dataStream,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    } else if (snapshot.data == null) {
+                      return const Text("Loading");
+                    } else if (snapshot.hasError) {
+                      print("error");
+                      return const Text("Error");
+                    } else {
+                      return SizedBox(
+                        height: constraints.maxHeight / 2.5,
+                        width: constraints.maxWidth / 1.1,
+                        child: Scrollbar(
+                          isAlwaysShown: true,
+                          controller: _firstController,
+                          child: ListView.builder(
+                            padding: const EdgeInsets.all(0),
                             controller: _firstController,
-                            child: ListView.builder(
-                              padding: const EdgeInsets.all(0),
-                              controller: _firstController,
-                              itemCount: snapshot.data!.length,
-                              itemBuilder: _itemBuilder,
-                            ),
+                            itemCount: snapshot.data!.length,
+                            itemBuilder: _itemBuilder,
                           ),
-                        );
-                      }
-                    }),
-              ],
+                        ),
+                      );
+                    }
+                  }),
+              // ],
             ),
           ])
         ]),
@@ -296,3 +235,62 @@ class NavBar extends StatelessWidget {
 }
 
 const defaultLetterSpacing = 0.03;
+
+class DisplayBox extends StatelessWidget {
+  const DisplayBox(
+      {Key? key,
+      required this.constraints,
+      required this.informationStream,
+      required this.icon,
+      this.textdata = ''})
+      : super(key: key);
+
+  final BoxConstraints constraints;
+  final Stream informationStream;
+  final textdata;
+  final IconData icon;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        height: constraints.maxHeight / 11,
+        width: constraints.maxWidth / 3,
+        child: Card(
+          elevation: 10,
+          shadowColor: kPrimaryColor,
+          margin: EdgeInsets.all(2),
+          shape: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20),
+              borderSide: BorderSide(color: kPrimaryDarkColor)),
+          child: Column(
+            children: <Widget>[
+              StreamBuilder(
+                  stream: informationStream,
+                  initialData: 0,
+                  builder: (context, snapshot) {
+                    return ListTile(
+                      leading: Icon(icon),
+                      trailing: Column(children: [
+                        Spacer(),
+                        Text(
+                          '${snapshot.data}',
+                          style: const TextStyle(
+                              color: Colors.black, fontSize: 25),
+                        ),
+                        Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(textdata,
+                                  style: const TextStyle(
+                                      backgroundColor: Colors.white,
+                                      color: Colors.black,
+                                      fontSize: 12))
+                            ]),
+                      ]),
+                    );
+                  })
+            ],
+          ),
+        ));
+  }
+}
