@@ -32,8 +32,6 @@ class _PackageDetailScreenState extends State<PackageDetailScreen> {
 
   List<Image> galleryItems = [];
 
-  get abc => null;
-
   void updateGallery() {
     galleryItems.clear();
     if (widget.packageList != null) {
@@ -63,6 +61,8 @@ class _PackageDetailScreenState extends State<PackageDetailScreen> {
     updateGallery();
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: kPrimaryColor,
+        elevation: 1,
         title: widget.packageList?.name != null
             ? Text("Package: ${widget.packageList?.name}")
             : const Text("Package Details"),
