@@ -57,7 +57,7 @@ class _InventoryPageState extends State<InventoryPage> {
                   constraints: constraints,
                   informationStream: dataBloc.sizeStream,
                   icon: Icons.archive,
-                  textdata: 'Boxes'),
+                  textdata: 'Packages'),
               DisplayBox(
                   constraints: constraints,
                   icon: Icons.my_library_books,
@@ -70,7 +70,7 @@ class _InventoryPageState extends State<InventoryPage> {
           ),
           Column(children: [
             const Text(
-              "Inventories",
+              "Inventory",
               style: TextStyle(fontSize: 20),
             ),
             SizedBox(
@@ -194,8 +194,8 @@ class _InventoryPageState extends State<InventoryPage> {
               .push(PackageDetailScreen(packageList: _foundPackages[index]));
         },
         title: _foundPackages[index].name == ""
-            ? Text('Box Id: ' + _foundPackages[index].packageId.toString())
-            : Text('Box Name: ' + _foundPackages[index].name.toString()),
+            ? Text('Package Id: ' + _foundPackages[index].packageId.toString())
+            : Text('Package Name: ' + _foundPackages[index].name.toString()),
         subtitle: Text('Item List: ' + _foundPackages[index].itemList),
         trailing: Container(
             width: 70,

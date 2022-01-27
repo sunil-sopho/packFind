@@ -59,7 +59,7 @@ class SettingsScreen extends StatelessWidget {
               ProfileMenu(
                 text:
                     'My account', //AppLocalizations.of(context).translate('my_account'),
-                icon: "assets/user.svg",
+                icon: Icons.verified_user,
                 press: () {
                   // Navigator.push(
                   //     context,
@@ -75,7 +75,7 @@ class SettingsScreen extends StatelessWidget {
               //       : 'switch to dark',
               //   // ? AppLocalizations.of(context).translate('switch_to_light')
               //   // : AppLocalizations.of(context).translate('switch_to_dark'),
-              //   icon: "assets/logout.svg", //"assets/icons/settings.svg",
+              //   icon: Icons.dark_mode, //"assets/icons/settings.svg",
               //   press: () {
               //     settingsProvider.darkTheme(!settingsProvider.isDarkThemeOn);
               //     analytics.logEvent(
@@ -112,7 +112,7 @@ class SettingsScreen extends StatelessWidget {
               ProfileMenu(
                 text:
                     "Generate QR pdf", //AppLocalizations.of(context).translate("log_out"),
-                icon: "assets/logout.svg",
+                icon: Icons.picture_as_pdf,
                 press: () async {
                   final pdfFile = await PdfApi.generateNew(1, 20);
                   await PdfApi.openFile(pdfFile);
@@ -122,7 +122,7 @@ class SettingsScreen extends StatelessWidget {
               ProfileMenu(
                 text:
                     "log out", //AppLocalizations.of(context).translate("log_out"),
-                icon: "assets/logout.svg",
+                icon: Icons.logout,
                 press: () {
                   GoogleSignInApi.logout();
                   context.router.popUntilRoot();
@@ -171,8 +171,11 @@ class SettingsScreen extends StatelessWidget {
                 child: Container(
                   decoration: const BoxDecoration(
                       shape: BoxShape.circle, color: Colors.white),
-                  padding: const EdgeInsets.all(5),
-                  // child: SvgPicture.asset("assets/Camera-Icon.svg",
+                  padding: const EdgeInsets.all(0),
+                  child: const CircleAvatar(
+                      child: Icon(Icons.camera, color: Colors.black45),
+                      backgroundColor: Colors.white),
+                  // SvgPicture.asset("assets/Camera-Icon.svg",
                   //     color: Colors.black45),
                 ),
               ),
@@ -192,7 +195,8 @@ class ProfileMenu extends StatelessWidget {
     required this.press,
   }) : super(key: key);
 
-  final String text, icon;
+  final String text;
+  final IconData icon;
   final VoidCallback press;
 
   @override
@@ -217,14 +221,20 @@ class ProfileMenu extends StatelessWidget {
         onPressed: press,
         child: Row(
           children: [
-            // SvgPicture.asset(
-            //   icon,
-            //   color: Provider.of<SettingsProvider>(context, listen: true)
-            //           .isDarkThemeOn
-            //       ? BaseStyles.onBackgroundDark
-            //       : BaseStyles.onBackground,
-            //   width: 22,
-            // ),
+            CircleAvatar(
+              // SvgPicture.asset(
+              child: Icon(icon,
+                  color: Provider.of<SettingsProvider>(context, listen: true)
+                          .isDarkThemeOn
+                      ? BaseStyles.onBackgroundDark
+                      : BaseStyles.onBackground),
+              radius: 10,
+              backgroundColor:
+                  Provider.of<SettingsProvider>(context, listen: true)
+                          .isDarkThemeOn
+                      ? BaseStyles.surfaceDark
+                      : BaseStyles.surface,
+            ),
             const SizedBox(width: 20),
             Expanded(child: Text(text)),
             const Icon(Icons.arrow_forward_ios),
