@@ -2,6 +2,7 @@
 import 'package:auto_route/src/router/auto_router_x.dart';
 import 'package:pack/config/constants.dart';
 import 'package:pack/controllers/api/google_signin_api.dart';
+import 'package:pack/controllers/services/generate_pdf.dart';
 import 'package:pack/controllers/utils.dart';
 import 'package:pack/controllers/providers/settings.dart';
 import 'package:pack/views/styles/baseStyles.dart';
@@ -17,7 +18,7 @@ import 'package:flutter/material.dart';
 // import 'package:pack/controllers/api/google_signin_api.dart';
 // import 'package:pack/views/styles/baseStyles.dart';
 // import './account-setting.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+// import 'package:flutter_svg/flutter_svg.dart';
 
 // // Project imports:
 //
@@ -57,7 +58,7 @@ class SettingsScreen extends StatelessWidget {
               space(),
               ProfileMenu(
                 text:
-                    'my_account', //AppLocalizations.of(context).translate('my_account'),
+                    'My account', //AppLocalizations.of(context).translate('my_account'),
                 icon: "assets/user.svg",
                 press: () {
                   // Navigator.push(
@@ -120,6 +121,16 @@ class SettingsScreen extends StatelessWidget {
                   );
                 },
               ),
+              spaceLow(),
+              ProfileMenu(
+                text:
+                    "Generate QR pdf", //AppLocalizations.of(context).translate("log_out"),
+                icon: "assets/logout.svg",
+                press: () async {
+                  final pdfFile = await PdfApi.generateNew(1, 22);
+                  await PdfApi.openFile(pdfFile);
+                },
+              ),
             ],
           ),
         ));
@@ -160,8 +171,8 @@ class SettingsScreen extends StatelessWidget {
                   decoration: const BoxDecoration(
                       shape: BoxShape.circle, color: Colors.white),
                   padding: const EdgeInsets.all(5),
-                  child: SvgPicture.asset("assets/Camera-Icon.svg",
-                      color: Colors.black45),
+                  // child: SvgPicture.asset("assets/Camera-Icon.svg",
+                  //     color: Colors.black45),
                 ),
               ),
             ),
@@ -205,14 +216,14 @@ class ProfileMenu extends StatelessWidget {
         onPressed: press,
         child: Row(
           children: [
-            SvgPicture.asset(
-              icon,
-              color: Provider.of<SettingsProvider>(context, listen: true)
-                      .isDarkThemeOn
-                  ? BaseStyles.onBackgroundDark
-                  : BaseStyles.onBackground,
-              width: 22,
-            ),
+            // SvgPicture.asset(
+            //   icon,
+            //   color: Provider.of<SettingsProvider>(context, listen: true)
+            //           .isDarkThemeOn
+            //       ? BaseStyles.onBackgroundDark
+            //       : BaseStyles.onBackground,
+            //   width: 22,
+            // ),
             const SizedBox(width: 20),
             Expanded(child: Text(text)),
             const Icon(Icons.arrow_forward_ios),
