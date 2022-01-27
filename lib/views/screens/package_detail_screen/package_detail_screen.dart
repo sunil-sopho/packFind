@@ -206,23 +206,28 @@ class _PackageDetailScreenState extends State<PackageDetailScreen>
       },
       animation: animation,
       child: Stack(
-        alignment: Alignment.bottomCenter,
+        alignment: Alignment.topCenter,
         children: <Widget>[
-          const TitleText(
-            text: "PackFND",
-            fontSize: 60,
-            color: AppColor.lightGrey,
-          ),
+          const Positioned(
+              bottom: 40,
+              child: TitleText(
+                text: "PackFND",
+                fontSize: 60,
+                color: AppColor.lightGrey,
+              )),
           // Image.asset('assets/logo-0.png', height: 200)
           // SizedBox(height: 200, child: defaultImage)
-          SizedBox(
-              height: 200,
+          Container(
+            height: MediaQuery.of(context).size.height * 0.38,
+          ),
+          Container(
+              height: MediaQuery.of(context).size.height * 0.38,
               child: PhotoViewGallery.builder(
                 scrollPhysics: const BouncingScrollPhysics(),
                 builder: (BuildContext context, int index) {
                   return PhotoViewGalleryPageOptions(
                     imageProvider: galleryItems[index].image,
-                    initialScale: PhotoViewComputedScale.contained * 0.8,
+                    initialScale: PhotoViewComputedScale.contained * 0.7,
                     heroAttributes: PhotoViewHeroAttributes(tag: index),
                   );
                 },
@@ -243,6 +248,7 @@ class _PackageDetailScreenState extends State<PackageDetailScreen>
                 // pageController: widget.pageController,
                 // onPageChanged: onPageChanged,
               )),
+          Positioned(bottom: 0.0, child: _categoryWidget()),
         ],
       ),
     );
@@ -299,8 +305,8 @@ class _PackageDetailScreenState extends State<PackageDetailScreen>
   Widget _detailWidget() {
     return DraggableScrollableSheet(
       maxChildSize: .8,
-      initialChildSize: .53,
-      minChildSize: .53,
+      initialChildSize: .55,
+      minChildSize: .55,
       builder: (context, scrollController) {
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10)
@@ -317,7 +323,7 @@ class _PackageDetailScreenState extends State<PackageDetailScreen>
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 Container(
                   alignment: Alignment.center,
                   child: Container(
@@ -328,17 +334,26 @@ class _PackageDetailScreenState extends State<PackageDetailScreen>
                         borderRadius: BorderRadius.all(Radius.circular(10))),
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Container(
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      TitleText(
-                          text: widget.packageList?.name == ''
-                              ? "Package " + widget.packageList?.packageId
-                              : widget.packageList?.name,
-                          fontSize: 25),
+                      Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            TitleText(
+                                text: widget.packageList?.name == ''
+                                    ? "Package " + widget.packageList?.packageId
+                                    : widget.packageList?.name,
+                                fontSize: 25),
+                            const SizedBox(height: 10),
+                            widget.packageList?.name != ''
+                                ? Text(
+                                    "Package " + widget.packageList!.packageId)
+                                : Container(),
+                          ]),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: <Widget>[
@@ -432,7 +447,6 @@ class _PackageDetailScreenState extends State<PackageDetailScreen>
                 children: <Widget>[
                   _appBar(),
                   _productImage(),
-                  _categoryWidget(),
                 ],
               ),
               _detailWidget()

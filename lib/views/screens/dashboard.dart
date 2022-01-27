@@ -57,7 +57,7 @@ class _InventoryPageState extends State<InventoryPage> {
                   constraints: constraints,
                   informationStream: dataBloc.sizeStream,
                   icon: Icons.archive,
-                  textdata: 'Packages'),
+                  textdata: 'Boxes'),
               DisplayBox(
                   constraints: constraints,
                   icon: Icons.my_library_books,
@@ -193,11 +193,10 @@ class _InventoryPageState extends State<InventoryPage> {
           context.router
               .push(PackageDetailScreen(packageList: _foundPackages[index]));
         },
-        title: Text('Inventory Name: ' +
-            _foundPackages[index].name.toString() +
-            '\n' +
-            'Item List: ' +
-            _foundPackages[index].itemList),
+        title: _foundPackages[index].name == ""
+            ? Text('Box Id: ' + _foundPackages[index].packageId.toString())
+            : Text('Box Name: ' + _foundPackages[index].name.toString()),
+        subtitle: Text('Item List: ' + _foundPackages[index].itemList),
         trailing: Container(
             width: 70,
             height: 70,
