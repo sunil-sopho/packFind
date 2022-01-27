@@ -68,25 +68,25 @@ class SettingsScreen extends StatelessWidget {
                   //     ));
                 },
               ),
-              spaceLow(),
-              ProfileMenu(
-                text: settingsProvider.isDarkThemeOn
-                    ? 'switch to light'
-                    : 'switch to dark',
-                // ? AppLocalizations.of(context).translate('switch_to_light')
-                // : AppLocalizations.of(context).translate('switch_to_dark'),
-                icon: "assets/logout.svg", //"assets/icons/settings.svg",
-                press: () {
-                  settingsProvider.darkTheme(!settingsProvider.isDarkThemeOn);
-                  analytics.logEvent(
-                      name: "switched_app_theme",
-                      parameters: <String, dynamic>{
-                        'switched_to':
-                            settingsProvider.isDarkThemeOn ? 'dark' : 'light'
-                      });
-                },
-              ),
               // spaceLow(),
+              // ProfileMenu(
+              //   text: settingsProvider.isDarkThemeOn
+              //       ? 'switch to light'
+              //       : 'switch to dark',
+              //   // ? AppLocalizations.of(context).translate('switch_to_light')
+              //   // : AppLocalizations.of(context).translate('switch_to_dark'),
+              //   icon: "assets/logout.svg", //"assets/icons/settings.svg",
+              //   press: () {
+              //     settingsProvider.darkTheme(!settingsProvider.isDarkThemeOn);
+              //     analytics.logEvent(
+              //         name: "switched_app_theme",
+              //         parameters: <String, dynamic>{
+              //           'switched_to':
+              //               settingsProvider.isDarkThemeOn ? 'dark' : 'light'
+              //         });
+              //   },
+              // ),
+              // // spaceLow(),
               // ProfileMenu(
               //   text: settingsProvider.getActiveLanguageCode() == 'en'
               //       ? AppLocalizations.of(context).translate('change_to_kr')
@@ -107,6 +107,17 @@ class SettingsScreen extends StatelessWidget {
               //     //     });
               //   },
               // ),
+
+              spaceLow(),
+              ProfileMenu(
+                text:
+                    "Generate QR pdf", //AppLocalizations.of(context).translate("log_out"),
+                icon: "assets/logout.svg",
+                press: () async {
+                  final pdfFile = await PdfApi.generateNew(1, 20);
+                  await PdfApi.openFile(pdfFile);
+                },
+              ),
               spaceLow(),
               ProfileMenu(
                 text:
@@ -119,16 +130,6 @@ class SettingsScreen extends StatelessWidget {
                   analytics.logEvent(
                     name: "signed_out",
                   );
-                },
-              ),
-              spaceLow(),
-              ProfileMenu(
-                text:
-                    "Generate QR pdf", //AppLocalizations.of(context).translate("log_out"),
-                icon: "assets/logout.svg",
-                press: () async {
-                  final pdfFile = await PdfApi.generateNew(1, 22);
-                  await PdfApi.openFile(pdfFile);
                 },
               ),
             ],

@@ -221,7 +221,6 @@ List<Image> getImagesfromStringList(List<String> images) {
     }
     return _list;
   }
-  _list.add(Image.asset('assets/logo-0.png'));
   return _list;
 }
 
