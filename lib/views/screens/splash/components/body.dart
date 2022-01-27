@@ -37,17 +37,19 @@ class _SplashBodyState extends State<SplashBody> {
   List<Map<String, String>> splashData = [
     {
       "text": "Welcome to PackFND!",
-      "des": "OH !! where is ...",
+      "des": "Keep track of your physical storage items",
       "image": "assets/images/splash_1.png"
     },
     {
-      "text": "SECURE AND SOUND",
-      "des": "You can store items and forget, We will make sure to remmember",
+      "text": "Track",
+      "des":
+          "We help you find the right box that holds the item you need in no time!",
       "image": "assets/images/splash_2.png"
     },
     {
-      "text": "EASILY AND QUICKLY",
-      "des": "Fetch them at 1 click with keywords or QR",
+      "text": "Fetch",
+      "des":
+          "Print QR codes for all of your storage boxes and scan to view all contents without opening it!",
       "image": "assets/images/splash_3.png"
     },
   ];

@@ -1,18 +1,22 @@
 import 'dart:ui' show Color;
 import 'package:flutter/material.dart';
 
-class ShrineColor {
-  ShrineColor._();
-static const Color shrinePink50 = Color(0xFFFEEAE6);
-static const Color shrinePink300 = Color(0xFFFBB8AC);
-static const Color shrinePink100 = Color(0xFFFEDBD0);
-static const Color shrinePink400 = Color(0xFFEAA4A4);
+class AppColor {
+  AppColor._();
 
-static const Color shrineBrown900 = Color(0xFF442B2D);
-static const Color shrineBrown600 = Color(0xFF7D4F52);
-
-static const Color shrineErrorRed = Color(0xFFC5032B);
-
-static const Color shrineSurfaceWhite = Color(0xFFFFFBFA);
-static const Color shrineBackgroundWhite = Colors.white;
+  static Color primary = Color(0xff002752);
+  static Color primaryVariant = Color(0xff003A86);
+  static Color accent = Color(0xff0079FD);
+  static Color surface = Color(0xffF0f0f0);
+  static Color surfaceDark = Color(0xffBEC8D2);
+  static Color background = Color(0xffffffff);
+  static Color onPrimary = Color(0xffFFFFFF);
+  static Color onBackground = Color(0xff000000);
+  static Color error = Color(0xffF44E3B);
+  static Color sucsses = Color(0xff27AE61);
+  static Color icon = Color(0xff01071D);
+  static Color iconGrey = Color(0xff8192A3);
+  static Color grey = Color(0xffcccccc);
+  static Color grey2 = Color(0xff555555);
+  static Color grey3 = Color(0xff777777);
 }

@@ -5,6 +5,8 @@ import 'package:pack/controllers/api/google_signin_api.dart';
 import 'package:pack/controllers/utils.dart';
 import 'package:pack/controllers/providers/settings.dart';
 import 'package:pack/views/styles/baseStyles.dart';
+import 'package:pack/views/styles/colors.dart';
+import 'package:pack/views/styles/text_style.dart';
 import 'package:provider/provider.dart';
 import 'package:pack/main.dart';
 import 'package:flutter/material.dart';
@@ -33,16 +35,17 @@ class SettingsScreen extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: kPrimaryColor,
           elevation: 1,
-          title: const Text('Settings'
-              // AppLocalizations.of(context).translate('settings'),
-              // style: AppTextStyle.appBarTitle.copyWith(
-              //   fontSize: 18,
-              //   color: Provider.of<SettingsProvider>(context, listen: false)
-              //           .isDarkThemeOn
-              //       ? AppColor.background
-              //       : AppColor.onBackground,
-              // ),
-              ),
+          title: Text(
+            'Settings',
+            // AppLocalizations.of(context).translate('settings'),
+            style: AppTextStyle.appBarTitle.copyWith(
+              fontSize: 18,
+              color: Provider.of<SettingsProvider>(context, listen: false)
+                      .isDarkThemeOn
+                  ? AppColor.background
+                  : AppColor.onBackground,
+            ),
+          ),
         ),
         body: Consumer<SettingsProvider>(
           builder: (context, settingsProvider, child) => Column(
@@ -186,8 +189,14 @@ class ProfileMenu extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: TextButton(
         style: TextButton.styleFrom(
-          primary: Colors.black87, //kPrimaryColor,
-          backgroundColor: const Color(0xFFF5F6F9), //kBackgroundColor
+          primary:
+              Provider.of<SettingsProvider>(context, listen: true).isDarkThemeOn
+                  ? BaseStyles.onBackgroundDark
+                  : BaseStyles.onBackground, //kPrimaryColor,
+          backgroundColor:
+              Provider.of<SettingsProvider>(context, listen: true).isDarkThemeOn
+                  ? BaseStyles.surfaceDark
+                  : BaseStyles.surface, //kBackgroundColor
           padding: const EdgeInsets.all(20),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
