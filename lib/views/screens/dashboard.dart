@@ -42,7 +42,8 @@ class _InventoryPageState extends State<InventoryPage> {
     print("dashboard build");
     return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
-      return Scaffold(
+      return SafeArea(
+          child: Scaffold(
         body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           // NavBar(eventSink: dataBloc.eventSink),
           const Padding(
@@ -109,7 +110,7 @@ class _InventoryPageState extends State<InventoryPage> {
         bottomNavigationBar: BottomNavigator(
           selectedIndex: selectedIndex,
         ),
-      );
+      ));
     });
   }
 
@@ -208,9 +209,9 @@ class _InventoryPageState extends State<InventoryPage> {
   }
 }
 
-IconThemeData _customIconTheme(IconThemeData original) {
-  return original.copyWith(color: ShrineColor.shrineBrown900);
-}
+// IconThemeData _customIconTheme(IconThemeData original) {
+//   return original.copyWith(color: ShrineColor.shrineBrown900);
+// }
 
 class NavBar extends StatelessWidget {
   const NavBar({Key? key, this.eventSink = ""}) : super(key: key);

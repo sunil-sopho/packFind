@@ -2,9 +2,12 @@
 import 'package:auto_route/src/router/auto_router_x.dart';
 import 'package:pack/config/constants.dart';
 import 'package:pack/controllers/api/google_signin_api.dart';
+import 'package:pack/controllers/services/generate_pdf.dart';
 import 'package:pack/controllers/utils.dart';
 import 'package:pack/controllers/providers/settings.dart';
 import 'package:pack/views/styles/baseStyles.dart';
+import 'package:pack/views/styles/colors.dart';
+import 'package:pack/views/styles/text_style.dart';
 import 'package:provider/provider.dart';
 import 'package:pack/main.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +18,7 @@ import 'package:flutter/material.dart';
 // import 'package:pack/controllers/api/google_signin_api.dart';
 // import 'package:pack/views/styles/baseStyles.dart';
 // import './account-setting.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+// import 'package:flutter_svg/flutter_svg.dart';
 
 // // Project imports:
 //
@@ -33,16 +36,17 @@ class SettingsScreen extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: kPrimaryColor,
           elevation: 1,
-          title: const Text('Settings'
-              // AppLocalizations.of(context).translate('settings'),
-              // style: AppTextStyle.appBarTitle.copyWith(
-              //   fontSize: 18,
-              //   color: Provider.of<SettingsProvider>(context, listen: false)
-              //           .isDarkThemeOn
-              //       ? AppColor.background
-              //       : AppColor.onBackground,
-              // ),
-              ),
+          title: Text(
+            'Settings',
+            // AppLocalizations.of(context).translate('settings'),
+            style: AppTextStyle.appBarTitle.copyWith(
+              fontSize: 18,
+              color: Provider.of<SettingsProvider>(context, listen: false)
+                      .isDarkThemeOn
+                  ? AppColor.background
+                  : AppColor.onBackground,
+            ),
+          ),
         ),
         body: Consumer<SettingsProvider>(
           builder: (context, settingsProvider, child) => Column(
@@ -54,7 +58,7 @@ class SettingsScreen extends StatelessWidget {
               space(),
               ProfileMenu(
                 text:
-                    'my_account', //AppLocalizations.of(context).translate('my_account'),
+                    'My account', //AppLocalizations.of(context).translate('my_account'),
                 icon: "assets/user.svg",
                 press: () {
                   // Navigator.push(
@@ -64,25 +68,25 @@ class SettingsScreen extends StatelessWidget {
                   //     ));
                 },
               ),
-              spaceLow(),
-              ProfileMenu(
-                text: settingsProvider.isDarkThemeOn
-                    ? 'switch to light'
-                    : 'switch to dark',
-                // ? AppLocalizations.of(context).translate('switch_to_light')
-                // : AppLocalizations.of(context).translate('switch_to_dark'),
-                icon: "assets/logout.svg", //"assets/icons/settings.svg",
-                press: () {
-                  settingsProvider.darkTheme(!settingsProvider.isDarkThemeOn);
-                  analytics.logEvent(
-                      name: "switched_app_theme",
-                      parameters: <String, dynamic>{
-                        'switched_to':
-                            settingsProvider.isDarkThemeOn ? 'dark' : 'light'
-                      });
-                },
-              ),
               // spaceLow(),
+              // ProfileMenu(
+              //   text: settingsProvider.isDarkThemeOn
+              //       ? 'switch to light'
+              //       : 'switch to dark',
+              //   // ? AppLocalizations.of(context).translate('switch_to_light')
+              //   // : AppLocalizations.of(context).translate('switch_to_dark'),
+              //   icon: "assets/logout.svg", //"assets/icons/settings.svg",
+              //   press: () {
+              //     settingsProvider.darkTheme(!settingsProvider.isDarkThemeOn);
+              //     analytics.logEvent(
+              //         name: "switched_app_theme",
+              //         parameters: <String, dynamic>{
+              //           'switched_to':
+              //               settingsProvider.isDarkThemeOn ? 'dark' : 'light'
+              //         });
+              //   },
+              // ),
+              // // spaceLow(),
               // ProfileMenu(
               //   text: settingsProvider.getActiveLanguageCode() == 'en'
               //       ? AppLocalizations.of(context).translate('change_to_kr')
@@ -103,6 +107,17 @@ class SettingsScreen extends StatelessWidget {
               //     //     });
               //   },
               // ),
+
+              spaceLow(),
+              ProfileMenu(
+                text:
+                    "Generate QR pdf", //AppLocalizations.of(context).translate("log_out"),
+                icon: "assets/logout.svg",
+                press: () async {
+                  final pdfFile = await PdfApi.generateNew(1, 20);
+                  await PdfApi.openFile(pdfFile);
+                },
+              ),
               spaceLow(),
               ProfileMenu(
                 text:
@@ -157,8 +172,8 @@ class SettingsScreen extends StatelessWidget {
                   decoration: const BoxDecoration(
                       shape: BoxShape.circle, color: Colors.white),
                   padding: const EdgeInsets.all(5),
-                  child: SvgPicture.asset("assets/Camera-Icon.svg",
-                      color: Colors.black45),
+                  // child: SvgPicture.asset("assets/Camera-Icon.svg",
+                  //     color: Colors.black45),
                 ),
               ),
             ),
@@ -186,8 +201,14 @@ class ProfileMenu extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: TextButton(
         style: TextButton.styleFrom(
-          primary: Colors.black87, //kPrimaryColor,
-          backgroundColor: const Color(0xFFF5F6F9), //kBackgroundColor
+          primary:
+              Provider.of<SettingsProvider>(context, listen: true).isDarkThemeOn
+                  ? BaseStyles.onBackgroundDark
+                  : BaseStyles.onBackground, //kPrimaryColor,
+          backgroundColor:
+              Provider.of<SettingsProvider>(context, listen: true).isDarkThemeOn
+                  ? BaseStyles.surfaceDark
+                  : BaseStyles.surface, //kBackgroundColor
           padding: const EdgeInsets.all(20),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
@@ -196,14 +217,14 @@ class ProfileMenu extends StatelessWidget {
         onPressed: press,
         child: Row(
           children: [
-            SvgPicture.asset(
-              icon,
-              color: Provider.of<SettingsProvider>(context, listen: true)
-                      .isDarkThemeOn
-                  ? BaseStyles.onBackgroundDark
-                  : BaseStyles.onBackground,
-              width: 22,
-            ),
+            // SvgPicture.asset(
+            //   icon,
+            //   color: Provider.of<SettingsProvider>(context, listen: true)
+            //           .isDarkThemeOn
+            //       ? BaseStyles.onBackgroundDark
+            //       : BaseStyles.onBackground,
+            //   width: 22,
+            // ),
             const SizedBox(width: 20),
             Expanded(child: Text(text)),
             const Icon(Icons.arrow_forward_ios),

@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:pack/views/styles/theme.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:hive/hive.dart';
@@ -89,6 +90,13 @@ class App extends StatelessWidget {
         Locale('en', ''),
       ],
       home: MaterialApp.router(
+        debugShowCheckedModeBanner: false,
+        theme: kLightThemeData,
+        darkTheme: kDarkThemeData,
+        themeMode:
+            Provider.of<SettingsProvider>(context, listen: true).isDarkThemeOn
+                ? ThemeMode.dark
+                : ThemeMode.light,
         routerDelegate: _appRouter.delegate(
           initialRoutes: [
             if (Hive.box('userBox').get('isLoggedIn'))

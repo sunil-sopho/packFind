@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pack/main.dart';
 import 'package:pack/views/routes/routes.gr.dart';
 import 'package:pack/views/widgets/common.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -94,7 +95,7 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
         SliverToBoxAdapter(
             child: Container(
                 child: Column(children: [
-          LogoWidget(width: 180, height: 170),
+          const LogoWidget(width: 180, height: 170),
           Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
             Expanded(
               child: TextFormField(
@@ -161,6 +162,9 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
               child: OutlinedButton(
                   onPressed: () {
                     context.router.push(MyHomePage());
+                    analytics.logEvent(
+                      name: "add_image_btn_pressed",
+                    );
                   },
                   child: const AddImagebutton(),
                   style: ButtonStyle(
@@ -190,6 +194,9 @@ class _QRGeneratorSharePageState extends State<QRGeneratorSharePage> {
                   dataBloc.eventSink
                       .add(DataEvent(DataAction.addPackage, newpackage));
                   imageBloc.eventSink.add(ImageEvent(ImageAction.clearImages));
+                  analytics.logEvent(
+                    name: "save_package",
+                  );
                   Navigator.pop(context);
                 },
                 style: ButtonStyle(
