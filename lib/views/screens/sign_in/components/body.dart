@@ -165,12 +165,12 @@ class Body extends StatelessWidget {
       Hive.box('userBox').put('isLoggedIn', true);
       context.router.popUntilRoot();
       context.router.pushNamed('/inventory-page');
-      // analytics.logEvent(
-      //     name: "signed_in_as_google",
-      //     parameters: <String, dynamic>{
-      //       "user_email": user.email,
-      //       "user_display_name": user.displayName
-      //     });
+      analytics.logEvent(
+          name: "signed_in_as_google",
+          parameters: <String, dynamic>{
+            "user_email": user.email,
+            "user_display_name": user.displayName
+          });
     } else {
       showAlertDialog(context, msg: 'user is null');
     }
@@ -193,12 +193,12 @@ class Body extends StatelessWidget {
 
       // Rouut.navigator.pop();
       // Rouut.navigator.pushNamed(Rouut.appBase);
-      // analytics.logEvent(
-      //     name: "signed_in_as_guest",
-      //     parameters: <String, dynamic>{
-      //       "user_email": user.email,
-      //       "user_display_name": user.displayName
-      //     });
+      analytics.logEvent(
+          name: "signed_in_as_guest",
+          parameters: <String, dynamic>{
+            "user_email": user.email,
+            "user_display_name": user.displayName
+          });
     }
   }
 }

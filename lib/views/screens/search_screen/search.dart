@@ -1,5 +1,6 @@
 import 'package:auto_route/src/router/auto_router_x.dart';
 import 'package:flutter/material.dart';
+import 'package:pack/main.dart';
 import 'package:pack/models/package.dart';
 import 'package:hive/hive.dart';
 import 'package:pack/views/routes/routes.gr.dart';
@@ -46,6 +47,9 @@ class _HomePageState extends State<HomePage> {
   // This function is called whenever the text field changes
   void _runFilter(String enteredKeyword) {
     List<Package> results = [];
+    analytics.logEvent(
+      name: "search_using_text",
+    );
     if (enteredKeyword.isEmpty) {
       // if the search field is empty or only contains white-space, we'll display all users
       results = [];
@@ -96,6 +100,9 @@ class _HomePageState extends State<HomePage> {
                     ),
                     IconButton(
                       onPressed: () {
+                        analytics.logEvent(
+                          name: "scan_qr_opened",
+                        );
                         context.router.push(const ScanQRPage());
                       },
                       icon: const Icon(

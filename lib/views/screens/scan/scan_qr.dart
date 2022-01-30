@@ -1,32 +1,12 @@
 import 'dart:io';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:pack/main.dart';
 import 'package:pack/views/routes/routes.gr.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:pack/views/widgets/bottom_navigator.dart';
 import 'package:get_it/get_it.dart';
 import 'package:pack/controllers/services/package_handler.dart';
-
-// void main() {
-//   runApp(MyApp());
-// }
-List getInfo = [
-  [1, 'pen1,pencil,brush', 'assets/logo-1.png'],
-  [2, 'pen2,pencil,brush', 'assets/logo-1.png'],
-  [3, 'pen3,pencil,brush', 'assets/logo-1.png'],
-];
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const ScanQRPage(),
-    );
-  }
-}
 
 class ScanQRPage extends StatefulWidget {
   const ScanQRPage({Key? key}) : super(key: key);
@@ -125,6 +105,9 @@ class _ScanQRPageState extends State<ScanQRPage> {
                           ElevatedButton(
                             onPressed: () {
                               // context.router.push(Information(result: result!.code));
+                              analytics.logEvent(
+                                name: "scan_qr_used",
+                              );
                               context.router.push(PackageDetailScreen(
                                   packageList:
                                       dataBloc.getPackage(result!.code)));

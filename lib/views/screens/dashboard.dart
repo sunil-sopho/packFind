@@ -1,6 +1,7 @@
 import 'package:auto_route/src/router/auto_router_x.dart';
 import 'package:flutter/material.dart';
 import 'package:pack/config/constants.dart';
+import 'package:pack/main.dart';
 import 'package:pack/models/package.dart';
 import 'package:hive/hive.dart';
 import 'package:pack/views/routes/routes.gr.dart';
@@ -40,7 +41,7 @@ class _InventoryPageState extends State<InventoryPage> {
   @override
   Widget build(BuildContext context) {
     print("dashboard build");
-    return LayoutBuilder(
+    return SafeArea(child: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
       return SafeArea(
           child: Scaffold(
@@ -70,7 +71,7 @@ class _InventoryPageState extends State<InventoryPage> {
           ),
           Column(children: [
             const Text(
-              "Inventories",
+              "Inventory",
               style: TextStyle(fontSize: 20),
             ),
             SizedBox(
@@ -111,7 +112,7 @@ class _InventoryPageState extends State<InventoryPage> {
           selectedIndex: selectedIndex,
         ),
       ));
-    });
+    }));
   }
 
   Widget _itemBuilder(BuildContext context, int index) {
@@ -190,14 +191,16 @@ class _InventoryPageState extends State<InventoryPage> {
       margin: const EdgeInsets.symmetric(vertical: 6),
       child: ListTile(
         onTap: () {
+          analytics.logEvent(
+            name: "package_detail_opened",
+          );
           context.router
               .push(PackageDetailScreen(packageList: _foundPackages[index]));
         },
-        title: Text('Inventory Name: ' +
-            _foundPackages[index].name.toString() +
-            '\n' +
-            'Item List: ' +
-            _foundPackages[index].itemList),
+        title: _foundPackages[index].name == ""
+            ? Text('Package Id: ' + _foundPackages[index].packageId.toString())
+            : Text('Package Name: ' + _foundPackages[index].name.toString()),
+        subtitle: Text('Item List: ' + _foundPackages[index].itemList),
         trailing: Container(
             width: 70,
             height: 70,

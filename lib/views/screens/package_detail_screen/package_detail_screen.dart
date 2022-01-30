@@ -135,8 +135,8 @@ class _PackageDetailScreenState extends State<PackageDetailScreen>
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          _icon(
-            Icons.arrow_back_ios,
+          IconAppBar(
+            icon: Icons.arrow_back_ios,
             color: Colors.black54,
             size: 15,
             padding: 12,
@@ -192,51 +192,6 @@ class _PackageDetailScreenState extends State<PackageDetailScreen>
     );
   }
 
-  Widget _icon(
-    IconData icon, {
-    Color color = const Color(0xff8192A3),
-    double size = 20,
-    double padding = 10,
-    bool isOutLine = false,
-    required Function onPressed,
-  }) {
-    return InkWell(
-        child: Container(
-          height: 40,
-          width: 40,
-          padding: EdgeInsets.all(padding),
-          // margin: EdgeInsets.all(padding),
-          decoration: BoxDecoration(
-            border: Border.all(
-                color: color,
-                style: isOutLine ? BorderStyle.solid : BorderStyle.none),
-            borderRadius: const BorderRadius.all(Radius.circular(13)),
-            color: isOutLine
-                ? Colors.transparent
-                : Theme.of(context).backgroundColor,
-            boxShadow: const <BoxShadow>[
-              BoxShadow(
-                  color: Color(0xfff8f8f8),
-                  blurRadius: 5,
-                  spreadRadius: 10,
-                  offset: Offset(5, 5)),
-            ],
-          ),
-          child: Icon(icon, color: color, size: size),
-        ),
-        onTap: () {
-          if (onPressed != null) {
-            onPressed();
-          }
-        },
-        borderRadius: const BorderRadius.all(Radius.circular(13)));
-    // .ripple(() {
-    //   if (onPressed != null) {
-    //     onPressed();
-    //   }
-    // }, borderRadius: const BorderRadius.all(Radius.circular(13)));
-  }
-
   Widget _productImage() {
     return AnimatedBuilder(
       builder: (context, child) {
@@ -248,23 +203,28 @@ class _PackageDetailScreenState extends State<PackageDetailScreen>
       },
       animation: animation,
       child: Stack(
-        alignment: Alignment.bottomCenter,
+        alignment: Alignment.topCenter,
         children: <Widget>[
-          const TitleText(
-            text: "PackFND",
-            fontSize: 60,
-            color: AppColor.lightGrey,
-          ),
+          const Positioned(
+              bottom: 40,
+              child: TitleText(
+                text: "PackFND",
+                fontSize: 60,
+                color: AppColor.lightGrey,
+              )),
           // Image.asset('assets/logo-0.png', height: 200)
           // SizedBox(height: 200, child: defaultImage)
-          SizedBox(
-              height: 200,
+          Container(
+            height: MediaQuery.of(context).size.height * 0.38,
+          ),
+          Container(
+              height: MediaQuery.of(context).size.height * 0.38,
               child: PhotoViewGallery.builder(
                 scrollPhysics: const BouncingScrollPhysics(),
                 builder: (BuildContext context, int index) {
                   return PhotoViewGalleryPageOptions(
                     imageProvider: galleryItems[index].image,
-                    initialScale: PhotoViewComputedScale.contained * 0.8,
+                    initialScale: PhotoViewComputedScale.contained * 0.7,
                     heroAttributes: PhotoViewHeroAttributes(tag: index),
                   );
                 },
@@ -285,6 +245,7 @@ class _PackageDetailScreenState extends State<PackageDetailScreen>
                 // pageController: widget.pageController,
                 // onPageChanged: onPageChanged,
               )),
+          Positioned(bottom: 0.0, child: _categoryWidget()),
         ],
       ),
     );
@@ -341,8 +302,8 @@ class _PackageDetailScreenState extends State<PackageDetailScreen>
   Widget _detailWidget() {
     return DraggableScrollableSheet(
       maxChildSize: .8,
-      initialChildSize: .53,
-      minChildSize: .53,
+      initialChildSize: .55,
+      minChildSize: .55,
       builder: (context, scrollController) {
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10)
@@ -359,7 +320,7 @@ class _PackageDetailScreenState extends State<PackageDetailScreen>
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 Container(
                   alignment: Alignment.center,
                   child: Container(
@@ -370,17 +331,26 @@ class _PackageDetailScreenState extends State<PackageDetailScreen>
                         borderRadius: BorderRadius.all(Radius.circular(10))),
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Container(
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      TitleText(
-                          text: widget.packageList?.name == ''
-                              ? "Package " + widget.packageList?.packageId
-                              : widget.packageList?.name,
-                          fontSize: 25),
+                      Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            TitleText(
+                                text: widget.packageList?.name == ''
+                                    ? "Package " + widget.packageList?.packageId
+                                    : widget.packageList?.name,
+                                fontSize: 25),
+                            const SizedBox(height: 10),
+                            widget.packageList?.name != ''
+                                ? Text(
+                                    "Package " + widget.packageList!.packageId)
+                                : Container(),
+                          ]),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: <Widget>[
@@ -474,7 +444,6 @@ class _PackageDetailScreenState extends State<PackageDetailScreen>
                 children: <Widget>[
                   _appBar(),
                   _productImage(),
-                  _categoryWidget(),
                 ],
               ),
               _detailWidget()
@@ -484,116 +453,6 @@ class _PackageDetailScreenState extends State<PackageDetailScreen>
       ),
     );
   }
-
-  // @override
-  // Widget build(BuildContext context) {
-  //   updateGallery();
-  //   return Scaffold(
-  //     appBar: AppBar(
-  //       backgroundColor: kPrimaryColor,
-  //       elevation: 1,
-  //       title: widget.packageList?.name != null
-  //           ? Text("Package: ${widget.packageList?.name}")
-  //           : const Text("Package Details"),
-  //       actions: <Widget>[
-  // PopupMenuButton<String>(
-  //   elevation: 10.0,
-  //   padding: const EdgeInsets.all(0.0),
-  //   offset: const Offset(-10.0, kToolbarHeight),
-  //   onSelected: (value) => handleClick(value, widget.packageList),
-  //   itemBuilder: (BuildContext context) {
-  //     return PackageNavbarSettings.choices.map((String choice) {
-  //       return PopupMenuItem<String>(
-  //         value: choice,
-  //         child: Text(choice),
-  //       );
-  //     }).toList();
-  //   },
-  // ),
-  //       ],
-  //     ),
-  //     body: SingleChildScrollView(
-  //       child: Column(
-  //         children: [
-  //           const SizedBox(
-  //             height: 20,
-  //           ),
-  //           const Text(
-  //             'List of items :  ',
-  //             style: TextStyle(
-  //               color: Colors.black,
-  //               fontWeight: FontWeight.bold,
-  //               fontSize: 22,
-  //             ),
-  //           ),
-  //           Text(
-  //             widget.packageList!.itemList,
-  //             style: const TextStyle(
-  //               fontSize: 18,
-  //             ),
-  //           ),
-  //           const Text(
-  //             'Location is  :  ',
-  //             style: TextStyle(
-  //               color: Colors.black,
-  //               fontWeight: FontWeight.bold,
-  //               fontSize: 22,
-  //             ),
-  //           ),
-  //           Text(
-  //             widget.packageList!.location,
-  //             style: const TextStyle(
-  //               fontSize: 18,
-  //             ),
-  //           ),
-
-  //           // Container(
-  //           //   margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-  //           //   constraints: const BoxConstraints(maxHeight: 300, maxWidth: 300),
-  //           //   decoration: const BoxDecoration(color: Colors.grey),
-  //           //   child: _data.getImage(int.parse(packageList.packageId) - 1),
-  //           // )
-  //           SizedBox(
-  //               height: 300,
-  //               child: PhotoViewGallery.builder(
-  //                 scrollPhysics: const BouncingScrollPhysics(),
-  //                 builder: (BuildContext context, int index) {
-  //                   return PhotoViewGalleryPageOptions(
-  //                     imageProvider: galleryItems[index].image,
-  //                     initialScale: PhotoViewComputedScale.contained * 0.8,
-  //                     heroAttributes:
-  //                         PhotoViewHeroAttributes(tag: galleryItems[index]),
-  //                   );
-  //                 },
-  //                 itemCount: galleryItems.length,
-  //                 loadingBuilder: (context, event) => Center(
-  //                   child: SizedBox(
-  //                     width: 20.0,
-  //                     height: 20.0,
-  //                     child: CircularProgressIndicator(
-  //                       value: event == null
-  //                           ? 0
-  //                           : event.cumulativeBytesLoaded /
-  //                               event.expectedTotalBytes!.toInt(),
-  //                     ),
-  //                   ),
-  //                 ),
-  //                 // backgroundDecoration: widget.backgroundDecoration,
-  //                 // pageController: widget.pageController,
-  //                 // onPageChanged: onPageChanged,
-  //               )),
-  //           Column(
-  //               mainAxisAlignment: MainAxisAlignment.center,
-  //               children: <Widget>[
-  //                 const SizedBox(height: 40),
-  //                 QrCodeWidget(textdata: widget.packageList?.packageId),
-  //                 QrShareButton(textdata: widget.packageList?.packageId)
-  //               ])
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
 }
 
 class QrCodeWidget extends StatelessWidget {
