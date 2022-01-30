@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:pack/main.dart';
 import 'package:pack/views/routes/routes.gr.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:pack/views/widgets/bottom_navigator.dart';
@@ -104,6 +105,9 @@ class _ScanQRPageState extends State<ScanQRPage> {
                           ElevatedButton(
                             onPressed: () {
                               // context.router.push(Information(result: result!.code));
+                              analytics.logEvent(
+                                name: "scan_qr_used",
+                              );
                               context.router.push(PackageDetailScreen(
                                   packageList:
                                       dataBloc.getPackage(result!.code)));

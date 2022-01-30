@@ -188,3 +188,55 @@ class QrShareButton extends StatelessWidget {
         ))));
   }
 }
+
+class IconAppBar extends StatelessWidget {
+  const IconAppBar(
+      {Key? key,
+      required this.icon,
+      this.color = const Color(0xff8192A3),
+      this.size = 20,
+      this.padding = 10,
+      this.isOutLine = false,
+      required this.onPressed})
+      : super(key: key);
+  final IconData icon;
+  final Color color;
+  final double size;
+  final double padding;
+  final bool isOutLine;
+  final Function onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+        child: Container(
+          height: 40,
+          width: 40,
+          padding: EdgeInsets.all(padding),
+          // margin: EdgeInsets.all(padding),
+          decoration: BoxDecoration(
+            border: Border.all(
+                color: color,
+                style: isOutLine ? BorderStyle.solid : BorderStyle.none),
+            borderRadius: const BorderRadius.all(Radius.circular(13)),
+            color: isOutLine
+                ? Colors.transparent
+                : Theme.of(context).backgroundColor,
+            boxShadow: const <BoxShadow>[
+              BoxShadow(
+                  color: Color(0xfff8f8f8),
+                  blurRadius: 5,
+                  spreadRadius: 10,
+                  offset: Offset(5, 5)),
+            ],
+          ),
+          child: Icon(icon, color: color, size: size),
+        ),
+        onTap: () {
+          if (onPressed != null) {
+            onPressed();
+          }
+        },
+        borderRadius: const BorderRadius.all(Radius.circular(13)));
+  }
+}

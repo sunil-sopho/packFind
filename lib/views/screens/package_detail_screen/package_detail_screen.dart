@@ -93,8 +93,8 @@ class _PackageDetailScreenState extends State<PackageDetailScreen>
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          _icon(
-            Icons.arrow_back_ios,
+          IconAppBar(
+            icon: Icons.arrow_back_ios,
             color: Colors.black54,
             size: 15,
             padding: 12,
@@ -148,51 +148,6 @@ class _PackageDetailScreenState extends State<PackageDetailScreen>
         ],
       ),
     );
-  }
-
-  Widget _icon(
-    IconData icon, {
-    Color color = const Color(0xff8192A3),
-    double size = 20,
-    double padding = 10,
-    bool isOutLine = false,
-    required Function onPressed,
-  }) {
-    return InkWell(
-        child: Container(
-          height: 40,
-          width: 40,
-          padding: EdgeInsets.all(padding),
-          // margin: EdgeInsets.all(padding),
-          decoration: BoxDecoration(
-            border: Border.all(
-                color: color,
-                style: isOutLine ? BorderStyle.solid : BorderStyle.none),
-            borderRadius: const BorderRadius.all(Radius.circular(13)),
-            color: isOutLine
-                ? Colors.transparent
-                : Theme.of(context).backgroundColor,
-            boxShadow: const <BoxShadow>[
-              BoxShadow(
-                  color: Color(0xfff8f8f8),
-                  blurRadius: 5,
-                  spreadRadius: 10,
-                  offset: Offset(5, 5)),
-            ],
-          ),
-          child: Icon(icon, color: color, size: size),
-        ),
-        onTap: () {
-          if (onPressed != null) {
-            onPressed();
-          }
-        },
-        borderRadius: const BorderRadius.all(Radius.circular(13)));
-    // .ripple(() {
-    //   if (onPressed != null) {
-    //     onPressed();
-    //   }
-    // }, borderRadius: const BorderRadius.all(Radius.circular(13)));
   }
 
   Widget _productImage() {
@@ -456,116 +411,6 @@ class _PackageDetailScreenState extends State<PackageDetailScreen>
       ),
     );
   }
-
-  // @override
-  // Widget build(BuildContext context) {
-  //   updateGallery();
-  //   return Scaffold(
-  //     appBar: AppBar(
-  //       backgroundColor: kPrimaryColor,
-  //       elevation: 1,
-  //       title: widget.packageList?.name != null
-  //           ? Text("Package: ${widget.packageList?.name}")
-  //           : const Text("Package Details"),
-  //       actions: <Widget>[
-  // PopupMenuButton<String>(
-  //   elevation: 10.0,
-  //   padding: const EdgeInsets.all(0.0),
-  //   offset: const Offset(-10.0, kToolbarHeight),
-  //   onSelected: (value) => handleClick(value, widget.packageList),
-  //   itemBuilder: (BuildContext context) {
-  //     return PackageNavbarSettings.choices.map((String choice) {
-  //       return PopupMenuItem<String>(
-  //         value: choice,
-  //         child: Text(choice),
-  //       );
-  //     }).toList();
-  //   },
-  // ),
-  //       ],
-  //     ),
-  //     body: SingleChildScrollView(
-  //       child: Column(
-  //         children: [
-  //           const SizedBox(
-  //             height: 20,
-  //           ),
-  //           const Text(
-  //             'List of items :  ',
-  //             style: TextStyle(
-  //               color: Colors.black,
-  //               fontWeight: FontWeight.bold,
-  //               fontSize: 22,
-  //             ),
-  //           ),
-  //           Text(
-  //             widget.packageList!.itemList,
-  //             style: const TextStyle(
-  //               fontSize: 18,
-  //             ),
-  //           ),
-  //           const Text(
-  //             'Location is  :  ',
-  //             style: TextStyle(
-  //               color: Colors.black,
-  //               fontWeight: FontWeight.bold,
-  //               fontSize: 22,
-  //             ),
-  //           ),
-  //           Text(
-  //             widget.packageList!.location,
-  //             style: const TextStyle(
-  //               fontSize: 18,
-  //             ),
-  //           ),
-
-  //           // Container(
-  //           //   margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-  //           //   constraints: const BoxConstraints(maxHeight: 300, maxWidth: 300),
-  //           //   decoration: const BoxDecoration(color: Colors.grey),
-  //           //   child: _data.getImage(int.parse(packageList.packageId) - 1),
-  //           // )
-  //           SizedBox(
-  //               height: 300,
-  //               child: PhotoViewGallery.builder(
-  //                 scrollPhysics: const BouncingScrollPhysics(),
-  //                 builder: (BuildContext context, int index) {
-  //                   return PhotoViewGalleryPageOptions(
-  //                     imageProvider: galleryItems[index].image,
-  //                     initialScale: PhotoViewComputedScale.contained * 0.8,
-  //                     heroAttributes:
-  //                         PhotoViewHeroAttributes(tag: galleryItems[index]),
-  //                   );
-  //                 },
-  //                 itemCount: galleryItems.length,
-  //                 loadingBuilder: (context, event) => Center(
-  //                   child: SizedBox(
-  //                     width: 20.0,
-  //                     height: 20.0,
-  //                     child: CircularProgressIndicator(
-  //                       value: event == null
-  //                           ? 0
-  //                           : event.cumulativeBytesLoaded /
-  //                               event.expectedTotalBytes!.toInt(),
-  //                     ),
-  //                   ),
-  //                 ),
-  //                 // backgroundDecoration: widget.backgroundDecoration,
-  //                 // pageController: widget.pageController,
-  //                 // onPageChanged: onPageChanged,
-  //               )),
-  //           Column(
-  //               mainAxisAlignment: MainAxisAlignment.center,
-  //               children: <Widget>[
-  //                 const SizedBox(height: 40),
-  //                 QrCodeWidget(textdata: widget.packageList?.packageId),
-  //                 QrShareButton(textdata: widget.packageList?.packageId)
-  //               ])
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
 }
 
 class QrCodeWidget extends StatelessWidget {

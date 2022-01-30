@@ -24,10 +24,12 @@ class PdfApi {
     for (int i = start; i <= end; i++) {
       Uint8List _qrImageBytes = await toQrImageData(i.toString());
       var heading = pw.Padding(
-          padding: const pw.EdgeInsets.only(bottom: 5),
+          padding:
+              const pw.EdgeInsets.only(bottom: 5, top: 0, left: 5, right: 5),
           child: pw.Text("Package ID: " + i.toString(),
               style: const pw.TextStyle(fontSize: 20)));
-      var image = pw.Image(pw.MemoryImage(_qrImageBytes));
+      var image =
+          pw.Image(pw.MemoryImage(_qrImageBytes), height: 100, width: 100);
       var rowChildWidget = pw.Padding(
           padding: const pw.EdgeInsets.only(top: 20, bottom: 20),
           child: pw.Column(children: [heading, image]));
@@ -86,7 +88,8 @@ class PdfApi {
         version: QrVersions.auto,
         gapless: true,
         emptyColor: Colors.white,
-      ).toImage(100);
+      ).toImage(400);
+      // final img_resized =  Image(ResizeImage(image, width: 70, height: 80));
       ByteData? byteData = await image.toByteData(format: ImageByteFormat.png);
       return byteData!.buffer.asUint8List();
     } catch (e) {
