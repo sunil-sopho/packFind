@@ -46,7 +46,7 @@ class LandHome extends StatelessWidget {
               )))),
           ElevatedButton(
               onPressed: () {
-                context.router.push(InventoryPage());
+                context.router.push(const InventoryPage());
               },
               child: const Text('all inventory'),
               style: ButtonStyle(
