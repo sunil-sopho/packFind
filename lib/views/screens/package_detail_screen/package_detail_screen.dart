@@ -29,11 +29,13 @@ class _PackageDetailScreenState extends State<PackageDetailScreen>
   final dataBloc = GetIt.instance<DataBloc>();
   late AnimationController controller;
   late Animation<double> animation;
+  bool confirmDelete = false;
   // Data? _data;
 
   @override
   void initState() {
     // _data = dataBloc.data;
+    confirmDelete = false;
     super.initState();
     controller = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 300));
@@ -67,7 +69,44 @@ class _PackageDetailScreenState extends State<PackageDetailScreen>
     });
   }
 
-  void handleClick(String value, dynamic package) {
+  Future<void> _showMyDialog(dynamic package) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirm deleting package'),
+          content: SingleChildScrollView(
+            child: Column(
+              children: const <Widget>[
+                Text("The package can't be recovered once deleted.")
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Confirm'),
+              onPressed: () {
+                print('Confirmed');
+                setState(() {
+                  confirmDelete = true;
+                });
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> handleClick(String value, dynamic package) async {
     switch (value) {
       case PackageNavbarSettings.edit:
         analytics.logEvent(
@@ -77,11 +116,14 @@ class _PackageDetailScreenState extends State<PackageDetailScreen>
         context.router.push(QRGeneratorSharePage(package: package));
         break;
       case PackageNavbarSettings.delete:
-        analytics.logEvent(
-          name: "delete_package",
-        );
-        dataBloc.eventSink.add(DataEvent(DataAction.deletePackage, package));
-        Navigator.pop(context);
+        await _showMyDialog(package);
+        if (confirmDelete) {
+          analytics.logEvent(
+            name: "delete_package",
+          );
+          dataBloc.eventSink.add(DataEvent(DataAction.deletePackage, package));
+          Navigator.pop(context);
+        }
         break;
     }
   }
