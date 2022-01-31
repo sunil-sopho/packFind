@@ -1,6 +1,7 @@
 import 'package:auto_route/src/router/auto_router_x.dart';
 import 'package:flutter/material.dart';
 import 'package:pack/config/constants.dart';
+import 'package:pack/controllers/providers/settings.dart';
 import 'package:pack/main.dart';
 import 'package:pack/models/package.dart';
 import 'package:hive/hive.dart';
@@ -11,6 +12,7 @@ import 'package:pack/views/widgets/bottom_navigator.dart';
 
 import 'package:get_it/get_it.dart';
 import 'package:pack/views/widgets/common.dart';
+import 'package:provider/provider.dart';
 
 Box<Package>? packageBox = Hive.box<Package>('packageBox');
 
@@ -24,6 +26,7 @@ class InventoryPage extends StatefulWidget {
 class _InventoryPageState extends State<InventoryPage> {
   // final Data _data = Data();
   final dataBloc = GetIt.instance<DataBloc>();
+  final imageBloc = GetIt.instance<ImageBloc>();
   final int selectedIndex = 0;
 
   @override
@@ -34,85 +37,171 @@ class _InventoryPageState extends State<InventoryPage> {
   @override
   void initState() {
     dataBloc.eventSink.add(DataEvent(DataAction.init));
+    imageBloc.eventSink.add(ImageEvent(ImageAction.clearImages));
     super.initState();
   }
 
   final ScrollController _firstController = ScrollController();
+  Widget _appBar() {
+    return Consumer<SettingsProvider>(
+        builder: (context, settingsProvider, child) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            RotatedBox(
+                quarterTurns: 4,
+                child: IconAppBar(
+                  icon: Icons.sort,
+                  color: Colors.black54,
+                  isOutLine: true,
+                  onPressed: () {
+                    return true;
+                  },
+                )),
+            ClipRRect(
+              borderRadius: const BorderRadius.all(Radius.circular(13)),
+              child: Container(
+                  height: 40,
+                  width: 40,
+                  decoration: const BoxDecoration(
+                    color: Colors.transparent,
+                    boxShadow: <BoxShadow>[
+                      BoxShadow(
+                          color: Color(0xfff8f8f8),
+                          blurRadius: 10,
+                          spreadRadius: 10),
+                    ],
+                  ),
+                  child: CircleAvatar(
+                      minRadius: 50,
+                      backgroundImage:
+                          NetworkImage(settingsProvider.userProfilePic),
+                      backgroundColor: kPrimaryDarkColor)),
+            )
+          ],
+        ),
+      );
+    });
+  }
+
+  Widget _icon(IconData icon, {Color color = AppColor.lightGrey}) {
+    return InkWell(
+        child: Container(
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(13)),
+              color: Theme.of(context).backgroundColor,
+              boxShadow: const <BoxShadow>[
+                BoxShadow(
+                    color: Color(0xfff8f8f8), blurRadius: 10, spreadRadius: 15),
+              ]),
+          child: Icon(
+            icon,
+            color: color,
+          ),
+        ),
+        onTap: () {},
+        borderRadius: const BorderRadius.all(Radius.circular(13)));
+  }
+
   @override
   Widget build(BuildContext context) {
     print("dashboard build");
-    return SafeArea(child: LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-      return SafeArea(
-          child: Scaffold(
-        body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          // NavBar(eventSink: dataBloc.eventSink),
-          const Padding(
-              padding: EdgeInsets.only(top: 10),
-              child: LogoWidget(width: 210, height: 120)),
-          const SizedBox(height: 15),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              DisplayBox(
-                  constraints: constraints,
-                  informationStream: dataBloc.sizeStream,
-                  icon: Icons.archive,
-                  textdata: 'Packages'),
-              DisplayBox(
-                  constraints: constraints,
-                  icon: Icons.my_library_books,
-                  informationStream: dataBloc.itemStream,
-                  textdata: 'Items')
-            ],
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          Column(children: [
-            const Text(
-              "Inventory",
-              style: TextStyle(fontSize: 20),
-            ),
-            SizedBox(
-              height: 350,
-              // mainAxisAlignment: MainAxisAlignment.spaceAround,
-              child: StreamBuilder<List>(
-                  stream: dataBloc.dataStream,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const CircularProgressIndicator();
-                    } else if (snapshot.data == null) {
-                      return const Text("Loading");
-                    } else if (snapshot.hasError) {
-                      print("error");
-                      return const Text("Error");
-                    } else {
-                      return SizedBox(
-                        height: constraints.maxHeight / 2.5,
-                        width: constraints.maxWidth / 1.1,
-                        child: Scrollbar(
-                          isAlwaysShown: true,
-                          controller: _firstController,
-                          child: ListView.builder(
-                            padding: const EdgeInsets.all(0),
-                            controller: _firstController,
-                            itemCount: snapshot.data!.length,
-                            itemBuilder: _itemBuilder,
+    return Scaffold(
+      body: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+        return SafeArea(
+            child: Stack(
+          fit: StackFit.expand,
+          children: <Widget>[
+            // SingleChildScrollView(
+            // child:
+            Container(
+                height: MediaQuery.of(context).size.height - 50,
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xfffbfbfb),
+                      Color(0xfff7f7f7),
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                ),
+                child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          _appBar(),
+                          // NavBar(eventSink: dataBloc.eventSink),
+                          // const Padding(
+                          //     padding: EdgeInsets.only(top: 10),
+                          //     child: LogoWidget(width: 210, height: 120)),
+                          const SizedBox(height: 15),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              DisplayBox(
+                                  constraints: constraints,
+                                  informationStream: dataBloc.sizeStream,
+                                  icon: Icons.archive,
+                                  textdata: 'Packages'),
+                              DisplayBox(
+                                  constraints: constraints,
+                                  icon: Icons.my_library_books,
+                                  informationStream: dataBloc.itemStream,
+                                  textdata: 'Items')
+                            ],
                           ),
-                        ),
-                      );
-                    }
-                  }),
-              // ],
-            ),
-          ])
-        ]),
-        bottomNavigationBar: BottomNavigator(
-          selectedIndex: selectedIndex,
-        ),
-      ));
-    }));
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          // Column(children: [
+                          const Center(
+                              child: Text(
+                            "Inventory",
+                            style: TextStyle(fontSize: 20),
+                          )),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          // SizedBox(
+                          //   height: 450,
+                          // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          Expanded(
+                            child: StreamBuilder<List>(
+                                stream: dataBloc.dataStream,
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const CircularProgressIndicator();
+                                  } else if (snapshot.data == null) {
+                                    return const Text("Loading");
+                                  } else if (snapshot.hasError) {
+                                    print("error");
+                                    return const Text("Error");
+                                  } else {
+                                    return ListView.builder(
+                                      padding: const EdgeInsets.all(0),
+                                      controller: _firstController,
+                                      itemCount: snapshot.data!.length,
+                                      itemBuilder: _itemBuilder,
+                                    );
+                                  }
+                                }),
+                          )
+                          // ],
+                        ])))
+          ],
+        ));
+      }),
+      bottomNavigationBar: BottomNavigator(
+        selectedIndex: selectedIndex,
+      ),
+    );
   }
 
   Widget _itemBuilder(BuildContext context, int index) {
@@ -256,7 +345,7 @@ class DisplayBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: constraints.maxHeight / 11,
+        height: constraints.maxHeight / 10,
         width: constraints.maxWidth / 3,
         child: Card(
           elevation: 10,

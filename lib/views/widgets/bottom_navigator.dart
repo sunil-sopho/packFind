@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:auto_route/src/router/auto_router_x.dart';
 import 'package:get_it/get_it.dart';
 import 'package:pack/config/constants.dart';
+import 'package:pack/controllers/services/package_handler.dart';
 import 'package:pack/views/screens/home.dart';
 import 'package:pack/views/screens/dashboard.dart';
 import 'package:pack/views/screens/landing.dart';
@@ -129,7 +130,7 @@ class _BottomNavigatorState extends State<BottomNavigator>
             begin: Curves.easeInExpo.transform(_yController.value),
             end: inCurve.transform(_yController.value),
           ).transform(_yController.velocity.sign * 0.5 + 0.5),
-          Colors.grey.shade100),
+          Colors.white),
     );
   }
 
@@ -150,7 +151,7 @@ class _BottomNavigatorState extends State<BottomNavigator>
         _indexToPosition(index) / MediaQuery.of(context).size.width,
         duration: const Duration(milliseconds: 620));
     Future.delayed(
-      Duration(milliseconds: 500),
+      const Duration(milliseconds: 500),
       () {
         _yController.animateTo(1.0, duration: Duration(milliseconds: 1200));
       },
@@ -164,7 +165,7 @@ class _BottomNavigatorState extends State<BottomNavigator>
         context.router.replaceNamed('/inventory-page');
         break;
       case 1:
-        context.router.replaceNamed('/q-rgenerator-share-page');
+        context.router.pushNamed('/q-rgenerator-share-page');
         break;
       case 2:
         context.router.replaceNamed('/package-finder');
@@ -193,6 +194,8 @@ class _BottomNavigatorState extends State<BottomNavigator>
                 onPressed: () {
                   setState(() => _selectedIndex = index); // Changes the tab
                   Navigator.pop(context);
+                  final imageBloc = GetIt.instance<ImageBloc>();
+                  imageBloc.eventSink.add(ImageEvent(ImageAction.clearImages));
                   changePage(index);
                   // Closes the dialog
                 },
@@ -231,7 +234,7 @@ class _BottomNavigatorState extends State<BottomNavigator>
     final height = 60.0;
     return Container(
       width: appSize.width,
-      height: 60,
+      height: height,
       child: Stack(
         children: [
           Positioned(

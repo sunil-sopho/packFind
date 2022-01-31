@@ -1,8 +1,10 @@
 // // Flutter imports:
 import 'package:auto_route/src/router/auto_router_x.dart';
+import 'package:get_it/get_it.dart';
 import 'package:pack/config/constants.dart';
 import 'package:pack/controllers/api/google_signin_api.dart';
 import 'package:pack/controllers/services/generate_pdf.dart';
+import 'package:pack/controllers/services/package_handler.dart';
 import 'package:pack/controllers/utils.dart';
 import 'package:pack/controllers/providers/settings.dart';
 import 'package:pack/views/styles/baseStyles.dart';
@@ -29,8 +31,9 @@ import 'package:flutter/material.dart';
 // import 'package:pack/config/aplication_localization.dart';
 
 class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({Key? key}) : super(key: key);
+  SettingsScreen({Key? key}) : super(key: key);
   final selectedIndex = 3;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
