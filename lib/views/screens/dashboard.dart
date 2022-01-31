@@ -1,5 +1,6 @@
 import 'package:auto_route/src/router/auto_router_x.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pack/config/constants.dart';
 import 'package:pack/controllers/providers/settings.dart';
 import 'package:pack/controllers/services/generate_pdf.dart';
@@ -10,6 +11,7 @@ import 'package:pack/views/routes/routes.gr.dart';
 import 'package:pack/controllers/services/package_handler.dart';
 import 'package:pack/views/styles/colors.dart';
 import 'package:pack/views/widgets/bottom_navigator.dart';
+import 'package:flutter/services.dart';
 
 import 'package:get_it/get_it.dart';
 import 'package:pack/views/widgets/common.dart';
@@ -82,9 +84,22 @@ class _InventoryPageState extends State<InventoryPage> {
                                     await PdfApiPackages.openFile(pdfFile);
                                   }),
                               ListTile(
-                                leading: Icon(Icons.copy),
-                                title: Text('Share Link'),
-                              ),
+                                  leading: Icon(Icons.copy),
+                                  title: Text('Share Link'),
+                                  onTap: () {
+                                    Clipboard.setData(const ClipboardData(
+                                            text: "Your Copy text"))
+                                        .then((_) {
+                                      Fluttertoast.showToast(
+                                        msg: 'Link to app copid',
+                                        gravity: ToastGravity.BOTTOM,
+                                        backgroundColor: Colors.black,
+                                        timeInSecForIosWeb: 3,
+                                        toastLength: Toast.LENGTH_SHORT,
+                                      );
+                                      Navigator.of(context).pop();
+                                    });
+                                  }),
                             ],
                           );
                         });
