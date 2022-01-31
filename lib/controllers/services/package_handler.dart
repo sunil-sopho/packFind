@@ -166,7 +166,7 @@ class Data {
   }
 
   String getName(int index) {
-    return _data[index].uid;
+    return _data[index].name;
   }
 
   String getItemList(int index) {

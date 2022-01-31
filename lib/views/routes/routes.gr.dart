@@ -87,8 +87,10 @@ class Routes extends _i13.RootStackRouter {
           routeData: routeData, child: const _i10.SignInScreen());
     },
     SettingsScreen.name: (routeData) {
+      final args = routeData.argsAs<SettingsScreenArgs>(
+          orElse: () => const SettingsScreenArgs());
       return _i13.AdaptivePage<dynamic>(
-          routeData: routeData, child: const _i11.SettingsScreen());
+          routeData: routeData, child: _i11.SettingsScreen(key: args.key));
     },
     SplashScreen.name: (routeData) {
       return _i13.AdaptivePage<dynamic>(
@@ -271,10 +273,23 @@ class SignInScreen extends _i13.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i11.SettingsScreen]
-class SettingsScreen extends _i13.PageRouteInfo<void> {
-  const SettingsScreen() : super(SettingsScreen.name, path: '/settings-screen');
+class SettingsScreen extends _i13.PageRouteInfo<SettingsScreenArgs> {
+  SettingsScreen({_i14.Key? key})
+      : super(SettingsScreen.name,
+            path: '/settings-screen', args: SettingsScreenArgs(key: key));
 
   static const String name = 'SettingsScreen';
+}
+
+class SettingsScreenArgs {
+  const SettingsScreenArgs({this.key});
+
+  final _i14.Key? key;
+
+  @override
+  String toString() {
+    return 'SettingsScreenArgs{key: $key}';
+  }
 }
 
 /// generated route for
