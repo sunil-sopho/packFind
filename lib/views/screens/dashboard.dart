@@ -88,7 +88,8 @@ class _InventoryPageState extends State<InventoryPage> {
                                   title: Text('Share Link'),
                                   onTap: () {
                                     Clipboard.setData(const ClipboardData(
-                                            text: "Your Copy text"))
+                                            text:
+                                                "https://play.google.com/store/apps/details?id=com.pack.pack"))
                                         .then((_) {
                                       Fluttertoast.showToast(
                                         msg: 'Link to app copid',
