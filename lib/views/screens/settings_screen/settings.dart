@@ -8,6 +8,7 @@ import 'package:pack/controllers/providers/settings.dart';
 import 'package:pack/views/styles/baseStyles.dart';
 import 'package:pack/views/styles/colors.dart';
 import 'package:pack/views/styles/text_style.dart';
+import 'package:pack/views/widgets/bottom_navigator.dart';
 import 'package:provider/provider.dart';
 import 'package:pack/main.dart';
 import 'package:flutter/material.dart';
@@ -29,112 +30,116 @@ import 'package:flutter/material.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({Key? key}) : super(key: key);
-
+  final selectedIndex = 3;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: kPrimaryColor,
-          elevation: 1,
-          title: Text(
-            'Settings',
-            // AppLocalizations.of(context).translate('settings'),
-            style: AppTextStyle.appBarTitle.copyWith(
-              fontSize: 18,
-              color: Provider.of<SettingsProvider>(context, listen: false)
-                      .isDarkThemeOn
-                  ? AppColor.background
-                  : AppColor.onBackground,
+      // appBar: AppBar(
+      //   backgroundColor: kPrimaryColor,
+      //   elevation: 1,
+      //   title: Text(
+      //     'Settings',
+      //     // AppLocalizations.of(context).translate('settings'),
+      //     style: AppTextStyle.appBarTitle.copyWith(
+      //       fontSize: 18,
+      //       color: Provider.of<SettingsProvider>(context, listen: false)
+      //               .isDarkThemeOn
+      //           ? AppColor.background
+      //           : AppColor.onBackground,
+      //     ),
+      //   ),
+      // ),
+      body: Consumer<SettingsProvider>(
+        builder: (context, settingsProvider, child) => Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const SizedBox(height: 20),
+            space(),
+            profileImageBtn(settingsProvider),
+            space(),
+            ProfileMenu(
+              text:
+                  'My account', //AppLocalizations.of(context).translate('my_account'),
+              icon: Icons.verified_user,
+              press: () {
+                // Navigator.push(
+                //     context,
+                //     new MaterialPageRoute(
+                //       builder: (context) => AccountSetting(),
+                //     ));
+              },
             ),
-          ),
-        ),
-        body: Consumer<SettingsProvider>(
-          builder: (context, settingsProvider, child) => Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              const SizedBox(height: 20),
-              space(),
-              profileImageBtn(settingsProvider),
-              space(),
-              ProfileMenu(
-                text:
-                    'My account', //AppLocalizations.of(context).translate('my_account'),
-                icon: Icons.verified_user,
-                press: () {
-                  // Navigator.push(
-                  //     context,
-                  //     new MaterialPageRoute(
-                  //       builder: (context) => AccountSetting(),
-                  //     ));
-                },
-              ),
-              // spaceLow(),
-              // ProfileMenu(
-              //   text: settingsProvider.isDarkThemeOn
-              //       ? 'switch to light'
-              //       : 'switch to dark',
-              //   // ? AppLocalizations.of(context).translate('switch_to_light')
-              //   // : AppLocalizations.of(context).translate('switch_to_dark'),
-              //   icon: Icons.dark_mode, //"assets/icons/settings.svg",
-              //   press: () {
-              //     settingsProvider.darkTheme(!settingsProvider.isDarkThemeOn);
-              //     analytics.logEvent(
-              //         name: "switched_app_theme",
-              //         parameters: <String, dynamic>{
-              //           'switched_to':
-              //               settingsProvider.isDarkThemeOn ? 'dark' : 'light'
-              //         });
-              //   },
-              // ),
-              // // spaceLow(),
-              // ProfileMenu(
-              //   text: settingsProvider.getActiveLanguageCode() == 'en'
-              //       ? AppLocalizations.of(context).translate('change_to_kr')
-              //       : AppLocalizations.of(context).translate('change_to_en'),
-              //   icon: "assets/icons/settings.svg",
-              //   press: () {
-              //     print(settingsProvider.getActiveLanguageCode());
-              //     if (settingsProvider.getActiveLanguageCode() == "en") {
-              //       settingsProvider.setLang("Korean");
-              //     } else {
-              //       settingsProvider.setLang("English");
-              //     }
-              //     // analytics.logEvent(
-              //     //     name: "switched_app_lang",
-              //     //     parameters: <String, dynamic>{
-              //     //       'switched_to':
-              //     //           settingsProvider.getActiveLanguageCode() == 'en' ? 'en' : 'kr'
-              //     //     });
-              //   },
-              // ),
+            // spaceLow(),
+            // ProfileMenu(
+            //   text: settingsProvider.isDarkThemeOn
+            //       ? 'switch to light'
+            //       : 'switch to dark',
+            //   // ? AppLocalizations.of(context).translate('switch_to_light')
+            //   // : AppLocalizations.of(context).translate('switch_to_dark'),
+            //   icon: Icons.dark_mode, //"assets/icons/settings.svg",
+            //   press: () {
+            //     settingsProvider.darkTheme(!settingsProvider.isDarkThemeOn);
+            //     analytics.logEvent(
+            //         name: "switched_app_theme",
+            //         parameters: <String, dynamic>{
+            //           'switched_to':
+            //               settingsProvider.isDarkThemeOn ? 'dark' : 'light'
+            //         });
+            //   },
+            // ),
+            // // spaceLow(),
+            // ProfileMenu(
+            //   text: settingsProvider.getActiveLanguageCode() == 'en'
+            //       ? AppLocalizations.of(context).translate('change_to_kr')
+            //       : AppLocalizations.of(context).translate('change_to_en'),
+            //   icon: "assets/icons/settings.svg",
+            //   press: () {
+            //     print(settingsProvider.getActiveLanguageCode());
+            //     if (settingsProvider.getActiveLanguageCode() == "en") {
+            //       settingsProvider.setLang("Korean");
+            //     } else {
+            //       settingsProvider.setLang("English");
+            //     }
+            //     // analytics.logEvent(
+            //     //     name: "switched_app_lang",
+            //     //     parameters: <String, dynamic>{
+            //     //       'switched_to':
+            //     //           settingsProvider.getActiveLanguageCode() == 'en' ? 'en' : 'kr'
+            //     //     });
+            //   },
+            // ),
 
-              spaceLow(),
-              ProfileMenu(
-                text:
-                    "Generate QR pdf", //AppLocalizations.of(context).translate("log_out"),
-                icon: Icons.picture_as_pdf,
-                press: () async {
-                  final pdfFile = await PdfApi.generateNew(1, 20);
-                  await PdfApi.openFile(pdfFile);
-                },
-              ),
-              spaceLow(),
-              ProfileMenu(
-                text:
-                    "log out", //AppLocalizations.of(context).translate("log_out"),
-                icon: Icons.logout,
-                press: () {
-                  GoogleSignInApi.logout();
-                  context.router.popUntilRoot();
-                  context.router.replaceNamed('/');
-                  analytics.logEvent(
-                    name: "signed_out",
-                  );
-                },
-              ),
-            ],
-          ),
-        ));
+            spaceLow(),
+            ProfileMenu(
+              text:
+                  "Generate QR pdf", //AppLocalizations.of(context).translate("log_out"),
+              icon: Icons.picture_as_pdf,
+              press: () async {
+                final pdfFile = await PdfApi.generateNew(1, 20);
+                await PdfApi.openFile(pdfFile);
+              },
+            ),
+            spaceLow(),
+            ProfileMenu(
+              text:
+                  "log out", //AppLocalizations.of(context).translate("log_out"),
+              icon: Icons.logout,
+              press: () {
+                GoogleSignInApi.logout();
+                context.router.popUntilRoot();
+                context.router.replaceNamed('/');
+                analytics.logEvent(
+                  name: "signed_out",
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: BottomNavigator(
+        selectedIndex: selectedIndex,
+      ),
+    );
   }
 
   Widget space() {
