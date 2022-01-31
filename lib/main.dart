@@ -54,6 +54,8 @@ void main() async {
   // registering blocs
   final dataBloc = DataBloc();
   final imageBloc = ImageBloc();
+  GlobalKey navBarGlobalKey = GlobalKey(debugLabel: 'bottomAppBar');
+  getIt.registerSingleton<GlobalKey>(navBarGlobalKey);
   getIt.registerSingleton<DataBloc>(dataBloc);
   getIt.registerSingleton<ImageBloc>(imageBloc);
 
