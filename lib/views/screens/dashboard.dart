@@ -2,6 +2,7 @@ import 'package:auto_route/src/router/auto_router_x.dart';
 import 'package:flutter/material.dart';
 import 'package:pack/config/constants.dart';
 import 'package:pack/controllers/providers/settings.dart';
+import 'package:pack/controllers/services/generate_pdf.dart';
 import 'package:pack/main.dart';
 import 'package:pack/models/package.dart';
 import 'package:hive/hive.dart';
@@ -57,29 +58,62 @@ class _InventoryPageState extends State<InventoryPage> {
                   color: Colors.black54,
                   isOutLine: true,
                   onPressed: () {
-                    return true;
+                    showModalBottomSheet(
+                        context: context,
+                        elevation: 5,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(20),
+                          ),
+                        ),
+                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                        constraints: BoxConstraints(minHeight: 150),
+                        builder: (context) {
+                          return Wrap(
+                            spacing: 200,
+                            clipBehavior: Clip.antiAlias,
+                            children: [
+                              ListTile(
+                                  leading: Icon(Icons.share),
+                                  title: Text('Export Inventory'),
+                                  onTap: () async {
+                                    final pdfFile =
+                                        await PdfApiPackages.generateNew(1, 20);
+                                    await PdfApiPackages.openFile(pdfFile);
+                                  }),
+                              ListTile(
+                                leading: Icon(Icons.copy),
+                                title: Text('Share Link'),
+                              ),
+                            ],
+                          );
+                        });
                   },
                 )),
-            ClipRRect(
-              borderRadius: const BorderRadius.all(Radius.circular(13)),
-              child: Container(
-                  height: 40,
-                  width: 40,
-                  decoration: const BoxDecoration(
-                    color: Colors.transparent,
-                    boxShadow: <BoxShadow>[
-                      BoxShadow(
-                          color: Color(0xfff8f8f8),
-                          blurRadius: 10,
-                          spreadRadius: 10),
-                    ],
-                  ),
-                  child: CircleAvatar(
-                      minRadius: 50,
-                      backgroundImage:
-                          NetworkImage(settingsProvider.userProfilePic),
-                      backgroundColor: kPrimaryDarkColor)),
-            )
+            InkWell(
+                onTap: () {
+                  context.router.pushNamed('/settings-screen');
+                }, // Handle your callback
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(13)),
+                  child: Container(
+                      height: 40,
+                      width: 40,
+                      decoration: const BoxDecoration(
+                        color: Colors.transparent,
+                        boxShadow: <BoxShadow>[
+                          BoxShadow(
+                              color: Color(0xfff8f8f8),
+                              blurRadius: 10,
+                              spreadRadius: 10),
+                        ],
+                      ),
+                      child: CircleAvatar(
+                          minRadius: 50,
+                          backgroundImage:
+                              NetworkImage(settingsProvider.userProfilePic),
+                          backgroundColor: kPrimaryDarkColor)),
+                ))
           ],
         ),
       );
@@ -276,8 +310,8 @@ class _InventoryPageState extends State<InventoryPage> {
 
       key: ValueKey(_foundPackages[index].packageId),
       color: Colors.amberAccent,
-      elevation: 10,
-      margin: const EdgeInsets.symmetric(vertical: 6),
+      elevation: 5,
+      margin: const EdgeInsets.symmetric(vertical: 3),
       child: ListTile(
         onTap: () {
           analytics.logEvent(
