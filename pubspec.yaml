@@ -78,6 +78,7 @@ flutter_icons:
   image_path: "assets/packFND_mascot1.png" 
   android: true
   ios: true
+  remove_alpha_ios: true
 
 # The following section is specific to Flutter.
 flutter:
