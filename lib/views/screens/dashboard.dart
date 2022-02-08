@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pack/config/constants.dart';
 import 'package:pack/controllers/providers/settings.dart';
 import 'package:pack/controllers/services/generate_pdf.dart';
+import 'package:pack/controllers/services/item_handler.dart';
 import 'package:pack/main.dart';
 import 'package:pack/models/package.dart';
 import 'package:hive/hive.dart';
@@ -26,11 +27,16 @@ class InventoryPage extends StatefulWidget {
   _InventoryPageState createState() => _InventoryPageState();
 }
 
+enum CurrentTab { packagePage, itemPage }
+
 class _InventoryPageState extends State<InventoryPage> {
   // final Data _data = Data();
   final dataBloc = GetIt.instance<DataBloc>();
+  final itemDataBloc = GetIt.instance<ItemDataBloc>();
   final imageBloc = GetIt.instance<ImageBloc>();
   final int selectedIndex = 0;
+
+  var _currentTab;
 
   @override
   void dispose() {
@@ -39,8 +45,10 @@ class _InventoryPageState extends State<InventoryPage> {
 
   @override
   void initState() {
+    _currentTab = CurrentTab.packagePage;
     dataBloc.eventSink.add(DataEvent(DataAction.init));
     imageBloc.eventSink.add(ImageEvent(ImageAction.clearImages));
+    itemDataBloc.eventSink.add(ItemDataEvent(ItemDataAction.init));
     super.initState();
   }
 
@@ -156,6 +164,22 @@ class _InventoryPageState extends State<InventoryPage> {
         borderRadius: const BorderRadius.all(Radius.circular(13)));
   }
 
+  void _opTapPackagePage() {
+    if (_currentTab != CurrentTab.packagePage) {
+      setState(() {
+        _currentTab = CurrentTab.packagePage;
+      });
+    }
+  }
+
+  void _opTapItemPage() {
+    if (_currentTab != CurrentTab.itemPage) {
+      setState(() {
+        _currentTab = CurrentTab.itemPage;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     print("dashboard build");
@@ -195,15 +219,26 @@ class _InventoryPageState extends State<InventoryPage> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: <Widget>[
                               DisplayBox(
-                                  constraints: constraints,
-                                  informationStream: dataBloc.sizeStream,
-                                  icon: Icons.archive,
-                                  textdata: 'Packages'),
+                                constraints: constraints,
+                                informationStream: dataBloc.sizeStream,
+                                icon: Icons.archive,
+                                textdata: 'Packages',
+                                isSelected:
+                                    _currentTab == CurrentTab.packagePage
+                                        ? true
+                                        : false,
+                                onTapHandler: _opTapPackagePage,
+                              ),
                               DisplayBox(
-                                  constraints: constraints,
-                                  icon: Icons.my_library_books,
-                                  informationStream: dataBloc.itemStream,
-                                  textdata: 'Items')
+                                constraints: constraints,
+                                icon: Icons.my_library_books,
+                                informationStream: dataBloc.itemStream,
+                                textdata: 'Items',
+                                isSelected: _currentTab == CurrentTab.itemPage
+                                    ? true
+                                    : false,
+                                onTapHandler: _opTapItemPage,
+                              )
                             ],
                           ),
                           const SizedBox(
@@ -340,7 +375,7 @@ class _InventoryPageState extends State<InventoryPage> {
             ? Text('Package Id: ' + _foundPackages[index].packageId.toString())
             : Text('Package Name: ' + _foundPackages[index].name.toString()),
         subtitle: Text('Item List: ' + _foundPackages[index].itemList),
-        trailing: Container(
+        trailing: SizedBox(
             width: 70,
             height: 70,
             child: QrCodeTrailing(
@@ -380,11 +415,17 @@ class NavBar extends StatelessWidget {
 const defaultLetterSpacing = 0.03;
 
 class DisplayBox extends StatelessWidget {
+  final onTapHandler;
+
+  final isSelected;
+
   const DisplayBox(
       {Key? key,
       required this.constraints,
       required this.informationStream,
       required this.icon,
+      required this.isSelected,
+      required this.onTapHandler,
       this.textdata = ''})
       : super(key: key);
 
@@ -397,42 +438,46 @@ class DisplayBox extends StatelessWidget {
     return Container(
         height: constraints.maxHeight / 10,
         width: constraints.maxWidth / 3,
-        child: Card(
-          elevation: 10,
-          shadowColor: kPrimaryColor,
-          margin: EdgeInsets.all(2),
-          shape: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20),
-              borderSide: BorderSide(color: kPrimaryDarkColor)),
-          child: Column(
-            children: <Widget>[
-              StreamBuilder(
-                  stream: informationStream,
-                  initialData: 0,
-                  builder: (context, snapshot) {
-                    return ListTile(
-                      leading: Icon(icon),
-                      trailing: Column(children: [
-                        Spacer(),
-                        Text(
-                          '${snapshot.data}',
-                          style: const TextStyle(
-                              color: Colors.black, fontSize: 25),
-                        ),
-                        Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(textdata,
-                                  style: const TextStyle(
-                                      backgroundColor: Colors.white,
-                                      color: Colors.black,
-                                      fontSize: 12))
-                            ]),
-                      ]),
-                    );
-                  })
-            ],
+        child: InkWell(
+          onTap: onTapHandler,
+          child: Card(
+            color: isSelected ? Colors.blue : null,
+            elevation: 10,
+            shadowColor: kPrimaryColor,
+            margin: EdgeInsets.all(2),
+            shape: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20),
+                borderSide: BorderSide(color: kPrimaryDarkColor)),
+            child: Column(
+              children: <Widget>[
+                StreamBuilder(
+                    stream: informationStream,
+                    initialData: 0,
+                    builder: (context, snapshot) {
+                      return ListTile(
+                        leading: Icon(icon),
+                        trailing: Column(children: [
+                          Spacer(),
+                          Text(
+                            '${snapshot.data}',
+                            style: const TextStyle(
+                                color: Colors.black, fontSize: 25),
+                          ),
+                          Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(textdata,
+                                    style: const TextStyle(
+                                        backgroundColor: Colors.white,
+                                        color: Colors.black,
+                                        fontSize: 12))
+                              ]),
+                        ]),
+                      );
+                    })
+              ],
+            ),
           ),
         ));
   }

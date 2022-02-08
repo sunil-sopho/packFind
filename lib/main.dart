@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:pack/controllers/services/item_handler.dart';
 import 'package:pack/views/styles/theme.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -12,6 +13,8 @@ import 'package:pack/models/package.dart';
 import 'package:pack/models/image.dart';
 import 'package:pack/controllers/services/package_handler.dart';
 import 'package:pack/controllers/providers/settings.dart';
+
+import 'models/item.dart';
 
 late FirebaseAnalytics analytics;
 final getIt = GetIt.instance;
@@ -27,6 +30,7 @@ void main() async {
   Hive.registerAdapter(ImgAdapter());
   // flutter boxes related to data storage
   await Hive.openBox<Package>('packageBox');
+  await Hive.openBox<Item>('itemBox');
   await Hive.openBox('countBox');
   await Hive.openBox<Img>('imageBox');
 
@@ -34,6 +38,7 @@ void main() async {
   if (_init == null) {
     await Hive.box('countBox').put('isInitialized', true);
     await Hive.box('countBox').put('idCounter', 1);
+    await Hive.box('countBox').put('itemIdCounter', 1);
   }
 
   // settings and user information boxes
@@ -54,10 +59,12 @@ void main() async {
   // registering blocs
   final dataBloc = DataBloc();
   final imageBloc = ImageBloc();
+  final itemDataBloc = ItemDataBloc();
   GlobalKey navBarGlobalKey = GlobalKey(debugLabel: 'bottomAppBar');
   getIt.registerSingleton<GlobalKey>(navBarGlobalKey);
   getIt.registerSingleton<DataBloc>(dataBloc);
   getIt.registerSingleton<ImageBloc>(imageBloc);
+  getIt.registerSingleton<ItemDataBloc>(itemDataBloc);
 
   runApp(
     MultiProvider(
