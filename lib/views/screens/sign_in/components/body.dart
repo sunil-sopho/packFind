@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:auto_route/src/router/auto_router_x.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -80,7 +82,7 @@ class Body extends StatelessWidget {
                   // }
                   // Rouut.navigator.pop();
                   // Rouut.navigator.pushNamed(Rouut.appBase);
-                  return signInGuest(context);
+                  // return signInGuest(context);
                 },
               ),
               SizedBox(height: SizeConfig.screenHeight * 0.02),
@@ -98,32 +100,42 @@ class Body extends StatelessWidget {
                   return signInGoogle(context);
                 },
               ),
-              SizedBox(height: SizeConfig.screenHeight * 0.04),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // SocalCard(
-                  //   icon: Icon(Icons.audiotrack),
-                  //   press: () {
-                  //     showAlertDialog(context);
-                  //   },
-                  // ),
-                  SignInButton(
-                    Buttons.Facebook,
-                    mini: true,
-                    onPressed: () {
-                      showAlertDialog(context);
-                    },
-                  ),
-                  SignInButton(
-                    Buttons.Twitter,
-                    mini: true,
-                    onPressed: () {
-                      showAlertDialog(context);
-                    },
-                  ),
-                ],
-              ),
+              SizedBox(height: SizeConfig.screenHeight * 0.02),
+              (Platform.isIOS)
+                  ? SignInButton(
+                      Buttons.AppleDark,
+                      text: "Sign up with Apple",
+                      onPressed: () {
+                        return signInGoogle(context);
+                      },
+                    )
+                  : Container(),
+              // Uncomment to add twitter and facebook login
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   children: [
+              //     // SocalCard(
+              //     //   icon: Icon(Icons.audiotrack),
+              //     //   press: () {
+              //     //     showAlertDialog(context);
+              //     //   },
+              //     // ),
+              //     SignInButton(
+              //       Buttons.Facebook,
+              //       mini: true,
+              //       onPressed: () {
+              //         showAlertDialog(context);
+              //       },
+              //     ),
+              //     SignInButton(
+              //       Buttons.Twitter,
+              //       mini: true,
+              //       onPressed: () {
+              //         showAlertDialog(context);
+              //       },
+              //     ),
+              //   ],
+              // ),
               SizedBox(height: getProportionateScreenHeight(20)),
               // NoAccountText(),
               // SizedBox(height: getProportionateScreenHeight(20)),
@@ -138,103 +150,109 @@ class Body extends StatelessWidget {
 
   Future signInGoogle(BuildContext context) async {
     var user;
+    print("----------------------");
     try {
       user = await GoogleSignInApi.login();
     } catch (error) {
-      showAlertDialog(context, msg: error.toString());
+      // showAlertDialog(context, msg: error.toString()); //remove cmt
+      return; //----del
     }
-    print("user --------------- $user");
-    final settings = Provider.of<SettingsProvider>(context, listen: false);
-    if (user != null) {
-      print("signed in $user");
-      print("signed in ${user.photoUrl}");
-      // final ggAuth = await user.authentication;
-      // print(ggAuth.idToken);
-      // print(ggAuth.accessToken);
-
-      // print("auth token :${user.getAuthResponse().id_token}")
-      settings.setUserProfilePic(user.photoUrl ?? '');
-      settings.setUserFullName(user.displayName ?? '');
-      settings.googleSignInAccount = user;
-      // while (Rouut.navigator.canPop()) {
-      //   Rouut.navigator.pop();
-      //   // TODO: why we did, we don't know
-      // }
-      // Rouut.navigator.pop();
-      // Rouut.navigator.pushNamed(Rouut.appBase);
-      Hive.box('userBox').put('isLoggedIn', true);
-      context.router.popUntilRoot();
-      context.router.pushNamed('/inventory-page');
-      analytics.logEvent(
-          name: "signed_in_as_google",
-          parameters: <String, dynamic>{
-            "user_email": user.email,
-            "user_display_name": user.displayName
-          });
-    } else {
-      showAlertDialog(context, msg: 'user is null');
+    if (user == null) {
+      return; //--- del
     }
   }
+//     print("user --------------- $user");
+//     final settings = Provider.of<SettingsProvider>(context, listen: false);
+//     if (user != null) {
+//       print("signed in $user");
+//       print("signed in ${user.photoUrl}");
+//       // final ggAuth = await user.authentication;
+//       // print(ggAuth.idToken);
+//       // print(ggAuth.accessToken);
 
-  Future signInGuest(BuildContext context) async {
-    final user = await GoogleSignInApi.loginGuest();
-    final settings = Provider.of<SettingsProvider>(context, listen: false);
-    if (user != null) {
-      settings.setUserProfilePic(user.photoUrl);
-      settings.setUserFullName(user.displayName);
-      // if (settings != null) settings.googleSignInAccount = user;
-      // while (Rouut.navigator.canPop()) {
-      //   Rouut.navigator.pop();
-      //   // TODO: why we did, we don't know
-      // }
-      Hive.box('userBox').put('isLoggedIn', true);
-      context.router.popUntilRoot();
-      context.router.pushNamed('/inventory-page');
+//       // print("auth token :${user.getAuthResponse().id_token}")
+//       settings.setUserProfilePic(user.photoUrl ?? '');
+//       settings.setUserFullName(user.displayName ?? '');
+//       settings.googleSignInAccount = user;
+//       // while (Rouut.navigator.canPop()) {
+//       //   Rouut.navigator.pop();
+//       //   // TODO: why we did, we don't know
+//       // }
+//       // Rouut.navigator.pop();
+//       // Rouut.navigator.pushNamed(Rouut.appBase);
+//       Hive.box('userBox').put('isLoggedIn', true);
+//       context.router.popUntilRoot();
+//       context.router.pushNamed('/inventory-page');
+//       analytics.logEvent(
+//           name: "signed_in_as_google",
+//           parameters: <String, dynamic>{
+//             "user_email": user.email,
+//             "user_display_name": user.displayName
+//           });
+//     } else {
+//       showAlertDialog(context, msg: 'user is null');
+//     }
+//   }
 
-      // Rouut.navigator.pop();
-      // Rouut.navigator.pushNamed(Rouut.appBase);
-      analytics.logEvent(
-          name: "signed_in_as_guest",
-          parameters: <String, dynamic>{
-            "user_email": user.email,
-            "user_display_name": user.displayName
-          });
-    }
-  }
-}
+//   Future signInGuest(BuildContext context) async {
+//     final user = await GoogleSignInApi.loginGuest();
+//     final settings = Provider.of<SettingsProvider>(context, listen: false);
+//     if (user != null) {
+//       settings.setUserProfilePic(user.photoUrl);
+//       settings.setUserFullName(user.displayName);
+//       // if (settings != null) settings.googleSignInAccount = user;
+//       // while (Rouut.navigator.canPop()) {
+//       //   Rouut.navigator.pop();
+//       //   // TODO: why we did, we don't know
+//       // }
+//       Hive.box('userBox').put('isLoggedIn', true);
+//       context.router.popUntilRoot();
+//       context.router.pushNamed('/inventory-page');
 
-showAlertDialog(BuildContext context, {String? msg}) {
-  final ButtonStyle flatButtonStyle = TextButton.styleFrom(
-    minimumSize: const Size(60, 34),
-    backgroundColor: Colors.grey,
-    padding: const EdgeInsets.all(0),
-  );
-  // Create button
-  Widget okButton = TextButton(
-    style: flatButtonStyle,
-    onPressed: () {
-      Navigator.of(context).pop();
-    },
-    child: const Text(
-      "OK",
-      style: TextStyle(color: Colors.white),
-    ),
-  );
+//       // Rouut.navigator.pop();
+//       // Rouut.navigator.pushNamed(Rouut.appBase);
+//       analytics.logEvent(
+//           name: "signed_in_as_guest",
+//           parameters: <String, dynamic>{
+//             "user_email": user.email,
+//             "user_display_name": user.displayName
+//           });
+//     }
+//   }
+// }
 
-  // Create AlertDialog
-  AlertDialog alert = AlertDialog(
-    title: const Text("Coming Soon..."),
-    content: Text(msg ?? "Currently this login method is not available."),
-    actions: [
-      okButton,
-    ],
-  );
+// showAlertDialog(BuildContext context, {String? msg}) {
+//   final ButtonStyle flatButtonStyle = TextButton.styleFrom(
+//     minimumSize: const Size(60, 34),
+//     backgroundColor: Colors.grey,
+//     padding: const EdgeInsets.all(0),
+//   );
+//   // Create button
+//   Widget okButton = TextButton(
+//     style: flatButtonStyle,
+//     onPressed: () {
+//       Navigator.of(context).pop();
+//     },
+//     child: const Text(
+//       "OK",
+//       style: TextStyle(color: Colors.white),
+//     ),
+//   );
 
-  // show the dialog
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return alert;
-    },
-  );
+//   // Create AlertDialog
+//   AlertDialog alert = AlertDialog(
+//     title: const Text("Coming Soon..."),
+//     content: Text(msg ?? "Currently this login method is not available."),
+//     actions: [
+//       okButton,
+//     ],
+//   );
+
+//   // show the dialog
+//   showDialog(
+//     context: context,
+//     builder: (BuildContext context) {
+//       return alert;
+//     },
+//   );
 }
