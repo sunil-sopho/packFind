@@ -1,7 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hive/hive.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+
+import 'auth_bloc.dart';
 
 class User {
   late String displayName, photoUrl, email;
@@ -14,47 +18,79 @@ class GoogleSignInApi {
   static final _googleSignIn = GoogleSignIn();
 
   static Future<GoogleSignInAccount?> login() async {
+    // try {
+    //   final user = await _googleSignIn.signIn();
+    //   print("google");
+    //   if (user == null) {
+    //     return null;
+    //   }
+
+    //   final gKey = await user.authentication;
+
+    //   // final accessToken = gKey?.accessToken;
+    //   final idToken = gKey.idToken;
+    //   // print(idToken);
+
+    //   // Checking if email and name is null
+    //   assert(user.email != null);
+    //   assert(user.displayName != null);
+    //   assert(user.photoUrl != null);
+
+    //   // var url = Uri.parse(weburl + 'login');
+    //   // var response = await http.post(url, body: {'idToken': idToken});
+    //   // print("rej");
+    //   // print(jsonDecode(response.body));
+    //   // if (response.statusCode != 200) {
+    //   //   return null;
+    //   // }
+    //   // Saves user token and loggedin status in local storage so that user dont need to login every time
+    //   Hive.box('userBox').put('isLoggedIn', true);
+    //   // Hive.box('userBox').put('token', json.decode(response.body)['token']);
+    //   // result.authentication.then((googleKey) {
+    //   // print(accessToken);
+    //   // print(idToken);
+    //   //   print(_googleSignIn.currentUser.displayName);
+    //   // }).catchError((err) {
+    //   //   print('inner error');
+    //   // });
+    //   // print("return result");
+    //   return user;
+    // } catch (error) {
+    //   print(error);
+    //   rethrow;
+    // }
+
     try {
-      final user = await _googleSignIn.signIn();
-      print("google");
-      if (user == null) {
+      print("here 1-----------");
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
+        print("user is null-----");
         return null;
       }
+      print("1 googleuser-----");
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+      print("1 googleauth-----");
+      print(googleAuth.idToken);
+      final AuthCredential credential = GoogleAuthProvider.credential(
+          idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
+      // _processRunning.sink.add(true);
+      final user = await signinWithCredential(credential);
+      // return user;
+      // _processRunning.sink.add(false);
 
-      final gKey = await user.authentication;
-
-      // final accessToken = gKey?.accessToken;
-      final idToken = gKey.idToken;
-      // print(idToken);
-
-      // Checking if email and name is null
-      assert(user.email != null);
-      assert(user.displayName != null);
-      assert(user.photoUrl != null);
-
-      // var url = Uri.parse(weburl + 'login');
-      // var response = await http.post(url, body: {'idToken': idToken});
-      // print("rej");
-      // print(jsonDecode(response.body));
-      // if (response.statusCode != 200) {
-      //   return null;
-      // }
-      // Saves user token and loggedin status in local storage so that user dont need to login every time
-      Hive.box('userBox').put('isLoggedIn', true);
-      // Hive.box('userBox').put('token', json.decode(response.body)['token']);
-      // result.authentication.then((googleKey) {
-      // print(accessToken);
-      // print(idToken);
-      //   print(_googleSignIn.currentUser.displayName);
-      // }).catchError((err) {
-      //   print('inner error');
-      // });
-      // print("return result");
-      return user;
-    } catch (error) {
-      print(error);
-      rethrow;
+    } on PlatformException catch (error) {
+      return null;
+      // _processRunning.sink.add(false);
+      // _errorMessage.sink.add(error.message);
+    } on FirebaseAuthException catch (error) {
+      return null;
+      // _processRunning.sink.add(false);
+      // _errorMessage.sink.add(error.message);
+    } catch (e) {
+      return null;
     }
+    return null;
   }
 
   // log in as Guest
