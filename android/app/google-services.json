@@ -30,7 +30,23 @@
           }
         },
         {
-          "client_id": "247454213976-6ime00131grtpip60irgabiqvl7s2e18.apps.googleusercontent.com",
+          "client_id": "247454213976-avfr0bk88om3hkitojtkfln6v4a7dtdq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pack.pack",
+            "certificate_hash": "0005b960c93dd344cf9ec5f981320730d0d94dab"
+          }
+        },
+        {
+          "client_id": "247454213976-vcc2pc8g9t6pjb4uaurq2ql7loo90dld.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pack.pack",
+            "certificate_hash": "24b0e3ac2159fc5cc296700a0a451560972cca45"
+          }
+        },
+        {
+          "client_id": "247454213976-nvm2uoaf9appjre3mc5tqf5vj7oc6ffk.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -45,6 +61,13 @@
             {
               "client_id": "247454213976-6ime00131grtpip60irgabiqvl7s2e18.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "247454213976-3p1e8tel4antc9jk8jjvdlto6mm888n3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.pack.pack"
+              }
             }
           ]
         }

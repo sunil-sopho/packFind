@@ -83,7 +83,7 @@
 //               leading: Icon(Icons.logout),
 //               title: Text('Log out'), //Text(AppLocalizations.of(context).translate('profile')),
 //               onTap: () {
-//                 GoogleSignInApi.logout();
+//                 SignInApi.logout();
 //                 Rouut.navigator.pushNamed(Rouut.splash);
 //               },
 //             ),

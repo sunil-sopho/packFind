@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:auto_route/src/router/auto_router_x.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:pack/controllers/api/google_signin_api.dart';
+import 'package:pack/controllers/api/signin_api.dart';
 import 'package:pack/controllers/providers/settings.dart';
 import 'package:pack/controllers/utils.dart';
 // import 'package:pack/views/widgets/default_button.dart';
@@ -114,31 +114,38 @@ class Body extends StatelessWidget {
                     )
                   : Container(),
               // Uncomment to add twitter and facebook login
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.center,
-              //   children: [
-              //     // SocalCard(
-              //     //   icon: Icon(Icons.audiotrack),
-              //     //   press: () {
-              //     //     showAlertDialog(context);
-              //     //   },
-              //     // ),
-              //     SignInButton(
-              //       Buttons.Facebook,
-              //       mini: true,
-              //       onPressed: () {
-              //         showAlertDialog(context);
-              //       },
-              //     ),
-              //     SignInButton(
-              //       Buttons.Twitter,
-              //       mini: true,
-              //       onPressed: () {
-              //         showAlertDialog(context);
-              //       },
-              //     ),
-              //   ],
-              // ),
+              (Platform.isIOS)
+                  ? SizedBox(height: SizeConfig.screenHeight * 0.02)
+                  : Container(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // SocalCard(
+                  //   icon: Icon(Icons.audiotrack),
+                  //   press: () {
+                  //     showAlertDialog(context);
+                  //   },
+                  // ),
+                  SignInButton(
+                    Buttons.Facebook,
+                    mini: true,
+                    onPressed: () {
+                      showAlertDialog(context,
+                          alert_title: "Coming Soon...",
+                          msg: "Currently this login method is not available.");
+                    },
+                  ),
+                  SignInButton(
+                    Buttons.Twitter,
+                    mini: true,
+                    onPressed: () {
+                      showAlertDialog(context,
+                          alert_title: "Coming Soon...",
+                          msg: "Currently this login method is not available.");
+                    },
+                  ),
+                ],
+              ),
               SizedBox(height: getProportionateScreenHeight(20)),
               // NoAccountText(),
               // SizedBox(height: getProportionateScreenHeight(20)),
@@ -153,19 +160,20 @@ class Body extends StatelessWidget {
 
   Future signInGoogle(BuildContext context) async {
     var user;
-    print("----------------------");
+    // log("----------------------");
     try {
-      user = await GoogleSignInApi.login();
+      user = await SignInApi.login();
     } catch (error) {
       showAlertDialog(context, msg: error.toString()); //remove cmt
       // return; //----del
+      return;
     }
 
-    print("user --------------- $user");
+    log("user --------------- $user");
     final settings = Provider.of<SettingsProvider>(context, listen: false);
     if (user != null) {
-      print("signed in $user");
-      print("signed in ${user.photoUrl}");
+      log("signed in ${user.displayName}");
+      log("signed in ${user.photoUrl}");
       // final ggAuth = await user.authentication;
       // print(ggAuth.idToken);
       // print(ggAuth.accessToken);
@@ -173,7 +181,7 @@ class Body extends StatelessWidget {
       // print("auth token :${user.getAuthResponse().id_token}")
       settings.setUserProfilePic(user.photoUrl ?? '');
       settings.setUserFullName(user.displayName ?? '');
-      settings.googleSignInAccount = user;
+      settings.packFindUser = user;
       // while (Rouut.navigator.canPop()) {
       //   Rouut.navigator.pop();
       //   // TODO: why we did, we don't know
@@ -190,12 +198,12 @@ class Body extends StatelessWidget {
             "user_display_name": user.displayName
           });
     } else {
-      showAlertDialog(context, msg: 'user is null');
+      showAlertDialog(context, msg: 'Unable to signin! Please try again!');
     }
   }
 
   Future signInGuest(BuildContext context) async {
-    final user = await GoogleSignInApi.loginGuest();
+    final user = await SignInApi.loginGuest();
     final settings = Provider.of<SettingsProvider>(context, listen: false);
     if (user != null) {
       settings.setUserProfilePic(user.photoUrl);
@@ -221,38 +229,32 @@ class Body extends StatelessWidget {
   }
 }
 
-showAlertDialog(BuildContext context, {String? msg}) {
+showAlertDialog(BuildContext context, {String? alert_title, String? msg}) {
   final ButtonStyle flatButtonStyle = TextButton.styleFrom(
     minimumSize: const Size(60, 34),
     backgroundColor: Colors.grey,
     padding: const EdgeInsets.all(0),
   );
-  // Create button
-  Widget okButton = TextButton(
-    style: flatButtonStyle,
-    onPressed: () {
-      Navigator.of(context).pop();
-    },
-    child: const Text(
-      "OK",
-      style: TextStyle(color: Colors.white),
-    ),
-  );
 
-  // Create AlertDialog
-  AlertDialog alert = AlertDialog(
-    title: const Text("Coming Soon..."),
-    content: Text(msg ?? "Currently this login method is not available."),
-    actions: [
-      okButton,
-    ],
-  );
-
-  // show the dialog
   showDialog(
     context: context,
-    builder: (BuildContext context) {
-      return alert;
+    builder: (BuildContext ctx) {
+      return AlertDialog(
+        title: Text(alert_title ?? "An error occured"),
+        content: Text(msg ?? "Please try again"),
+        actions: [
+          TextButton(
+            style: flatButtonStyle,
+            onPressed: () {
+              Navigator.of(ctx).pop();
+            },
+            child: const Text(
+              "OK",
+              style: TextStyle(color: Colors.white),
+            ),
+          )
+        ],
+      );
     },
   );
 }

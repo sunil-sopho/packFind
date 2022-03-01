@@ -2,7 +2,7 @@
 import 'package:auto_route/src/router/auto_router_x.dart';
 import 'package:get_it/get_it.dart';
 import 'package:pack/config/constants.dart';
-import 'package:pack/controllers/api/google_signin_api.dart';
+import 'package:pack/controllers/api/signin_api.dart';
 import 'package:pack/controllers/services/generate_pdf.dart';
 import 'package:pack/controllers/services/package_handler.dart';
 import 'package:pack/controllers/utils.dart';
@@ -128,7 +128,7 @@ class SettingsScreen extends StatelessWidget {
                   "log out", //AppLocalizations.of(context).translate("log_out"),
               icon: Icons.logout,
               press: () {
-                GoogleSignInApi.logout();
+                SignInApi.logout();
                 context.router.popUntilRoot();
                 context.router.replaceNamed('/');
                 analytics.logEvent(

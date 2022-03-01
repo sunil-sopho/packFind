@@ -4,12 +4,13 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 // Package imports:
 import 'package:hive/hive.dart';
+import 'package:pack/models/packfindUser.dart';
 
 class SettingsProvider extends ChangeNotifier {
   bool isDarkThemeOn = Hive.box('settingsBox').get('isDarkModeOn') ?? false;
   String activeLanguge = Hive.box('settingsBox').get('activeLang') ?? "English";
   String localeCode = "en";
-  late GoogleSignInAccount googleSignInAccount;
+  late PackFindUser packFindUser;
   String userProfilePic = Hive.box('userBox').get('userProfilePic') ??
       'https://www.woolha.com/media/2020/03/eevee.png';
   String userFullName = Hive.box('userBox').get('userFullName') ?? '';
