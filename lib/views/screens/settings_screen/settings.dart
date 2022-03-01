@@ -128,7 +128,7 @@ class SettingsScreen extends StatelessWidget {
                   "log out", //AppLocalizations.of(context).translate("log_out"),
               icon: Icons.logout,
               press: () {
-                // GoogleSignInApi.logout();
+                GoogleSignInApi.logout();
                 context.router.popUntilRoot();
                 context.router.replaceNamed('/');
                 analytics.logEvent(
