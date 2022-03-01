@@ -158,6 +158,50 @@ class Body extends StatelessWidget {
     ));
   }
 
+  Future signInApple(BuildContext context) async {
+    var user;
+    // log("----------------------");
+    try {
+      user = await SignInApi.appleLogin();
+    } catch (error) {
+      showAlertDialog(context, msg: error.toString()); //remove cmt
+      // return; //----del
+      return;
+    }
+
+    log("user --------------- $user");
+    final settings = Provider.of<SettingsProvider>(context, listen: false);
+    if (user != null) {
+      log("signed in ${user.displayName}");
+      log("signed in ${user.photoUrl}");
+      // final ggAuth = await user.authentication;
+      // print(ggAuth.idToken);
+      // print(ggAuth.accessToken);
+
+      // print("auth token :${user.getAuthResponse().id_token}")
+      settings.setUserProfilePic(user.photoUrl ?? '');
+      settings.setUserFullName(user.displayName ?? '');
+      settings.packFindUser = user;
+      // while (Rouut.navigator.canPop()) {
+      //   Rouut.navigator.pop();
+      //   // TODO: why we did, we don't know
+      // }
+      // Rouut.navigator.pop();
+      // Rouut.navigator.pushNamed(Rouut.appBase);
+      Hive.box('userBox').put('isLoggedIn', true);
+      context.router.popUntilRoot();
+      context.router.pushNamed('/inventory-page');
+      analytics.logEvent(
+          name: "signed_in_as_google",
+          parameters: <String, dynamic>{
+            "user_email": user.email,
+            "user_display_name": user.displayName
+          });
+    } else {
+      showAlertDialog(context, msg: 'Unable to signin! Please try again!');
+    }
+  }
+
   Future signInGoogle(BuildContext context) async {
     var user;
     // log("----------------------");

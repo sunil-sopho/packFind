@@ -6,6 +6,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hive/hive.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:the_apple_sign_in/the_apple_sign_in.dart';
 import 'package:pack/models/packfindUser.dart';
 
 import 'auth_bloc.dart';
@@ -50,6 +51,51 @@ class SignInApi {
       return myuser;
     }
     throw Exception("Unable to signin! Please try again.");
+  }
+
+  static Future<PackFindUser?> appleLogin() async {
+    try {
+      if (!await TheAppleSignIn.isAvailable()) {
+        throw Exception('This Device is not eligible for Apple Sign in');
+      }
+    } catch (error) {
+      rethrow;
+    }
+
+    final result = await TheAppleSignIn.performRequests(const [
+      AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
+    ]);
+
+    // _processRunning.sink.add(true);
+
+    switch (result.status) {
+      case AuthorizationStatus.authorized:
+        final appleIdCredential = result.credential!;
+        final oAuthProvider = OAuthProvider('apple.com');
+        final credential = oAuthProvider.credential(
+          idToken: String.fromCharCodes(appleIdCredential.identityToken!),
+          accessToken:
+              String.fromCharCodes(appleIdCredential.authorizationCode!),
+        );
+
+        final user = await signinWithCredential(credential);
+        Hive.box('userBox').put('isLoggedIn', true);
+
+        return user;
+      case AuthorizationStatus.error:
+        throw PlatformException(
+          code: 'ERROR_AUTHORIZATION_DENIED',
+          message: result.error.toString(),
+        );
+
+      case AuthorizationStatus.cancelled:
+        throw PlatformException(
+          code: 'ERROR_ABORTED_BY_USER',
+          message: 'Sign in aborted by user',
+        );
+      default:
+        throw UnimplementedError();
+    }
   }
 
   static Future<PackFindUser?> login() async {
