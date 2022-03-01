@@ -109,7 +109,7 @@ class Body extends StatelessWidget {
                       Buttons.AppleDark,
                       text: "Sign up with Apple",
                       onPressed: () {
-                        return signInGoogle(context);
+                        return signInApple(context);
                       },
                     )
                   : Container(),

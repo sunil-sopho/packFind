@@ -25,9 +25,9 @@ class SignInApi {
       {bool verified = true}) async {
     //Sign in to Firebase
     final UserCredential result = await MyUserAuth.signin(credential);
-    // log("result ${result.toString()}");
+    log("result ${result.toString()}");
     dynamic user = result.user;
-    // log("user + ${user.toString()}");
+    log("user + ${user.toString()}");
     //Check for existing user, Add if not yet registered
     if (user != null) {
       // log("h1 ------");
